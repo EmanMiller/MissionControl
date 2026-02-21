@@ -688,6 +688,47 @@ function AddTaskModal({ onClose, onAdd }) {
 
 /* ─── NavPlaceholder ─────────────────────────────────────────────────────── */
 
+/* ─── People ─────────────────────────────────────────────────────────────── */
+
+const PEOPLE = [
+  { id: 1, name: 'Joe Biden',       role: '46th President of the United States', initials: 'JB', color: '#1D4ED8' },
+  { id: 2, name: 'Donald Trump',    role: '45th President of the United States', initials: 'DT', color: '#B45309' },
+  { id: 3, name: 'Barack Obama',    role: '44th President of the United States', initials: 'BO', color: '#059669' },
+  { id: 4, name: 'George W. Bush',  role: '43rd President of the United States', initials: 'GB', color: '#7C3AED' },
+  { id: 5, name: 'Bill Clinton',    role: '42nd President of the United States', initials: 'BC', color: '#DC2626' },
+];
+
+function PeoplePanel() {
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
+      <p className="text-[#9CA3AF] text-[11px] font-medium tracking-widest uppercase m-0 mb-3">
+        People · {PEOPLE.length}
+      </p>
+      <div className="flex flex-col gap-2">
+        {PEOPLE.map(person => (
+          <div
+            key={person.id}
+            className="flex items-center gap-3 bg-[#111111] border border-[#2A2A2A] rounded-lg px-4 py-3 cursor-pointer transition-colors duration-150 hover:border-[#3A3A3A]"
+          >
+            {/* Avatar */}
+            <div
+              className="flex items-center justify-center rounded-full shrink-0 text-white text-[12px] font-semibold select-none"
+              style={{ width: 36, height: 36, background: person.color }}
+            >
+              {person.initials}
+            </div>
+            {/* Info */}
+            <div className="flex flex-col min-w-0">
+              <span className="text-[#F9FAFB] text-[13px] font-medium truncate">{person.name}</span>
+              <span className="text-[#9CA3AF] text-[11px] truncate">{person.role}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function NavPlaceholder({ activeNav }) {
   const item = NAV_ITEMS.find(n => n.label === activeNav);
   const Icon = item?.Icon;
@@ -956,6 +997,8 @@ function Dashboard({ onSignOut }) {
               <BuildDetail task={selectedTask} onBuildThis={handleBuildThis} />
             </div>
           </>
+        ) : activeNav === 'People' ? (
+          <PeoplePanel />
         ) : (
           <NavPlaceholder activeNav={activeNav} />
         )}
