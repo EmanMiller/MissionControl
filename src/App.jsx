@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import OnboardingFlow from './OnboardingFlow.jsx';
 
 /* ─── SVG Icons ──────────────────────────────────────────────────────────── */
 
@@ -831,6 +832,18 @@ function BottomNav({ activeNav, setActiveNav }) {
 /* ─── App Root ───────────────────────────────────────────────────────────── */
 
 export default function App() {
+  const [onboarded, setOnboarded] = useState(
+    () => localStorage.getItem('mc_onboarding_complete') === 'true'
+  );
+
+  if (!onboarded) {
+    return <OnboardingFlow onComplete={() => setOnboarded(true)} />;
+  }
+
+  return <Dashboard />;
+}
+
+function Dashboard() {
   const [tasks, setTasks] = useState(INITIAL_TASKS);
   const [selected, setSelected] = useState(3);
   const [activeNav, setActiveNav] = useState('Tasks');
