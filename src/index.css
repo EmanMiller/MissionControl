@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* No rubber-band scroll on body — iOS fix */
+  overflow: hidden;
+  background: #0A0A0A;
+  font-family: 'Inter', sans-serif;
+  /* Remove tap flash on iOS */
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  height: 100%;
+}
+
+button {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Slim custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2A2A;
+  border-radius: 2px;
+}
+
+/* iOS momentum scroll helper — apply to any scrollable container */
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+}
