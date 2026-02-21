@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { LogOut } from 'lucide-react';
 import OnboardingFlow from './OnboardingFlow.jsx';
 
 /* ─── SVG Icons ──────────────────────────────────────────────────────────── */
@@ -366,7 +367,7 @@ function TopBar({ mobileView, selectedTask, onBack, onHamburger, onAddTask }) {
 
 /* ─── SidebarContent (shared between desktop column + mobile drawer) ─────── */
 
-function SidebarContent({ activeNav, setActiveNav, onClose }) {
+function SidebarContent({ activeNav, setActiveNav, onClose, onSignOut }) {
   return (
     <div className="flex flex-col h-full bg-[#0F0F0F] overflow-hidden">
       {/* Nav items */}
@@ -388,6 +389,20 @@ function SidebarContent({ activeNav, setActiveNav, onClose }) {
             </div>
           );
         })}
+      </div>
+
+      {/* Sign out */}
+      <div className="px-4 py-2" style={{ borderTop: '1px solid #1A1A1A' }}>
+        <button
+          onClick={onSignOut}
+          className="flex items-center gap-2.5 w-full cursor-pointer bg-transparent border-none select-none transition-colors duration-100"
+          style={{ color: '#4B5563', fontSize: 13, fontFamily: 'inherit', minHeight: 36, padding: 0 }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#9CA3AF')}
+          onMouseLeave={e => (e.currentTarget.style.color = '#4B5563')}
+        >
+          <LogOut size={14} strokeWidth={1.5} />
+          <span>Sign out</span>
+        </button>
       </div>
 
       {/* Avatar / silhouette */}
@@ -424,17 +439,17 @@ function SidebarContent({ activeNav, setActiveNav, onClose }) {
 
 /* ─── LeftSidebar (desktop only) ─────────────────────────────────────────── */
 
-function LeftSidebar({ activeNav, setActiveNav }) {
+function LeftSidebar({ activeNav, setActiveNav, onSignOut }) {
   return (
     <div className="hidden lg:flex w-[220px] shrink-0 border-r border-[#2A2A2A] flex-col">
-      <SidebarContent activeNav={activeNav} setActiveNav={setActiveNav} />
+      <SidebarContent activeNav={activeNav} setActiveNav={setActiveNav} onSignOut={onSignOut} />
     </div>
   );
 }
 
 /* ─── Drawer (mobile only) ───────────────────────────────────────────────── */
 
-function Drawer({ isOpen, activeNav, setActiveNav, onClose }) {
+function Drawer({ isOpen, activeNav, setActiveNav, onClose, onSignOut }) {
   return (
     <div className="lg:hidden">
       {/* Dimmed backdrop */}
@@ -450,7 +465,7 @@ function Drawer({ isOpen, activeNav, setActiveNav, onClose }) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <SidebarContent activeNav={activeNav} setActiveNav={setActiveNav} onClose={onClose} />
+        <SidebarContent activeNav={activeNav} setActiveNav={setActiveNav} onClose={onClose} onSignOut={onSignOut} />
       </div>
     </div>
   );
@@ -836,15 +851,27 @@ export default function App() {
     () => localStorage.getItem('mc_onboarding_complete') === 'true'
   );
 
+  function handleSignOut() {
+    localStorage.removeItem('mc_onboarding_complete');
+    setOnboarded(false);
+  }
+
   if (!onboarded) {
     return <OnboardingFlow onComplete={() => setOnboarded(true)} />;
   }
 
-  return <Dashboard />;
+  return <Dashboard onSignOut={handleSignOut} />;
 }
 
-function Dashboard() {
-  const [tasks, setTasks] = useState(INITIAL_TASKS);
+function Dashboard({ onSignOut }) {
+  const [tasks, setTasks] = useState(() => {
+    try {
+      const saved = localStorage.getItem('mc_tasks');
+      return saved ? JSON.parse(saved) : INITIAL_TASKS;
+    } catch {
+      return INITIAL_TASKS;
+    }
+  });
   const [selected, setSelected] = useState(3);
   const [activeNav, setActiveNav] = useState('Tasks');
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'detail'
@@ -865,6 +892,10 @@ function Dashboard() {
   function handleAddTask(task) {
     setTasks(prev => [task, ...prev]);
   }
+
+  useEffect(() => {
+    localStorage.setItem('mc_tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   // Mobile task list: show on mobile list-view only; always hidden on desktop
   const mobileCenterClass = [
@@ -898,7 +929,7 @@ function Dashboard() {
 
       {/* Three-column body */}
       <div className="flex flex-1 overflow-hidden min-h-0">
-        <LeftSidebar activeNav={activeNav} setActiveNav={setActiveNav} />
+        <LeftSidebar activeNav={activeNav} setActiveNav={setActiveNav} onSignOut={onSignOut} />
 
         {activeNav === 'Tasks' ? (
           <>
@@ -939,6 +970,7 @@ function Dashboard() {
         activeNav={activeNav}
         setActiveNav={setActiveNav}
         onClose={() => setDrawerOpen(false)}
+        onSignOut={onSignOut}
       />
 
       {/* Add Task modal */}
