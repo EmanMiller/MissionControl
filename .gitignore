@@ -46,3 +46,5 @@ theme/
 
 # Prototypes / scratch files
 dashboard.html
+backend/.venv/
+backend/*.db
