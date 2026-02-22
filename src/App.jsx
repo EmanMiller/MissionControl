@@ -1,5 +1,10 @@
-import { useState, useEffect } from 'react';
-import { LogOut } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import {
+  LogOut, LayoutDashboard, Lightbulb, CheckSquare,
+  FolderOpen, FileText, Clock, Settings,
+  Search, Trash2, Send, Download, Eye,
+  Bell, ChevronDown,
+} from 'lucide-react';
 import OnboardingFlow from './OnboardingFlow.jsx';
 
 /* ─── SVG Icons ──────────────────────────────────────────────────────────── */
@@ -69,112 +74,26 @@ function IcoChevronLeft() {
   );
 }
 
-function IcoTasks() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <rect x="2" y="3" width="12" height="10" rx="1.5" />
-      <line x1="5" y1="6.5" x2="11" y2="6.5" />
-      <line x1="5" y1="9.5" x2="11" y2="9.5" />
-    </svg>
-  );
-}
 
-function IcoContent() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <rect x="3" y="2" width="10" height="12" rx="1.5" />
-      <line x1="5.5" y1="5.5" x2="10.5" y2="5.5" />
-      <line x1="5.5" y1="8" x2="10.5" y2="8" />
-      <line x1="5.5" y1="10.5" x2="8.5" y2="10.5" />
-    </svg>
-  );
-}
-
-function IcoApprovals() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="3,8.5 6.5,12 13,5" />
-    </svg>
-  );
-}
-
-function IcoCouncil() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9.5,2 5.5,9 8.5,9 6.5,14 11.5,7 8.5,7" />
-    </svg>
-  );
-}
-
-function IcoCalendar() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <rect x="2" y="3" width="12" height="11" rx="1.5" />
-      <line x1="2" y1="7" x2="14" y2="7" />
-      <line x1="5" y1="1.5" x2="5" y2="4.5" />
-      <line x1="11" y1="1.5" x2="11" y2="4.5" />
-    </svg>
-  );
-}
-
-function IcoProjects() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M2 6C2 4.9 2.9 4 4 4H6.2L7.6 5.5H12C13.1 5.5 14 6.4 14 7.5V11C14 12.1 13.1 13 12 13H4C2.9 13 2 12.1 2 11V6Z" />
-    </svg>
-  );
-}
-
-function IcoMemory() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M6 2.5C4 2.5 3 4 3 5.5C3 6.8 3.8 7.8 5 8.3V11C5 12.1 5.9 13 7 13H9C10.1 13 11 12.1 11 11V8.3C12.2 7.8 13 6.8 13 5.5C13 4 12 2.5 10 2.5" />
-      <line x1="8" y1="2.5" x2="8" y2="5" />
-      <line x1="6.5" y1="5" x2="9.5" y2="5" />
-    </svg>
-  );
-}
-
-function IcoDocs() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M4 2H9.5L13 5.5V14H4V2Z" />
-      <polyline points="9.5,2 9.5,5.5 13,5.5" />
-      <line x1="6" y1="8" x2="11" y2="8" />
-      <line x1="6" y1="10.5" x2="9" y2="10.5" />
-    </svg>
-  );
-}
-
-function IcoPeople() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <circle cx="8" cy="5" r="2.5" />
-      <path d="M3 14c0-2.8 2.2-5 5-5s5 2.2 5 5" />
-    </svg>
-  );
-}
 
 /* ─── Data ───────────────────────────────────────────────────────────────── */
 
 const NAV_ITEMS = [
-  { label: 'Tasks',     Icon: IcoTasks     },
-  { label: 'Content',   Icon: IcoContent   },
-  { label: 'Approvals', Icon: IcoApprovals },
-  { label: 'Council',   Icon: IcoCouncil   },
-  { label: 'Calendar',  Icon: IcoCalendar  },
-  { label: 'Projects',  Icon: IcoProjects  },
-  { label: 'Memory',    Icon: IcoMemory    },
-  { label: 'Docs',      Icon: IcoDocs      },
-  { label: 'People',    Icon: IcoPeople    },
+  { label: 'Dashboard', Icon: () => <LayoutDashboard size={15} strokeWidth={1.5} /> },
+  { label: 'Ideas',     Icon: () => <Lightbulb       size={15} strokeWidth={1.5} /> },
+  { label: 'Approvals', Icon: () => <CheckSquare     size={15} strokeWidth={1.5} /> },
+  { label: 'Projects',  Icon: () => <FolderOpen      size={15} strokeWidth={1.5} /> },
+  { label: 'Outputs',   Icon: () => <FileText        size={15} strokeWidth={1.5} /> },
+  { label: 'History',   Icon: () => <Clock           size={15} strokeWidth={1.5} /> },
+  { label: 'Settings',  Icon: () => <Settings        size={15} strokeWidth={1.5} /> },
 ];
 
 const BOTTOM_NAV_ITEMS = [
-  { label: 'Tasks',     Icon: IcoTasks     },
-  { label: 'Content',   Icon: IcoContent   },
-  { label: 'Approvals', Icon: IcoApprovals },
-  { label: 'Calendar',  Icon: IcoCalendar  },
-  { label: 'Projects',  Icon: IcoProjects  },
+  { label: 'Dashboard', Icon: () => <LayoutDashboard size={15} strokeWidth={1.5} /> },
+  { label: 'Ideas',     Icon: () => <Lightbulb       size={15} strokeWidth={1.5} /> },
+  { label: 'Approvals', Icon: () => <CheckSquare     size={15} strokeWidth={1.5} /> },
+  { label: 'Outputs',   Icon: () => <FileText        size={15} strokeWidth={1.5} /> },
+  { label: 'Settings',  Icon: () => <Settings        size={15} strokeWidth={1.5} /> },
 ];
 
 const INITIAL_TASKS = [
@@ -606,7 +525,7 @@ function KanbanBoard({ tasks, selected, onTaskClick, onAddTask }) {
     <div className="hidden lg:flex lg:flex-col lg:flex-1 lg:overflow-hidden bg-[#0A0A0A]">
       {/* Header bar */}
       <div className="h-12 shrink-0 bg-[#111111] border-b border-[#2A2A2A] flex items-center justify-between px-4">
-        <span className="text-[#F9FAFB] text-sm font-semibold">Tasks</span>
+        <span className="text-[#F9FAFB] text-sm font-semibold">Dashboard</span>
         <button
           onClick={onAddTask}
           className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-[12px] font-semibold rounded-md px-3 cursor-pointer flex items-center gap-1.5 transition-colors select-none"
@@ -686,115 +605,623 @@ function AddTaskModal({ onClose, onAdd }) {
   );
 }
 
-/* ─── Docs ───────────────────────────────────────────────────────────────── */
+/* ─── Shared panel header ────────────────────────────────────────────────── */
 
-const DEV_DOCS = [
-  { id: 1, icon: '⚡', title: 'Quick Start',        desc: 'Set up Mission Control and submit your first automated task in under 5 minutes.' },
-  { id: 2, icon: '📡', title: 'API Reference',       desc: 'Full REST API — endpoints, authentication headers, rate limits, and response schemas.' },
-  { id: 3, icon: '🔗', title: 'Webhooks',            desc: 'Configure push events for task status changes, build completions, and agent errors.' },
-  { id: 4, icon: '🐙', title: 'GitHub Integration',  desc: 'Connect your repos so the AI can create branches, push commits, and open pull requests.' },
-  { id: 5, icon: '⌨️', title: 'CLI Reference',       desc: 'All command-line flags and subcommands for the mc CLI tool.' },
-  { id: 6, icon: '🏗️', title: 'Architecture',        desc: 'How Mission Control orchestrates agents, sandboxes, and output pipelines end-to-end.' },
-  { id: 7, icon: '🔐', title: 'Auth & Security',     desc: 'OAuth flows, API key scopes, RBAC, and self-hosting security considerations.' },
-  { id: 8, icon: '🚢', title: 'Deploying',           desc: 'Self-host on your own infrastructure or connect to the managed cloud environment.' },
+function PanelHeader({ title, subtitle }) {
+  return (
+    <div className="mb-4">
+      <p className="text-[#F9FAFB] text-[14px] font-semibold m-0 mb-1">{title}</p>
+      {subtitle && <p className="text-[#9CA3AF] text-[12px] m-0">{subtitle}</p>}
+    </div>
+  );
+}
+
+/* ─── IDEAS ──────────────────────────────────────────────────────────────── */
+
+const DUMMY_IDEAS = [
+  { id: 1, text: 'Build a tool that converts my voice notes into structured blog posts automatically', savedAt: 'Saved Feb 19, 9:12 AM' },
+  { id: 2, text: 'Research the top 10 Shopify apps for creators and summarize what\'s missing in the market', savedAt: 'Saved Feb 18, 3:45 PM' },
+  { id: 3, text: 'Create a landing page for my beat selling business with a dark theme and fire aesthetic', savedAt: 'Saved Feb 17, 11:00 AM' },
 ];
 
-const CREATOR_DOCS = [
-  { id: 1, icon: '👋', title: 'Getting Started',       desc: 'Welcome to Mission Control — a quick tour of what it does and how to get the most out of it.' },
-  { id: 2, icon: '📝', title: 'Submitting a Task',     desc: 'How to write a clear task so the AI knows exactly what to do — no technical jargon needed.' },
-  { id: 3, icon: '💡', title: 'Task Ideas',            desc: 'Inspiration for what to ask for: blog posts, research reports, content calendars, and more.' },
-  { id: 4, icon: '📊', title: 'Understanding Status',  desc: 'What New, In Progress, and Built mean — and what to do when your task is ready.' },
-  { id: 5, icon: '✍️', title: 'Content Mode Guide',    desc: 'Tips for getting great results on blog posts, social captions, video scripts, and newsletters.' },
-  { id: 6, icon: '🔔', title: 'Notifications',         desc: 'Set up email or push alerts so you know the moment your task is done.' },
-  { id: 7, icon: '🙋', title: 'FAQ',                   desc: 'Common questions answered in plain English — no experience required.' },
-];
+function IdeasPanel({ onSendToQueue }) {
+  const [draft, setDraft] = useState('');
+  const [ideas, setIdeas] = useState(DUMMY_IDEAS);
 
-function DocsPanel({ mode }) {
-  const isDev = mode === 'dev';
-  const articles = isDev ? DEV_DOCS : CREATOR_DOCS;
-  const badge = isDev ? 'Developer' : 'Creator';
-  const badgeColor = isDev ? '#06B6D4' : '#10B981';
+  function saveIdea(andQueue = false) {
+    const trimmed = draft.trim();
+    if (!trimmed) return;
+    const now = new Date();
+    const savedAt = 'Saved ' + now.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+    const idea = { id: Date.now(), text: trimmed, savedAt };
+    setIdeas(prev => [idea, ...prev]);
+    setDraft('');
+    if (andQueue) onSendToQueue?.(trimmed);
+  }
+
+  function deleteIdea(id) {
+    setIdeas(prev => prev.filter(i => i.id !== id));
+  }
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
-      <div className="flex items-center gap-2 mb-4">
-        <p className="text-[#9CA3AF] text-[11px] font-medium tracking-widest uppercase m-0">
-          Docs
-        </p>
-        <span
-          className="rounded text-[10px] font-semibold px-2 py-0.5"
-          style={{ background: `${badgeColor}22`, color: badgeColor, border: `1px solid ${badgeColor}44` }}
-        >
-          {badge}
-        </span>
-      </div>
+      <PanelHeader title="Ideas" subtitle="Capture it now. Build it when you're ready." />
 
-      <div className="flex flex-col gap-2">
-        {articles.map(({ id, icon, title, desc }) => (
+      {/* Capture area */}
+      <div className="mb-4">
+        <textarea
+          value={draft}
+          onChange={e => setDraft(e.target.value)}
+          placeholder="What's on your mind? Describe something you want built, researched, or created..."
+          className="w-full outline-none resize-none rounded-lg text-[#F9FAFB] placeholder-[#4B5563] text-[14px] leading-relaxed"
+          style={{
+            background: '#111111', border: '1px solid #2A2A2A', padding: 14,
+            minHeight: 100, fontFamily: 'inherit', transition: 'border-color 0.15s',
+          }}
+          onFocus={e => (e.target.style.borderColor = '#06B6D4')}
+          onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
+        />
+        <div className="flex justify-end gap-2 mt-2">
           <button
-            key={id}
-            className="text-left w-full bg-[#111111] border border-[#2A2A2A] rounded-lg px-4 py-3 cursor-pointer transition-colors duration-150 hover:border-[#3A3A3A] select-none"
-            style={{ fontFamily: 'inherit' }}
+            onClick={() => saveIdea(false)}
+            className="text-[#9CA3AF] text-[13px] rounded-md cursor-pointer select-none border border-[#2A2A2A] bg-[#1A1A1A] transition-colors"
+            style={{ padding: '7px 14px', fontFamily: 'inherit' }}
             onMouseEnter={e => (e.currentTarget.style.borderColor = '#3A3A3A')}
             onMouseLeave={e => (e.currentTarget.style.borderColor = '#2A2A2A')}
           >
-            <div className="flex items-start gap-3">
-              <span className="text-base shrink-0 mt-0.5">{icon}</span>
-              <div className="min-w-0">
-                <p className="text-[#F9FAFB] text-[13px] font-medium m-0 mb-0.5">{title}</p>
-                <p className="text-[#9CA3AF] text-[11px] m-0 leading-relaxed">{desc}</p>
+            Save Idea
+          </button>
+          <button
+            onClick={() => saveIdea(true)}
+            className="font-semibold text-[#0A0A0A] text-[13px] rounded-md cursor-pointer select-none border-none transition-colors"
+            style={{ padding: '7px 14px', background: '#06B6D4', fontFamily: 'inherit' }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#0891B2')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#06B6D4')}
+          >
+            Save + Send to Queue
+          </button>
+        </div>
+      </div>
+
+      {/* Saved ideas */}
+      {ideas.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-2 text-center py-12">
+          <Lightbulb size={28} color="#2A2A2A" strokeWidth={1.5} />
+          <p className="text-[#4B5563] text-[13px] m-0">No ideas yet. What are you thinking about?</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {ideas.map(idea => (
+            <div key={idea.id} className="bg-[#111111] border border-[#2A2A2A] rounded-lg px-3.5 py-3">
+              <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0 mb-3">{idea.text}</p>
+              <div className="flex items-center justify-between">
+                <span className="text-[#9CA3AF] text-[11px]">{idea.savedAt}</span>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => onSendToQueue?.(idea.text)}
+                    className="text-[#06B6D4] text-[11px] bg-transparent border-none cursor-pointer select-none p-0 transition-opacity hover:opacity-70"
+                    style={{ fontFamily: 'inherit' }}
+                  >
+                    Send to Queue
+                  </button>
+                  <button
+                    onClick={() => deleteIdea(idea.id)}
+                    className="text-[#EF4444] text-[11px] bg-transparent border-none cursor-pointer select-none p-0 transition-opacity hover:opacity-70"
+                    style={{ fontFamily: 'inherit' }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── APPROVALS ──────────────────────────────────────────────────────────── */
+
+const DUMMY_APPROVALS = [
+  {
+    id: 1,
+    task: 'Add a voice transcription button to the brain dump screen',
+    built: 'Added a microphone button to the top-right of the Brain Dump screen. Clicking it starts recording. Speech is transcribed using the Web Speech API and inserted into the text field automatically. Works on Chrome and Safari.',
+    time: 'Feb 20, 10:43 AM',
+  },
+  {
+    id: 2,
+    task: 'Create a history tab showing all my past content ideas',
+    built: 'Created a new History tab in the main navigation. It pulls all previously saved ideas from local storage and displays them in a searchable, scrollable list sorted by date.',
+    time: 'Feb 20, 9:15 AM',
+  },
+];
+
+function ApprovalsPanel() {
+  const [items, setItems] = useState(DUMMY_APPROVALS);
+
+  function approve(id) { setItems(prev => prev.filter(a => a.id !== id)); }
+  function requestChanges(id) { setItems(prev => prev.filter(a => a.id !== id)); }
+
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
+      <PanelHeader
+        title="Approvals"
+        subtitle="Review what Mission Control built. Approve to ship it, or ask for changes."
+      />
+
+      {items.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-2 text-center py-16">
+          <CheckSquare size={28} color="#2A2A2A" strokeWidth={1.5} />
+          <p className="text-[#4B5563] text-[13px] m-0">You're all caught up — nothing waiting for review.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {items.map(item => (
+            <div key={item.id} className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4">
+              {/* Top row */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-[#9CA3AF] text-[11px] bg-[#1A1A1A] border border-[#2A2A2A] rounded px-2 py-0.5">✦ Feature</span>
+                  <span className="text-white text-[11px] font-semibold rounded px-2 py-0.5" style={{ background: '#F59E0B' }}>
+                    Awaiting Review
+                  </span>
+                </div>
+                <span className="text-[#9CA3AF] text-[11px]">{item.time}</span>
+              </div>
+
+              <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0 mb-3">{item.task}</p>
+
+              <div className="h-px bg-[#2A2A2A] mb-3" />
+
+              {/* What was built */}
+              <p className="text-[#9CA3AF] text-[10px] font-medium tracking-widest uppercase m-0 mb-2">What was built:</p>
+              <div className="rounded-md p-3 mb-4" style={{ background: '#0A0A0A', border: '1px solid #2A2A2A' }}>
+                <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0">{item.built}</p>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => approve(item.id)}
+                  className="text-white text-[13px] font-semibold rounded-md border-none cursor-pointer select-none transition-colors"
+                  style={{ background: '#10B981', padding: '7px 16px', fontFamily: 'inherit' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#059669')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#10B981')}
+                >
+                  ✓ Approve &amp; Ship
+                </button>
+                <button
+                  onClick={() => requestChanges(item.id)}
+                  className="text-[#9CA3AF] text-[13px] rounded-md cursor-pointer select-none border border-[#2A2A2A] bg-[#1A1A1A] transition-colors"
+                  style={{ padding: '7px 16px', fontFamily: 'inherit' }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = '#3A3A3A')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = '#2A2A2A')}
+                >
+                  Request Changes
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── OUTPUTS ────────────────────────────────────────────────────────────── */
+
+const OUTPUT_TYPE_COLORS = {
+  Code:     { bg: 'rgba(6,182,212,0.1)',   text: '#06B6D4',  border: 'rgba(6,182,212,0.2)'  },
+  Research: { bg: 'rgba(180,83,9,0.12)',   text: '#F59E0B',  border: 'rgba(245,158,11,0.2)' },
+  Content:  { bg: 'rgba(16,185,129,0.1)',  text: '#10B981',  border: 'rgba(16,185,129,0.2)' },
+  Docs:     { bg: 'rgba(139,92,246,0.1)',  text: '#8B5CF6',  border: 'rgba(139,92,246,0.2)' },
+};
+
+const DUMMY_OUTPUTS = [
+  { id: 1, type: 'Code',     date: 'Feb 20', title: 'History Tab Component',                      desc: 'React component for browsing saved content ideas' },
+  { id: 2, type: 'Research', date: 'Feb 19', title: 'Top Shopify Apps for Creators — Market Gap',  desc: '10 apps analyzed, 3 market gaps identified' },
+  { id: 3, type: 'Content',  date: 'Feb 18', title: 'Instagram Caption Pack — 7 posts',            desc: 'Captions for beat drop, studio session, collab announcement' },
+  { id: 4, type: 'Code',     date: 'Feb 17', title: 'Voice Transcription Feature',                 desc: 'Microphone button + Web Speech API integration' },
+  { id: 5, type: 'Docs',     date: 'Feb 16', title: 'Business Plan — Beat Selling Platform',       desc: 'Market analysis, revenue model, go-to-market strategy' },
+  { id: 6, type: 'Content',  date: 'Feb 15', title: 'Brand Copy — Landing Page',                   desc: 'Hero headline, subheadline, CTA, and about section' },
+];
+
+const OUTPUT_FILTERS = ['All', 'Code', 'Research', 'Content', 'Docs'];
+
+function OutputsPanel() {
+  const [search, setSearch] = useState('');
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const filtered = DUMMY_OUTPUTS.filter(o => {
+    const matchesFilter = activeFilter === 'All' || o.type === activeFilter;
+    const matchesSearch = !search || o.title.toLowerCase().includes(search.toLowerCase()) || o.desc.toLowerCase().includes(search.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
+      <PanelHeader title="Outputs" subtitle="Everything Mission Control has built or generated for you." />
+
+      {/* Search */}
+      <div className="relative mb-3">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4B5563]" />
+        <input
+          type="text"
+          placeholder="Search outputs..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full outline-none rounded-lg text-[#F9FAFB] text-[13px] placeholder-[#4B5563]"
+          style={{ background: '#111111', border: '1px solid #2A2A2A', padding: '10px 14px 10px 34px', fontFamily: 'inherit' }}
+          onFocus={e => (e.target.style.borderColor = '#06B6D4')}
+          onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
+        />
+      </div>
+
+      {/* Filter pills */}
+      <div className="flex gap-1.5 mb-4 flex-wrap">
+        {OUTPUT_FILTERS.map(f => (
+          <button
+            key={f}
+            onClick={() => setActiveFilter(f)}
+            className="border-none cursor-pointer select-none transition-all text-[11px] font-semibold"
+            style={{
+              borderRadius: 20,
+              padding: '4px 14px',
+              background: activeFilter === f ? '#06B6D4' : 'transparent',
+              color: activeFilter === f ? '#0A0A0A' : '#9CA3AF',
+              fontFamily: 'inherit',
+            }}
+          >
+            {f}
           </button>
         ))}
+      </div>
+
+      {/* Grid */}
+      {filtered.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-2 text-center py-12">
+          <FileText size={28} color="#2A2A2A" strokeWidth={1.5} />
+          <p className="text-[#4B5563] text-[13px] m-0">No outputs match your search.</p>
+        </div>
+      ) : (
+        <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
+          {filtered.map(output => {
+            const colors = OUTPUT_TYPE_COLORS[output.type];
+            return (
+              <div key={output.id} className="rounded-lg p-3.5 flex flex-col gap-1.5" style={{ background: '#111111', border: '1px solid #2A2A2A' }}>
+                <div className="flex items-center justify-between">
+                  <span
+                    className="text-[11px] font-semibold rounded px-2 py-0.5"
+                    style={{ background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}
+                  >
+                    {output.type}
+                  </span>
+                  <span className="text-[#9CA3AF] text-[11px]">{output.date}</span>
+                </div>
+                <p className="text-[#F9FAFB] text-[13px] font-medium m-0 mt-1">{output.title}</p>
+                <p className="text-[#9CA3AF] text-[12px] m-0 leading-relaxed" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {output.desc}
+                </p>
+                <div className="flex items-center gap-3 mt-1">
+                  <button className="text-[#06B6D4] text-[11px] bg-transparent border-none cursor-pointer p-0 flex items-center gap-1 select-none hover:opacity-70 transition-opacity" style={{ fontFamily: 'inherit' }}>
+                    <Download size={11} /> Download
+                  </button>
+                  <button className="text-[#9CA3AF] text-[11px] bg-transparent border-none cursor-pointer p-0 flex items-center gap-1 select-none hover:opacity-70 transition-opacity" style={{ fontFamily: 'inherit' }}>
+                    <Eye size={11} /> View
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── HISTORY ────────────────────────────────────────────────────────────── */
+
+const DUMMY_HISTORY = [
+  {
+    date: 'Feb 20, 2025',
+    entries: [
+      { id: 1, time: '10:43 AM', status: 'Built',     text: 'History tab with compose ideas' },
+      { id: 2, time: '9:15 AM',  status: 'Built',     text: 'Voice transcription button' },
+    ],
+  },
+  {
+    date: 'Feb 19, 2025',
+    entries: [
+      { id: 3, time: '4:30 PM', status: 'Generated', text: 'Shopify market research report' },
+      { id: 4, time: '2:00 PM', status: 'Built',     text: 'Dark mode toggle for settings' },
+    ],
+  },
+  {
+    date: 'Feb 18, 2025',
+    entries: [
+      { id: 5, time: '11:00 AM', status: 'Generated', text: 'Instagram caption pack' },
+    ],
+  },
+];
+
+const STATUS_BADGE_COLORS = {
+  Built:     { bg: '#10B981', text: '#fff' },
+  Generated: { bg: 'rgba(139,92,246,0.2)', text: '#8B5CF6' },
+};
+
+function HistoryPanel() {
+  const [search, setSearch] = useState('');
+
+  const groups = DUMMY_HISTORY.map(group => ({
+    ...group,
+    entries: group.entries.filter(e =>
+      !search || e.text.toLowerCase().includes(search.toLowerCase())
+    ),
+  })).filter(g => g.entries.length > 0);
+
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
+      <PanelHeader title="History" subtitle="Everything Mission Control has ever completed for you." />
+
+      {/* Search */}
+      <div className="relative mb-5">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4B5563]" />
+        <input
+          type="text"
+          placeholder="Search history..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full outline-none rounded-lg text-[#F9FAFB] text-[13px] placeholder-[#4B5563]"
+          style={{ background: '#111111', border: '1px solid #2A2A2A', padding: '10px 14px 10px 34px', fontFamily: 'inherit' }}
+          onFocus={e => (e.target.style.borderColor = '#06B6D4')}
+          onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
+        />
+      </div>
+
+      {groups.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-2 text-center py-12">
+          <Clock size={28} color="#2A2A2A" strokeWidth={1.5} />
+          <p className="text-[#4B5563] text-[13px] m-0">Nothing here yet — completed tasks will show up here.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-5">
+          {groups.map(group => (
+            <div key={group.date} className="flex gap-3">
+              {/* Timeline line */}
+              <div className="flex flex-col items-center shrink-0" style={{ width: 16 }}>
+                <div className="rounded-full shrink-0" style={{ width: 8, height: 8, background: '#06B6D4', marginTop: 2 }} />
+                <div className="flex-1 w-px mt-1" style={{ background: '#2A2A2A' }} />
+              </div>
+              {/* Content */}
+              <div className="flex-1 min-w-0 pb-2">
+                <p className="text-[#9CA3AF] text-[11px] font-medium tracking-widest uppercase m-0 mb-2">
+                  {group.date}
+                </p>
+                <div className="flex flex-col gap-2">
+                  {group.entries.map(entry => {
+                    const badge = STATUS_BADGE_COLORS[entry.status] || STATUS_BADGE_COLORS.Built;
+                    return (
+                      <div key={entry.id} className="rounded-lg p-3 flex flex-col gap-1.5" style={{ background: '#111111', border: '1px solid #2A2A2A' }}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-semibold rounded px-2 py-0.5" style={{ background: badge.bg, color: badge.text }}>
+                            {entry.status}
+                          </span>
+                          <span className="text-[#9CA3AF] text-[11px]">{entry.time}</span>
+                        </div>
+                        <p className="text-[#F9FAFB] text-[13px] m-0 leading-relaxed">{entry.text}</p>
+                        <button className="text-[#06B6D4] text-[11px] bg-transparent border-none cursor-pointer p-0 text-left select-none hover:opacity-70 transition-opacity" style={{ fontFamily: 'inherit' }}>
+                          View Output →
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── SETTINGS ───────────────────────────────────────────────────────────── */
+
+function Toggle({ on, onToggle }) {
+  return (
+    <button
+      onClick={onToggle}
+      className="relative shrink-0 rounded-full border-none cursor-pointer select-none transition-colors duration-150"
+      style={{ width: 36, height: 20, background: on ? '#06B6D4' : '#2A2A2A', padding: 0 }}
+    >
+      <span
+        className="absolute top-[3px] rounded-full bg-white transition-all duration-150"
+        style={{ width: 14, height: 14, left: on ? 18 : 3 }}
+      />
+    </button>
+  );
+}
+
+function SectionLabel({ children }) {
+  return (
+    <p className="text-[#9CA3AF] text-[10px] font-medium tracking-widest uppercase m-0 mb-3 mt-6 first:mt-0">
+      {children}
+    </p>
+  );
+}
+
+function SettingsPanel({ onSignOut }) {
+  const [mode, setMode] = useState(() => localStorage.getItem('mc_user_mode') || 'dev');
+  const [anthropicKey, setAnthropicKey] = useState('');
+  const [githubToken, setGithubToken] = useState('');
+  const [email, setEmail] = useState('');
+  const [notifications, setNotifications] = useState({ buildComplete: true, researchReady: true, weeklySummary: false });
+  const [showAnthropicKey, setShowAnthropicKey] = useState(false);
+  const [showGithubToken, setShowGithubToken] = useState(false);
+
+  function saveMode(m) {
+    setMode(m);
+    localStorage.setItem('mc_user_mode', m);
+  }
+
+  const inputStyle = {
+    background: '#0A0A0A', border: '1px solid #2A2A2A', borderRadius: 8,
+    padding: '10px 12px', color: '#F9FAFB', fontSize: 13, fontFamily: 'inherit',
+    width: '100%', outline: 'none', boxSizing: 'border-box',
+  };
+
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
+      <PanelHeader title="Settings" />
+
+      {/* ── Your Mode ── */}
+      <SectionLabel>Your Mode</SectionLabel>
+      <div className="flex gap-2 mb-2">
+        {[
+          { id: 'dev',     label: 'Dev Mode',     icon: '</>' },
+          { id: 'creator', label: 'Creator Mode',  icon: '✦'  },
+        ].map(({ id, label, icon }) => (
+          <button
+            key={id}
+            onClick={() => saveMode(id)}
+            className="flex-1 flex items-center justify-center gap-2 rounded-lg border-none cursor-pointer select-none text-[13px] font-semibold transition-all"
+            style={{
+              padding: '10px 20px',
+              background: mode === id ? '#06B6D4' : '#1A1A1A',
+              color: mode === id ? '#0A0A0A' : '#9CA3AF',
+              fontFamily: 'inherit',
+            }}
+          >
+            <span style={{ fontSize: 12 }}>{icon}</span> {label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── AI Keys ── */}
+      <SectionLabel>AI Keys</SectionLabel>
+      <p className="text-[#9CA3AF] text-[12px] m-0 mb-3">Your keys are stored locally on your device and never sent to our servers.</p>
+
+      <div className="flex flex-col gap-3 mb-1">
+        {/* Anthropic */}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-[#F9FAFB] text-[13px]">Anthropic API Key</label>
+            <a href="https://console.anthropic.com" target="_blank" rel="noreferrer" className="text-[#06B6D4] text-[11px] no-underline hover:underline">Get key →</a>
+          </div>
+          <div className="relative">
+            <input
+              type={showAnthropicKey ? 'text' : 'password'}
+              value={anthropicKey}
+              onChange={e => setAnthropicKey(e.target.value)}
+              placeholder="sk-ant-..."
+              style={{ ...inputStyle, paddingRight: 44 }}
+              onFocus={e => (e.target.style.borderColor = '#06B6D4')}
+              onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
+            />
+            <button onClick={() => setShowAnthropicKey(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#4B5563]" style={{ padding: 0 }}>
+              {showAnthropicKey ? <Eye size={14} /> : <Eye size={14} style={{ opacity: 0.4 }} />}
+            </button>
+          </div>
+        </div>
+
+        {/* GitHub token — dev mode only */}
+        {mode === 'dev' && (
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[#F9FAFB] text-[13px]">GitHub Token</label>
+              <a href="https://github.com/settings/tokens" target="_blank" rel="noreferrer" className="text-[#06B6D4] text-[11px] no-underline hover:underline">Create token →</a>
+            </div>
+            <div className="relative">
+              <input
+                type={showGithubToken ? 'text' : 'password'}
+                value={githubToken}
+                onChange={e => setGithubToken(e.target.value)}
+                placeholder="ghp_..."
+                style={{ ...inputStyle, paddingRight: 44 }}
+                onFocus={e => (e.target.style.borderColor = '#06B6D4')}
+                onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
+              />
+              <button onClick={() => setShowGithubToken(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-none text-[#4B5563]" style={{ padding: 0, cursor: 'pointer' }}>
+                {showGithubToken ? <Eye size={14} /> : <Eye size={14} style={{ opacity: 0.4 }} />}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <button
+        className="text-[#0A0A0A] font-semibold text-[13px] rounded-lg border-none cursor-pointer select-none transition-colors mt-3 mb-2"
+        style={{ background: '#06B6D4', padding: '10px 20px', fontFamily: 'inherit', width: 'fit-content' }}
+        onMouseEnter={e => (e.currentTarget.style.background = '#0891B2')}
+        onMouseLeave={e => (e.currentTarget.style.background = '#06B6D4')}
+      >
+        Save Keys
+      </button>
+
+      {/* ── Notifications ── */}
+      <SectionLabel>Notifications</SectionLabel>
+
+      <div className="flex flex-col gap-3 mb-3">
+        {[
+          { key: 'buildComplete',  label: 'Email me when a build completes' },
+          { key: 'researchReady',  label: 'Email me when research is ready' },
+          { key: 'weeklySummary',  label: 'Weekly summary of all outputs' },
+        ].map(({ key, label }) => (
+          <div key={key} className="flex items-center justify-between">
+            <span className="text-[#F9FAFB] text-[13px]">{label}</span>
+            <Toggle
+              on={notifications[key]}
+              onToggle={() => setNotifications(prev => ({ ...prev, [key]: !prev[key] }))}
+            />
+          </div>
+        ))}
+      </div>
+
+      <input
+        type="email"
+        placeholder="your@email.com"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        style={inputStyle}
+        onFocus={e => (e.target.style.borderColor = '#06B6D4')}
+        onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
+      />
+
+      {/* ── Account ── */}
+      <SectionLabel>Account</SectionLabel>
+      <p className="text-[#9CA3AF] text-[13px] m-0 mb-3">Signed in as test@missioncontrol.app</p>
+      <button
+        onClick={onSignOut}
+        className="text-[#EF4444] text-[13px] rounded-md cursor-pointer select-none bg-transparent transition-colors w-fit"
+        style={{ border: '1px solid #EF4444', padding: '7px 16px', fontFamily: 'inherit' }}
+        onMouseEnter={e => (e.currentTarget.style.background = 'rgba(239,68,68,0.08)')}
+        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+      >
+        Sign Out
+      </button>
+
+      {/* ── Pro ── */}
+      <SectionLabel>Mission Control Pro</SectionLabel>
+      <div className="rounded-xl p-4 mb-6" style={{ background: '#111111', border: '1px solid #06B6D4' }}>
+        <p className="text-[#9CA3AF] text-[13px] m-0 mb-4 leading-relaxed">
+          Unlock multi-repo support, team seats, approvals for teams, and priority builds.
+        </p>
+        <button
+          className="w-full text-[#0A0A0A] font-semibold text-[13px] rounded-lg border-none cursor-pointer select-none transition-colors"
+          style={{ background: '#06B6D4', padding: '10px 20px', fontFamily: 'inherit' }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#0891B2')}
+          onMouseLeave={e => (e.currentTarget.style.background = '#06B6D4')}
+        >
+          Upgrade for $199 →
+        </button>
       </div>
     </div>
   );
 }
 
 /* ─── NavPlaceholder ─────────────────────────────────────────────────────── */
-
-/* ─── People ─────────────────────────────────────────────────────────────── */
-
-const PEOPLE = [
-  { id: 1, name: 'Joe Biden',       role: '46th President of the United States', initials: 'JB', color: '#1D4ED8' },
-  { id: 2, name: 'Donald Trump',    role: '45th President of the United States', initials: 'DT', color: '#B45309' },
-  { id: 3, name: 'Barack Obama',    role: '44th President of the United States', initials: 'BO', color: '#059669' },
-  { id: 4, name: 'George W. Bush',  role: '43rd President of the United States', initials: 'GB', color: '#7C3AED' },
-  { id: 5, name: 'Bill Clinton',    role: '42nd President of the United States', initials: 'BC', color: '#DC2626' },
-];
-
-function PeoplePanel() {
-  return (
-    <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
-      <p className="text-[#9CA3AF] text-[11px] font-medium tracking-widest uppercase m-0 mb-3">
-        People · {PEOPLE.length}
-      </p>
-      <div className="flex flex-col gap-2">
-        {PEOPLE.map(person => (
-          <div
-            key={person.id}
-            className="flex items-center gap-3 bg-[#111111] border border-[#2A2A2A] rounded-lg px-4 py-3 cursor-pointer transition-colors duration-150 hover:border-[#3A3A3A]"
-          >
-            {/* Avatar */}
-            <div
-              className="flex items-center justify-center rounded-full shrink-0 text-white text-[12px] font-semibold select-none"
-              style={{ width: 36, height: 36, background: person.color }}
-            >
-              {person.initials}
-            </div>
-            {/* Info */}
-            <div className="flex flex-col min-w-0">
-              <span className="text-[#F9FAFB] text-[13px] font-medium truncate">{person.name}</span>
-              <span className="text-[#9CA3AF] text-[11px] truncate">{person.role}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function NavPlaceholder({ activeNav }) {
   const item = NAV_ITEMS.find(n => n.label === activeNav);
   const Icon = item?.Icon;
@@ -973,6 +1400,8 @@ export default function App() {
 
   function handleSignOut() {
     localStorage.removeItem('mc_onboarding_complete');
+    localStorage.removeItem('mc_tasks');
+    localStorage.removeItem('mc_user_mode');
     setOnboarded(false);
   }
 
@@ -984,7 +1413,6 @@ export default function App() {
 }
 
 function Dashboard({ onSignOut }) {
-  const userMode = localStorage.getItem('mc_user_mode') || 'dev';
   const [tasks, setTasks] = useState(() => {
     try {
       const saved = localStorage.getItem('mc_tasks');
@@ -994,7 +1422,7 @@ function Dashboard({ onSignOut }) {
     }
   });
   const [selected, setSelected] = useState(3);
-  const [activeNav, setActiveNav] = useState('Tasks');
+  const [activeNav, setActiveNav] = useState('Dashboard');
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'detail'
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -1052,7 +1480,7 @@ function Dashboard({ onSignOut }) {
       <div className="flex flex-1 overflow-hidden min-h-0">
         <LeftSidebar activeNav={activeNav} setActiveNav={setActiveNav} onSignOut={onSignOut} />
 
-        {activeNav === 'Tasks' ? (
+        {activeNav === 'Dashboard' ? (
           <>
             {/* Desktop: Kanban board */}
             <KanbanBoard
@@ -1077,10 +1505,21 @@ function Dashboard({ onSignOut }) {
               <BuildDetail task={selectedTask} onBuildThis={handleBuildThis} />
             </div>
           </>
-        ) : activeNav === 'People' ? (
-          <PeoplePanel />
-        ) : activeNav === 'Docs' ? (
-          <DocsPanel mode={userMode} />
+        ) : activeNav === 'Ideas' ? (
+          <IdeasPanel onSendToQueue={text => {
+            const now = new Date();
+            const time = now.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+            handleAddTask({ id: Date.now(), status: 'New', time, text });
+            setActiveNav('Dashboard');
+          }} />
+        ) : activeNav === 'Approvals' ? (
+          <ApprovalsPanel />
+        ) : activeNav === 'Outputs' ? (
+          <OutputsPanel />
+        ) : activeNav === 'History' ? (
+          <HistoryPanel />
+        ) : activeNav === 'Settings' ? (
+          <SettingsPanel onSignOut={onSignOut} />
         ) : (
           <NavPlaceholder activeNav={activeNav} />
         )}
