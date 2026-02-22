@@ -99,7 +99,7 @@ const BOTTOM_NAV_ITEMS = [
 const INITIAL_TASKS = [
   {
     id: 1,
-    status: 'New',
+    status: 'Backlog',
     time: 'Feb 20, 11:05 AM',
     text: "Make it so that I can access the content ideas from the content coach. so i can ask questions and content coach can go through all my saved ideas",
   },
@@ -117,16 +117,24 @@ const INITIAL_TASKS = [
   },
   {
     id: 4,
-    status: 'New',
+    status: 'Backlog',
     time: 'Feb 20, 9:38 AM',
     text: "I want to be able to see the make me a banger history",
   },
 ];
 
+// Which columns a user is allowed to drag INTO.
+// Anything not listed = AI-only, no user drag allowed.
+const ALLOWED_DROPS = {
+  'Backlog': ['New'],           // user promotes from backlog → queue
+  'New':     ['In Progress'],   // user kicks off the AI
+};
+
 const COLUMNS = [
-  { id: 'New',         label: 'New',         color: '#06B6D4' },
-  { id: 'In Progress', label: 'In Progress',  color: '#F97316' },
-  { id: 'Built',       label: 'Built',        color: '#10B981' },
+  { id: 'Backlog',     label: 'Backlog',      color: '#4B5563', hint: 'Drag to New when ready' },
+  { id: 'New',         label: 'New',          color: '#06B6D4', hint: 'Drag to In Progress to start AI' },
+  { id: 'In Progress', label: 'In Progress',  color: '#F97316', hint: 'AI is working on this' },
+  { id: 'Built',       label: 'Built',        color: '#10B981', hint: 'Done' },
 ];
 
 const LOG_ENTRIES = [
@@ -160,24 +168,17 @@ function GhostBtn({ children, onClick }) {
 }
 
 function StatusBadge({ status }) {
-  if (status === 'Built') {
-    return (
-      <span className="bg-[#10B981] text-white text-[11px] rounded px-[7px] py-0.5 leading-4 inline-block">
-        Built
-      </span>
-    );
-  }
-  if (status === 'In Progress') {
-    return (
-      <span className="bg-transparent border border-[#F97316] text-[#F97316] text-[11px] rounded px-[7px] py-0.5 leading-4 inline-block">
-        In Progress
-      </span>
-    );
-  }
+  if (status === 'Built') return (
+    <span className="bg-[#10B981] text-white text-[11px] rounded px-[7px] py-0.5 leading-4 inline-block">Built</span>
+  );
+  if (status === 'In Progress') return (
+    <span className="bg-transparent border border-[#F97316] text-[#F97316] text-[11px] rounded px-[7px] py-0.5 leading-4 inline-block">In Progress</span>
+  );
+  if (status === 'Backlog') return (
+    <span className="bg-transparent border border-[#4B5563] text-[#9CA3AF] text-[11px] rounded px-[7px] py-0.5 leading-4 inline-block">Backlog</span>
+  );
   return (
-    <span className="bg-transparent border border-[#06B6D4] text-[#06B6D4] text-[11px] rounded px-[7px] py-0.5 leading-4 inline-block">
-      New
-    </span>
+    <span className="bg-transparent border border-[#06B6D4] text-[#06B6D4] text-[11px] rounded px-[7px] py-0.5 leading-4 inline-block">New</span>
   );
 }
 
@@ -452,43 +453,99 @@ function CenterPanel({ tasks, selected, onTaskClick, onBuildThis }) {
 
 /* ─── KanbanCard ─────────────────────────────────────────────────────────── */
 
-function KanbanCard({ task, isSelected, onClick }) {
+function KanbanCard({ task, isSelected, onClick, isDragging, onDragStart, onDragEnd }) {
+  const isDraggable = !!ALLOWED_DROPS[task.status];
+
   return (
     <div
       onClick={onClick}
-      className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-3 cursor-pointer transition-colors duration-150 hover:border-[#3A3A3A]"
-      style={isSelected ? { borderLeft: '3px solid #06B6D4' } : {}}
+      draggable={isDraggable}
+      onDragStart={e => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('taskId', String(task.id));
+        e.dataTransfer.setData('fromStatus', task.status);
+        // slight delay so the ghost image renders before opacity drops
+        setTimeout(() => onDragStart?.({ taskId: task.id, fromStatus: task.status }), 0);
+      }}
+      onDragEnd={onDragEnd}
+      className="bg-[#111111] border rounded-lg p-3 transition-all duration-150 select-none"
+      style={{
+        borderColor: isSelected ? '#06B6D4' : '#2A2A2A',
+        borderLeftWidth: isSelected ? 3 : 1,
+        cursor: isDraggable ? 'grab' : 'pointer',
+        opacity: isDragging ? 0.35 : 1,
+        transform: isDragging ? 'scale(0.97)' : 'scale(1)',
+      }}
     >
-      {/* Task text — 2-line clamp */}
       <p
         className="text-[#F9FAFB] text-[12px] leading-relaxed m-0 mb-2"
         style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
       >
         {task.text}
       </p>
-
-      {/* Bottom row */}
       <div className="flex items-center justify-between">
         <span className="bg-[#1A1A1A] border border-[#2A2A2A] text-[#9CA3AF] text-[10px] rounded px-[6px] py-0.5 inline-flex items-center gap-1">
           ✦ Feature
         </span>
         <span className="text-[#9CA3AF] text-[10px]">{task.time}</span>
       </div>
+      {isDraggable && (
+        <p className="text-[#4B5563] text-[10px] m-0 mt-1.5">
+          {COLUMNS.find(c => c.id === task.status)?.hint}
+        </p>
+      )}
     </div>
   );
 }
 
 /* ─── KanbanColumn ───────────────────────────────────────────────────────── */
 
-function KanbanColumn({ column, tasks, selected, onTaskClick }) {
+function KanbanColumn({ column, tasks, selected, onTaskClick, dragInfo, onDropTask, onDragStart, onDragEnd }) {
+  const [isOver, setIsOver] = useState(false);
+  const isValidTarget = dragInfo && ALLOWED_DROPS[dragInfo.fromStatus]?.includes(column.id);
+
   return (
-    <div className="w-[240px] shrink-0 flex flex-col min-h-0">
-      {/* Colored top border */}
-      <div className="h-[3px] rounded-t" style={{ backgroundColor: column.color }} />
+    <div
+      className="w-[240px] shrink-0 flex flex-col min-h-0"
+      onDragOver={e => {
+        if (!isValidTarget) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        setIsOver(true);
+      }}
+      onDragLeave={e => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setIsOver(false);
+      }}
+      onDrop={e => {
+        if (!isValidTarget) return;
+        e.preventDefault();
+        setIsOver(false);
+        onDropTask?.(Number(e.dataTransfer.getData('taskId')), column.id);
+      }}
+    >
+      {/* Colored top accent */}
+      <div
+        className="h-[3px] rounded-t transition-all duration-150"
+        style={{
+          backgroundColor: isOver ? '#06B6D4' : column.color,
+          boxShadow: isOver ? '0 0 10px rgba(6,182,212,0.5)' : 'none',
+        }}
+      />
 
       {/* Column header */}
-      <div className="bg-[#111111] border border-t-0 border-[#2A2A2A] px-3 py-2 flex items-center justify-between mb-2">
-        <span className="text-[#F9FAFB] text-[12px] font-semibold">{column.label}</span>
+      <div
+        className="border border-t-0 px-3 py-2 flex items-center justify-between mb-2 transition-colors duration-150"
+        style={{
+          background: isOver ? 'rgba(6,182,212,0.06)' : '#111111',
+          borderColor: isOver ? '#06B6D4' : '#2A2A2A',
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-[#F9FAFB] text-[12px] font-semibold">{column.label}</span>
+          {isValidTarget && !isOver && (
+            <span className="text-[#06B6D4] text-[10px]">← drop here</span>
+          )}
+        </div>
         <span
           className="text-[#9CA3AF] text-[11px] bg-[#1A1A1A] border border-[#2A2A2A] rounded-full flex items-center justify-center"
           style={{ minWidth: 20, height: 20, paddingLeft: 5, paddingRight: 5 }}
@@ -497,11 +554,23 @@ function KanbanColumn({ column, tasks, selected, onTaskClick }) {
         </span>
       </div>
 
-      {/* Card list */}
-      <div className="flex flex-col gap-2 overflow-y-auto flex-1 scroll-touch pb-2">
+      {/* Card list — drop zone */}
+      <div
+        className="flex flex-col gap-2 overflow-y-auto flex-1 scroll-touch pb-2 rounded-lg transition-all duration-150"
+        style={{
+          outline: isOver ? '2px dashed rgba(6,182,212,0.45)' : '2px dashed transparent',
+          outlineOffset: 3,
+        }}
+      >
         {tasks.length === 0 ? (
-          <div className="border border-dashed border-[#2A2A2A] rounded-lg text-[#4B5563] text-[11px] text-center py-8">
-            No tasks
+          <div
+            className="border border-dashed rounded-lg text-[11px] text-center py-8 transition-colors duration-150"
+            style={{
+              borderColor: isOver ? '#06B6D4' : '#2A2A2A',
+              color: isOver ? '#06B6D4' : '#4B5563',
+            }}
+          >
+            {isOver ? '↓ Release to move here' : 'No tasks'}
           </div>
         ) : (
           tasks.map(task => (
@@ -510,6 +579,9 @@ function KanbanColumn({ column, tasks, selected, onTaskClick }) {
               task={task}
               isSelected={selected === task.id}
               onClick={() => onTaskClick(task.id)}
+              isDragging={dragInfo?.taskId === task.id}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
             />
           ))
         )}
@@ -520,12 +592,24 @@ function KanbanColumn({ column, tasks, selected, onTaskClick }) {
 
 /* ─── KanbanBoard (desktop only) ─────────────────────────────────────────── */
 
-function KanbanBoard({ tasks, selected, onTaskClick, onAddTask }) {
+function KanbanBoard({ tasks, selected, onTaskClick, onAddTask, onMoveTask }) {
+  const [dragInfo, setDragInfo] = useState(null); // { taskId, fromStatus } | null
+
   return (
-    <div className="hidden lg:flex lg:flex-col lg:flex-1 lg:overflow-hidden bg-[#0A0A0A]">
+    <div
+      className="hidden lg:flex lg:flex-col lg:flex-1 lg:overflow-hidden bg-[#0A0A0A]"
+      onDragEnd={() => setDragInfo(null)}
+    >
       {/* Header bar */}
       <div className="h-12 shrink-0 bg-[#111111] border-b border-[#2A2A2A] flex items-center justify-between px-4">
-        <span className="text-[#F9FAFB] text-sm font-semibold">Dashboard</span>
+        <div className="flex items-center gap-3">
+          <span className="text-[#F9FAFB] text-sm font-semibold">Dashboard</span>
+          {dragInfo && (
+            <span className="text-[#9CA3AF] text-[11px]">
+              Drop into <span className="text-[#06B6D4]">{ALLOWED_DROPS[dragInfo.fromStatus]?.[0]}</span>
+            </span>
+          )}
+        </div>
         <button
           onClick={onAddTask}
           className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-[12px] font-semibold rounded-md px-3 cursor-pointer flex items-center gap-1.5 transition-colors select-none"
@@ -544,9 +628,17 @@ function KanbanBoard({ tasks, selected, onTaskClick, onAddTask }) {
             tasks={tasks.filter(t => t.status === col.id)}
             selected={selected}
             onTaskClick={onTaskClick}
+            dragInfo={dragInfo}
+            onDragStart={setDragInfo}
+            onDragEnd={() => setDragInfo(null)}
+            onDropTask={(taskId, toStatus) => {
+              onMoveTask(taskId, toStatus);
+              setDragInfo(null);
+            }}
           />
         ))}
       </div>
+      <style>{`[draggable=true]{user-select:none}[draggable=true]:active{cursor:grabbing}`}</style>
     </div>
   );
 }
@@ -563,7 +655,7 @@ function AddTaskModal({ onClose, onAdd }) {
     const time = now.toLocaleString('en-US', {
       month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true,
     });
-    onAdd({ id: Date.now(), status: 'New', time, text: trimmed });
+    onAdd({ id: Date.now(), status: 'Backlog', time, text: trimmed });
     onClose();
   }
 
@@ -1252,7 +1344,7 @@ function QueuedDetail({ task, onBuildThis }) {
         </h2>
         <p className="text-[11px] text-[#9CA3AF] leading-relaxed m-0">
           <span className="font-semibold">Status: </span>
-          {task.status === 'In Progress' ? 'In progress — being built' : 'Queued — waiting to be built'}
+          {task.status === 'In Progress' ? 'In progress — the AI is working on this' : task.status === 'New' ? 'Queued — drag to In Progress to kick off the AI' : 'In your backlog — drag to New when ready'}
         </p>
       </div>
 
@@ -1442,6 +1534,10 @@ function Dashboard({ onSignOut }) {
     setTasks(prev => [task, ...prev]);
   }
 
+  function handleMoveTask(taskId, toStatus) {
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: toStatus } : t));
+  }
+
   useEffect(() => {
     localStorage.setItem('mc_tasks', JSON.stringify(tasks));
   }, [tasks]);
@@ -1488,6 +1584,7 @@ function Dashboard({ onSignOut }) {
               selected={selected}
               onTaskClick={handleTaskClick}
               onAddTask={() => setShowAddTask(true)}
+              onMoveTask={handleMoveTask}
             />
 
             {/* Mobile: flat task list */}
@@ -1509,7 +1606,7 @@ function Dashboard({ onSignOut }) {
           <IdeasPanel onSendToQueue={text => {
             const now = new Date();
             const time = now.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-            handleAddTask({ id: Date.now(), status: 'New', time, text });
+            handleAddTask({ id: Date.now(), status: 'Backlog', time, text });
             setActiveNav('Dashboard');
           }} />
         ) : activeNav === 'Approvals' ? (
