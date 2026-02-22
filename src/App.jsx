@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 import {
   LogOut, LayoutDashboard, Lightbulb, CheckSquare,
   FolderOpen, FileText, Clock, Settings,
@@ -409,7 +411,7 @@ function TaskCard({ task, isSelected, onClick, onBuildThis }) {
           </span>
           <StatusBadge status={task.status} />
         </div>
-        <span className="text-[#9CA3AF] text-[11px]">{task.time}</span>
+        <span className="text-[#9CA3AF] text-[11px]">{new Date(task.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}</span>
       </div>
 
       {/* Request text */}
@@ -487,7 +489,7 @@ function KanbanCard({ task, isSelected, onClick, isDragging, onDragStart, onDrag
         <span className="bg-[#1A1A1A] border border-[#2A2A2A] text-[#9CA3AF] text-[10px] rounded px-[6px] py-0.5 inline-flex items-center gap-1">
           ✦ Feature
         </span>
-        <span className="text-[#9CA3AF] text-[10px]">{task.time}</span>
+        <span className="text-[#9CA3AF] text-[10px]">{new Date(task.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}</span>
       </div>
       {isDraggable && (
         <p className="text-[#4B5563] text-[10px] m-0 mt-1.5">
@@ -651,11 +653,7 @@ function AddTaskModal({ onClose, onAdd }) {
   function handleSubmit() {
     const trimmed = text.trim();
     if (!trimmed) return;
-    const now = new Date();
-    const time = now.toLocaleString('en-US', {
-      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true,
-    });
-    onAdd({ id: Date.now(), status: 'Backlog', time, text: trimmed });
+    onAdd({ text: trimmed });
     onClose();
   }
 
@@ -718,21 +716,36 @@ const DUMMY_IDEAS = [
 
 function IdeasPanel({ onSendToQueue }) {
   const [draft, setDraft] = useState('');
-  const [ideas, setIdeas] = useState(DUMMY_IDEAS);
+  const [ideas, setIdeas] = useState([]);
 
-  function saveIdea(andQueue = false) {
+  useEffect(() => {
+    fetch(`${API_BASE}/api/ideas`)
+      .then(r => r.json())
+      .then(setIdeas)
+      .catch(() => {});
+  }, []);
+
+  async function saveIdea(andQueue = false) {
     const trimmed = draft.trim();
     if (!trimmed) return;
-    const now = new Date();
-    const savedAt = 'Saved ' + now.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-    const idea = { id: Date.now(), text: trimmed, savedAt };
-    setIdeas(prev => [idea, ...prev]);
-    setDraft('');
-    if (andQueue) onSendToQueue?.(trimmed);
+    try {
+      const r = await fetch(`${API_BASE}/api/ideas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: trimmed }),
+      });
+      const idea = await r.json();
+      setIdeas(prev => [idea, ...prev]);
+      setDraft('');
+      if (andQueue) onSendToQueue?.(trimmed);
+    } catch {}
   }
 
-  function deleteIdea(id) {
-    setIdeas(prev => prev.filter(i => i.id !== id));
+  async function deleteIdea(id) {
+    try {
+      await fetch(`${API_BASE}/api/ideas/${id}`, { method: 'DELETE' });
+      setIdeas(prev => prev.filter(i => i.id !== id));
+    } catch {}
   }
 
   return (
@@ -787,7 +800,7 @@ function IdeasPanel({ onSendToQueue }) {
             <div key={idea.id} className="bg-[#111111] border border-[#2A2A2A] rounded-lg px-3.5 py-3">
               <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0 mb-3">{idea.text}</p>
               <div className="flex items-center justify-between">
-                <span className="text-[#9CA3AF] text-[11px]">{idea.savedAt}</span>
+                <span className="text-[#9CA3AF] text-[11px]">{'Saved ' + new Date(idea.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}</span>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => onSendToQueue?.(idea.text)}
@@ -831,10 +844,28 @@ const DUMMY_APPROVALS = [
 ];
 
 function ApprovalsPanel() {
-  const [items, setItems] = useState(DUMMY_APPROVALS);
+  const [items, setItems] = useState([]);
 
-  function approve(id) { setItems(prev => prev.filter(a => a.id !== id)); }
-  function requestChanges(id) { setItems(prev => prev.filter(a => a.id !== id)); }
+  useEffect(() => {
+    fetch(`${API_BASE}/api/approvals`)
+      .then(r => r.json())
+      .then(setItems)
+      .catch(() => {});
+  }, []);
+
+  async function approve(id) {
+    try {
+      await fetch(`${API_BASE}/api/approvals/${id}/approve`, { method: 'POST' });
+      setItems(prev => prev.filter(a => a.id !== id));
+    } catch {}
+  }
+
+  async function requestChanges(id) {
+    try {
+      await fetch(`${API_BASE}/api/approvals/${id}/reject`, { method: 'POST' });
+      setItems(prev => prev.filter(a => a.id !== id));
+    } catch {}
+  }
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
@@ -860,17 +891,17 @@ function ApprovalsPanel() {
                     Awaiting Review
                   </span>
                 </div>
-                <span className="text-[#9CA3AF] text-[11px]">{item.time}</span>
+                <span className="text-[#9CA3AF] text-[11px]">{new Date(item.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}</span>
               </div>
 
-              <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0 mb-3">{item.task}</p>
+              <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0 mb-3">{item.task_text}</p>
 
               <div className="h-px bg-[#2A2A2A] mb-3" />
 
               {/* What was built */}
               <p className="text-[#9CA3AF] text-[10px] font-medium tracking-widest uppercase m-0 mb-2">What was built:</p>
               <div className="rounded-md p-3 mb-4" style={{ background: '#0A0A0A', border: '1px solid #2A2A2A' }}>
-                <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0">{item.built}</p>
+                <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0">{item.what_was_built}</p>
               </div>
 
               {/* Actions */}
@@ -925,10 +956,18 @@ const OUTPUT_FILTERS = ['All', 'Code', 'Research', 'Content', 'Docs'];
 function OutputsPanel() {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
+  const [allOutputs, setAllOutputs] = useState([]);
 
-  const filtered = DUMMY_OUTPUTS.filter(o => {
+  useEffect(() => {
+    fetch(`${API_BASE}/api/outputs`)
+      .then(r => r.json())
+      .then(setAllOutputs)
+      .catch(() => {});
+  }, []);
+
+  const filtered = allOutputs.filter(o => {
     const matchesFilter = activeFilter === 'All' || o.type === activeFilter;
-    const matchesSearch = !search || o.title.toLowerCase().includes(search.toLowerCase()) || o.desc.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = !search || o.title.toLowerCase().includes(search.toLowerCase()) || o.description.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -990,11 +1029,11 @@ function OutputsPanel() {
                   >
                     {output.type}
                   </span>
-                  <span className="text-[#9CA3AF] text-[11px]">{output.date}</span>
+                  <span className="text-[#9CA3AF] text-[11px]">{new Date(output.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric' })}</span>
                 </div>
                 <p className="text-[#F9FAFB] text-[13px] font-medium m-0 mt-1">{output.title}</p>
                 <p className="text-[#9CA3AF] text-[12px] m-0 leading-relaxed" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {output.desc}
+                  {output.description}
                 </p>
                 <div className="flex items-center gap-3 mt-1">
                   <button className="text-[#06B6D4] text-[11px] bg-transparent border-none cursor-pointer p-0 flex items-center gap-1 select-none hover:opacity-70 transition-opacity" style={{ fontFamily: 'inherit' }}>
@@ -1045,13 +1084,28 @@ const STATUS_BADGE_COLORS = {
 
 function HistoryPanel() {
   const [search, setSearch] = useState('');
+  const [rawHistory, setRawHistory] = useState([]);
 
-  const groups = DUMMY_HISTORY.map(group => ({
-    ...group,
-    entries: group.entries.filter(e =>
-      !search || e.text.toLowerCase().includes(search.toLowerCase())
-    ),
-  })).filter(g => g.entries.length > 0);
+  useEffect(() => {
+    fetch(`${API_BASE}/api/history`)
+      .then(r => r.json())
+      .then(setRawHistory)
+      .catch(() => {});
+  }, []);
+
+  // Group by date
+  const groups = (() => {
+    const filtered = rawHistory.filter(e =>
+      !search || e.event.toLowerCase().includes(search.toLowerCase())
+    );
+    const map = {};
+    for (const entry of filtered) {
+      const date = new Date(entry.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      if (!map[date]) map[date] = [];
+      map[date].push(entry);
+    }
+    return Object.entries(map).map(([date, entries]) => ({ date, entries }));
+  })();
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
@@ -1100,9 +1154,9 @@ function HistoryPanel() {
                           <span className="text-[11px] font-semibold rounded px-2 py-0.5" style={{ background: badge.bg, color: badge.text }}>
                             {entry.status}
                           </span>
-                          <span className="text-[#9CA3AF] text-[11px]">{entry.time}</span>
+                          <span className="text-[#9CA3AF] text-[11px]">{new Date(entry.created_at).toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</span>
                         </div>
-                        <p className="text-[#F9FAFB] text-[13px] m-0 leading-relaxed">{entry.text}</p>
+                        <p className="text-[#F9FAFB] text-[13px] m-0 leading-relaxed">{entry.event}</p>
                         <button className="text-[#06B6D4] text-[11px] bg-transparent border-none cursor-pointer p-0 text-left select-none hover:opacity-70 transition-opacity" style={{ fontFamily: 'inherit' }}>
                           View Output →
                         </button>
@@ -1505,19 +1559,53 @@ export default function App() {
 }
 
 function Dashboard({ onSignOut }) {
-  const [tasks, setTasks] = useState(() => {
-    try {
-      const saved = localStorage.getItem('mc_tasks');
-      return saved ? JSON.parse(saved) : INITIAL_TASKS;
-    } catch {
-      return INITIAL_TASKS;
-    }
-  });
-  const [selected, setSelected] = useState(3);
+  const [tasks, setTasks] = useState([]);
+  const [selected, setSelected] = useState(null);
   const [activeNav, setActiveNav] = useState('Dashboard');
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'detail'
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showAddTask, setShowAddTask] = useState(false);
+
+  // Load tasks on mount
+  useEffect(() => {
+    fetch(`${API_BASE}/api/tasks`)
+      .then(r => r.json())
+      .then(data => {
+        setTasks(data);
+        // Default select the first Built task or just the first task
+        const builtTask = data.find(t => t.status === 'Built');
+        setSelected(builtTask?.id ?? data[0]?.id ?? null);
+      })
+      .catch(() => {});
+  }, []);
+
+  // WebSocket for real-time task updates
+  useEffect(() => {
+    const wsUrl = API_BASE.replace(/^http/, 'ws') + '/ws';
+    let ws;
+    let retryTimeout;
+
+    function connect() {
+      ws = new WebSocket(wsUrl);
+      ws.onmessage = e => {
+        try {
+          const msg = JSON.parse(e.data);
+          if (msg.event === 'task_updated') {
+            setTasks(prev => prev.map(t => t.id === msg.task.id ? msg.task : t));
+          }
+        } catch {}
+      };
+      ws.onclose = () => {
+        retryTimeout = setTimeout(connect, 3000);
+      };
+    }
+
+    connect();
+    return () => {
+      clearTimeout(retryTimeout);
+      ws?.close();
+    };
+  }, []);
 
   const selectedTask = tasks.find(t => t.id === selected);
 
@@ -1526,21 +1614,41 @@ function Dashboard({ onSignOut }) {
     setMobileView('detail');
   }
 
-  function handleBuildThis(id) {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, status: 'In Progress' } : t));
+  async function handleBuildThis(id) {
+    try {
+      const r = await fetch(`${API_BASE}/api/tasks/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'In Progress' }),
+      });
+      const updated = await r.json();
+      setTasks(prev => prev.map(t => t.id === id ? updated : t));
+    } catch {}
   }
 
-  function handleAddTask(task) {
-    setTasks(prev => [task, ...prev]);
+  async function handleAddTask(taskData) {
+    try {
+      const r = await fetch(`${API_BASE}/api/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: taskData.text, status: 'Backlog' }),
+      });
+      const task = await r.json();
+      setTasks(prev => [task, ...prev]);
+    } catch {}
   }
 
-  function handleMoveTask(taskId, toStatus) {
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: toStatus } : t));
+  async function handleMoveTask(taskId, toStatus) {
+    try {
+      const r = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: toStatus }),
+      });
+      const updated = await r.json();
+      setTasks(prev => prev.map(t => t.id === taskId ? updated : t));
+    } catch {}
   }
-
-  useEffect(() => {
-    localStorage.setItem('mc_tasks', JSON.stringify(tasks));
-  }, [tasks]);
 
   // Mobile task list: show on mobile list-view only; always hidden on desktop
   const mobileCenterClass = [
@@ -1604,9 +1712,7 @@ function Dashboard({ onSignOut }) {
           </>
         ) : activeNav === 'Ideas' ? (
           <IdeasPanel onSendToQueue={text => {
-            const now = new Date();
-            const time = now.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-            handleAddTask({ id: Date.now(), status: 'Backlog', time, text });
+            handleAddTask({ text });
             setActiveNav('Dashboard');
           }} />
         ) : activeNav === 'Approvals' ? (

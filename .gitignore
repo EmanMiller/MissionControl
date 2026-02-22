@@ -38,7 +38,7 @@ yarn-error.*
 .claude/
 
 # Expo / React Native (orphaned — project migrated to Vite/React)
-app/
+/app/
 app.json
 babel.config.js
 components/
@@ -48,3 +48,5 @@ theme/
 dashboard.html
 backend/.venv/
 backend/*.db
+**/__pycache__/
+*.pyc
