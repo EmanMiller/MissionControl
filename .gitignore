@@ -36,3 +36,13 @@ yarn-error.*
 
 # Editor / AI tool configs (local only)
 .claude/
+
+# Expo / React Native (orphaned — project migrated to Vite/React)
+app/
+app.json
+babel.config.js
+components/
+theme/
+
+# Prototypes / scratch files
+dashboard.html
