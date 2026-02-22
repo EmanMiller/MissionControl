@@ -33,3 +33,6 @@ yarn-error.*
 
 # TypeScript
 *.tsbuildinfo
+
+# Editor / AI tool configs (local only)
+.claude/
