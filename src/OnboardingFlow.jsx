@@ -182,17 +182,109 @@ function GoogleIcon() {
   );
 }
 
-function SignInScreen({ onNext, onBack }) {
+function SignInScreen({ onNext, onBack, onSignedIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [appleLoading, setAppleLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
+  const githubPopupRef = useRef(null);
   const [toastMsg, setToastMsg] = useState('');
 
   function showToast(msg) {
     setToastMsg(msg);
     setTimeout(() => setToastMsg(''), 2500);
+  }
+
+  /* ── Apple Sign In with Apple ─────────────────────────────────────────── */
+
+  function loadAppleSDK() {
+    if (window.AppleID) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('Failed to load Apple SDK'));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function handleAppleClick() {
+    const clientId = import.meta.env.VITE_APPLE_CLIENT_ID;
+    if (!clientId || clientId === 'com.your.app.serviceid') {
+      setError('Apple sign-in is not configured yet. Add VITE_APPLE_CLIENT_ID to your .env.local.');
+      return;
+    }
+    setError('');
+    setAppleLoading(true);
+    try {
+      await loadAppleSDK();
+      window.AppleID.auth.init({
+        clientId,
+        scope: 'name email',
+        redirectURI: window.location.origin,
+        state: Math.random().toString(36).slice(2),
+        usePopup: true,
+      });
+      const data = await window.AppleID.auth.signIn();
+      // Decode the id_token JWT (base64url) to extract email
+      const [, rawPayload] = data.authorization.id_token.split('.');
+      const decoded = JSON.parse(atob(rawPayload.replace(/-/g, '+').replace(/_/g, '/')));
+      setAppleLoading(false);
+      onNext({ appleUser: { email: decoded.email, name: data.user?.name } });
+    } catch (err) {
+      setAppleLoading(false);
+      if (err?.error !== 'popup_closed_by_user') {
+        setError('Apple sign-in failed. Please try again or use another method.');
+      }
+    }
+  }
+
+  /* ── GitHub OAuth popup ───────────────────────────────────────────────── */
+
+  function handleGitHubClick() {
+    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+    if (!clientId || clientId === 'your_github_client_id') {
+      setError('GitHub sign-in is not configured yet. Add VITE_GITHUB_CLIENT_ID to your .env.local.');
+      return;
+    }
+    setError('');
+    setGithubLoading(true);
+
+    const state = Math.random().toString(36).slice(2);
+    sessionStorage.setItem('mc_github_state', state);
+
+    const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user:email&state=${state}`;
+    const popup = window.open(url, 'github-oauth', 'width=600,height=700,left=200,top=100');
+    githubPopupRef.current = popup;
+
+    function onMessage(event) {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type !== 'GITHUB_OAUTH') return;
+      const saved = sessionStorage.getItem('mc_github_state');
+      if (event.data.state !== saved) return;
+      cleanup();
+      sessionStorage.removeItem('mc_github_state');
+      setGithubLoading(false);
+      onNext({ githubCode: event.data.code });
+    }
+
+    function cleanup() {
+      window.removeEventListener('message', onMessage);
+      clearInterval(closedPoll);
+    }
+
+    window.addEventListener('message', onMessage);
+
+    // Detect manual popup close
+    const closedPoll = setInterval(() => {
+      if (popup.closed) {
+        cleanup();
+        setGithubLoading(false);
+      }
+    }, 500);
   }
 
   // Google OAuth — popup flow
@@ -229,7 +321,8 @@ function SignInScreen({ onNext, onBack }) {
   function handleSignIn() {
     if (email === 'test' && password === 'test') {
       setError('');
-      onNext();
+      localStorage.setItem(STORAGE_KEY, 'true');
+      onSignedIn();
     } else {
       setError('Invalid credentials. Try again.');
     }
@@ -283,26 +376,40 @@ function SignInScreen({ onNext, onBack }) {
           {googleLoading ? 'Connecting…' : 'Continue with Google'}
         </button>
 
-        {/* Apple — coming soon */}
+        {/* Apple */}
         <button
-          style={oauthBtnStyle}
-          onMouseEnter={e => (e.currentTarget.style.borderColor = '#3A3A3A')}
+          style={{
+            ...oauthBtnStyle,
+            opacity: appleLoading ? 0.7 : 1,
+            cursor: appleLoading ? 'not-allowed' : 'pointer',
+          }}
+          onMouseEnter={e => { if (!appleLoading) e.currentTarget.style.borderColor = '#3A3A3A'; }}
           onMouseLeave={e => (e.currentTarget.style.borderColor = '#2A2A2A')}
-          onClick={() => showToast('Coming soon')}
+          onClick={handleAppleClick}
+          disabled={appleLoading}
         >
-          <Apple size={18} />
-          Continue with Apple
+          {appleLoading
+            ? <Loader size={18} className="animate-spin" style={{ color: '#9CA3AF' }} />
+            : <Apple size={18} />}
+          {appleLoading ? 'Connecting…' : 'Continue with Apple'}
         </button>
 
-        {/* GitHub — coming soon */}
+        {/* GitHub */}
         <button
-          style={oauthBtnStyle}
-          onMouseEnter={e => (e.currentTarget.style.borderColor = '#3A3A3A')}
+          style={{
+            ...oauthBtnStyle,
+            opacity: githubLoading ? 0.7 : 1,
+            cursor: githubLoading ? 'not-allowed' : 'pointer',
+          }}
+          onMouseEnter={e => { if (!githubLoading) e.currentTarget.style.borderColor = '#3A3A3A'; }}
           onMouseLeave={e => (e.currentTarget.style.borderColor = '#2A2A2A')}
-          onClick={() => showToast('Coming soon')}
+          onClick={handleGitHubClick}
+          disabled={githubLoading}
         >
-          <Github size={18} />
-          Continue with GitHub
+          {githubLoading
+            ? <Loader size={18} className="animate-spin" style={{ color: '#9CA3AF' }} />
+            : <Github size={18} />}
+          {githubLoading ? 'Connecting…' : 'Continue with GitHub'}
         </button>
 
       </div>
@@ -811,8 +918,8 @@ export default function OnboardingFlow({ onComplete }) {
   const screen = (() => {
     switch (screenIndex) {
       case 0: return <SplashScreen onNext={() => advance()} />;
-      case 1: return <SignInScreen onNext={() => advance()} onBack={goBack} />;
-      case 2: return <ModeScreen onNext={data => advance(data)} onBack={goBack} />;
+      case 1: return <SignInScreen onNext={() => advance()} onBack={goBack} onSignedIn={onComplete} />;
+      case 2: return <ModeScreen onNext={data => { if (data?.mode) localStorage.setItem('mc_user_mode', data.mode); advance(data); }} onBack={goBack} />;
       case 3: return <KeysScreen onNext={data => advance(data)} onBack={goBack} />;
       case 4: return <WalkthroughScreen onNext={() => advance()} onBack={goBack} />;
       case 5: return <DoneScreen onComplete={onComplete} />;

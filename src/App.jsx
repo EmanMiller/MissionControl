@@ -686,6 +686,72 @@ function AddTaskModal({ onClose, onAdd }) {
   );
 }
 
+/* ─── Docs ───────────────────────────────────────────────────────────────── */
+
+const DEV_DOCS = [
+  { id: 1, icon: '⚡', title: 'Quick Start',        desc: 'Set up Mission Control and submit your first automated task in under 5 minutes.' },
+  { id: 2, icon: '📡', title: 'API Reference',       desc: 'Full REST API — endpoints, authentication headers, rate limits, and response schemas.' },
+  { id: 3, icon: '🔗', title: 'Webhooks',            desc: 'Configure push events for task status changes, build completions, and agent errors.' },
+  { id: 4, icon: '🐙', title: 'GitHub Integration',  desc: 'Connect your repos so the AI can create branches, push commits, and open pull requests.' },
+  { id: 5, icon: '⌨️', title: 'CLI Reference',       desc: 'All command-line flags and subcommands for the mc CLI tool.' },
+  { id: 6, icon: '🏗️', title: 'Architecture',        desc: 'How Mission Control orchestrates agents, sandboxes, and output pipelines end-to-end.' },
+  { id: 7, icon: '🔐', title: 'Auth & Security',     desc: 'OAuth flows, API key scopes, RBAC, and self-hosting security considerations.' },
+  { id: 8, icon: '🚢', title: 'Deploying',           desc: 'Self-host on your own infrastructure or connect to the managed cloud environment.' },
+];
+
+const CREATOR_DOCS = [
+  { id: 1, icon: '👋', title: 'Getting Started',       desc: 'Welcome to Mission Control — a quick tour of what it does and how to get the most out of it.' },
+  { id: 2, icon: '📝', title: 'Submitting a Task',     desc: 'How to write a clear task so the AI knows exactly what to do — no technical jargon needed.' },
+  { id: 3, icon: '💡', title: 'Task Ideas',            desc: 'Inspiration for what to ask for: blog posts, research reports, content calendars, and more.' },
+  { id: 4, icon: '📊', title: 'Understanding Status',  desc: 'What New, In Progress, and Built mean — and what to do when your task is ready.' },
+  { id: 5, icon: '✍️', title: 'Content Mode Guide',    desc: 'Tips for getting great results on blog posts, social captions, video scripts, and newsletters.' },
+  { id: 6, icon: '🔔', title: 'Notifications',         desc: 'Set up email or push alerts so you know the moment your task is done.' },
+  { id: 7, icon: '🙋', title: 'FAQ',                   desc: 'Common questions answered in plain English — no experience required.' },
+];
+
+function DocsPanel({ mode }) {
+  const isDev = mode === 'dev';
+  const articles = isDev ? DEV_DOCS : CREATOR_DOCS;
+  const badge = isDev ? 'Developer' : 'Creator';
+  const badgeColor = isDev ? '#06B6D4' : '#10B981';
+
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto scroll-touch bg-[#0A0A0A] p-4">
+      <div className="flex items-center gap-2 mb-4">
+        <p className="text-[#9CA3AF] text-[11px] font-medium tracking-widest uppercase m-0">
+          Docs
+        </p>
+        <span
+          className="rounded text-[10px] font-semibold px-2 py-0.5"
+          style={{ background: `${badgeColor}22`, color: badgeColor, border: `1px solid ${badgeColor}44` }}
+        >
+          {badge}
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        {articles.map(({ id, icon, title, desc }) => (
+          <button
+            key={id}
+            className="text-left w-full bg-[#111111] border border-[#2A2A2A] rounded-lg px-4 py-3 cursor-pointer transition-colors duration-150 hover:border-[#3A3A3A] select-none"
+            style={{ fontFamily: 'inherit' }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = '#3A3A3A')}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = '#2A2A2A')}
+          >
+            <div className="flex items-start gap-3">
+              <span className="text-base shrink-0 mt-0.5">{icon}</span>
+              <div className="min-w-0">
+                <p className="text-[#F9FAFB] text-[13px] font-medium m-0 mb-0.5">{title}</p>
+                <p className="text-[#9CA3AF] text-[11px] m-0 leading-relaxed">{desc}</p>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── NavPlaceholder ─────────────────────────────────────────────────────── */
 
 /* ─── People ─────────────────────────────────────────────────────────────── */
@@ -888,6 +954,19 @@ function BottomNav({ activeNav, setActiveNav }) {
 /* ─── App Root ───────────────────────────────────────────────────────────── */
 
 export default function App() {
+  // Handle GitHub OAuth popup callback — postMessage code to opener then close
+  const params = new URLSearchParams(window.location.search);
+  const _oauthCode = params.get('code');
+  const _oauthState = params.get('state');
+  if (window.opener && _oauthCode && _oauthState) {
+    window.opener.postMessage(
+      { type: 'GITHUB_OAUTH', code: _oauthCode, state: _oauthState },
+      window.location.origin
+    );
+    window.close();
+    return null;
+  }
+
   const [onboarded, setOnboarded] = useState(
     () => localStorage.getItem('mc_onboarding_complete') === 'true'
   );
@@ -905,6 +984,7 @@ export default function App() {
 }
 
 function Dashboard({ onSignOut }) {
+  const userMode = localStorage.getItem('mc_user_mode') || 'dev';
   const [tasks, setTasks] = useState(() => {
     try {
       const saved = localStorage.getItem('mc_tasks');
@@ -999,6 +1079,8 @@ function Dashboard({ onSignOut }) {
           </>
         ) : activeNav === 'People' ? (
           <PeoplePanel />
+        ) : activeNav === 'Docs' ? (
+          <DocsPanel mode={userMode} />
         ) : (
           <NavPlaceholder activeNav={activeNav} />
         )}
