@@ -1,0 +1,94 @@
+# Docker Compose for Mission Control Local Production Testing
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: mission-control-db
+    environment:
+      POSTGRES_DB: mission_control_production
+      POSTGRES_USER: mission_control
+      POSTGRES_PASSWORD: secure_local_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/production/postgresql-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mission_control -d mission_control_production"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mission-control-network
+
+  # Mission Control Application
+  app:
+    build: .
+    container_name: mission-control-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://mission_control:secure_local_password@postgres:5432/mission_control_production
+      DATABASE_SSL: "false"
+      JWT_SECRET: local_production_jwt_secret_change_for_real_production
+      SESSION_SECRET: local_production_session_secret
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000
+      RATE_LIMIT_MAX_REQUESTS: 1000
+      LOG_LEVEL: info
+    ports:
+      - "3001:3001"
+    volumes:
+      # Mount env file if it exists
+      - ./.env.production:/app/.env.production:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3001/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - mission-control-network
+
+  # Redis for session storage (optional, for scaling)
+  redis:
+    image: redis:7-alpine
+    container_name: mission-control-redis
+    command: redis-server --requirepass redis_password_change_for_production
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "redis_password_change_for_production", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mission-control-network
+
+  # Nginx reverse proxy (for production-like setup)
+  nginx:
+    image: nginx:alpine
+    container_name: mission-control-nginx
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    networks:
+      - mission-control-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  mission-control-network:
+    driver: bridge
