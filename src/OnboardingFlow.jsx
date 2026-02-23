@@ -118,17 +118,51 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             </div>
           )}
 
+          {/* Development Mode Bypass */}
+          {import.meta.env.VITE_DEV_MODE === 'true' && (
+            <div className="bg-[#06B6D4]/10 border border-[#06B6D4]/20 rounded-lg p-4">
+              <h3 className="text-[#06B6D4] text-sm font-semibold mb-2">Development Mode</h3>
+              <p className="text-[#9CA3AF] text-xs mb-3">OAuth providers need to be configured. Use demo mode for testing:</p>
+              <button
+                onClick={() => {
+                  onAuthSuccess({
+                    success: true,
+                    user: {
+                      id: 1,
+                      email: 'demo@missioncontrol.dev',
+                      name: 'Demo User',
+                      avatar_url: 'https://via.placeholder.com/64/06B6D4/FFFFFF?text=DU'
+                    }
+                  });
+                }}
+                disabled={isAuthenticating}
+                className="w-full bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+                style={{ fontFamily: 'inherit' }}
+              >
+                🚀 Continue as Demo User
+              </button>
+            </div>
+          )}
+
           {/* Google OAuth */}
-          <div className="flex flex-col">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => setError('Google Sign In failed')}
-              theme="filled_black"
-              shape="pill"
-              width="100%"
-              disabled={isAuthenticating}
-            />
-          </div>
+          {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
+            <div className="flex flex-col">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError('Google Sign In failed - check console for details')}
+                theme="filled_black"
+                shape="pill"
+                width="100%"
+                disabled={isAuthenticating}
+              />
+            </div>
+          ) : (
+            <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-lg p-3">
+              <p className="text-[#F59E0B] text-sm">
+                <strong>Google OAuth not configured.</strong> Add VITE_GOOGLE_CLIENT_ID to .env.local
+              </p>
+            </div>
+          )}
 
           {/* GitHub OAuth */}
           <button
@@ -163,6 +197,18 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             By signing in, you agree to connect your OpenClaw instance to Mission Control 
             for autonomous task processing and management.
           </p>
+          
+          {/* OAuth Setup Guide */}
+          <div className="mt-4 p-3 bg-[#111111] border border-[#2A2A2A] rounded-lg text-left">
+            <h4 className="text-[#F9FAFB] text-sm font-semibold mb-2">OAuth Setup Guide</h4>
+            <div className="space-y-2 text-xs text-[#9CA3AF]">
+              <p><strong>Google:</strong> Create OAuth client at <span className="text-[#06B6D4]">console.cloud.google.com</span></p>
+              <p><strong>Authorized origins:</strong> http://localhost:5173</p>
+              <p><strong>GitHub:</strong> Create OAuth app at <span className="text-[#06B6D4]">github.com/settings/developers</span></p>
+              <p><strong>Callback URL:</strong> http://localhost:5173</p>
+              <p className="text-[#F59E0B]">For now, use <strong>Demo Mode</strong> to test the system!</p>
+            </div>
+          </div>
         </div>
 
         {/* Loading Overlay */}
