@@ -50,6 +50,7 @@ function initializeDatabase() {
         description TEXT,
         status TEXT DEFAULT 'backlog',
         priority TEXT DEFAULT 'medium',
+        tags TEXT,
         openclaw_session_id TEXT,
         result_url TEXT,
         result_data TEXT,
@@ -108,12 +109,73 @@ function initializeDatabase() {
               if (err) console.error('Error creating index:', err.message);
               indexCompleted++;
               if (indexCompleted === indexes.length) {
-                console.log('Database initialized successfully');
-                resolve();
+                // Run migrations after indexes are created
+                runMigrations().then(() => {
+                  console.log('Database initialized successfully');
+                  resolve();
+                }).catch((err) => {
+                  console.error('Migration failed:', err);
+                  resolve(); // Don't fail initialization for migration issues
+                });
               }
             });
           });
         }
+      });
+    });
+  });
+}
+
+// Run database migrations
+function runMigrations() {
+  return new Promise((resolve) => {
+    const migrations = [
+      // Migration: Add tags column to tasks table
+      {
+        name: 'add_tags_to_tasks',
+        sql: 'ALTER TABLE tasks ADD COLUMN tags TEXT'
+      }
+    ];
+
+    let completed = 0;
+    
+    migrations.forEach((migration) => {
+      // Check if column already exists
+      db.get("PRAGMA table_info(tasks)", (err, result) => {
+        if (err) {
+          console.error(`Migration ${migration.name} check failed:`, err);
+          completed++;
+          if (completed === migrations.length) resolve();
+          return;
+        }
+
+        // Check if tags column exists
+        db.all("PRAGMA table_info(tasks)", (err, columns) => {
+          if (err) {
+            console.error(`Migration ${migration.name} failed:`, err);
+            completed++;
+            if (completed === migrations.length) resolve();
+            return;
+          }
+
+          const hasTagsColumn = columns.some(col => col.name === 'tags');
+          
+          if (!hasTagsColumn) {
+            db.run(migration.sql, (err) => {
+              if (err) {
+                console.error(`Migration ${migration.name} failed:`, err);
+              } else {
+                console.log(`Migration ${migration.name} completed successfully`);
+              }
+              completed++;
+              if (completed === migrations.length) resolve();
+            });
+          } else {
+            console.log(`Migration ${migration.name} already applied`);
+            completed++;
+            if (completed === migrations.length) resolve();
+          }
+        });
       });
     });
   });

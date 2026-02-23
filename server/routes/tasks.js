@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const userId = req.user.id;
   
-  db.all(`SELECT id, title, description, status, priority, 
+  db.all(`SELECT id, title, description, status, priority, tags,
                  result_url, created_at, updated_at, completed_at,
                  openclaw_session_id
           FROM tasks 
@@ -20,24 +20,44 @@ router.get('/', (req, res) => {
         return res.status(500).json({ error: 'Failed to fetch tasks' });
       }
       
-      res.json({ tasks });
+      // Parse tags for each task
+      const tasksWithParsedTags = tasks.map(task => {
+        let parsedTags = null;
+        if (task.tags) {
+          try {
+            parsedTags = JSON.parse(task.tags);
+          } catch (e) {
+            console.error('Error parsing task tags:', e);
+          }
+        }
+        
+        return {
+          ...task,
+          tags: parsedTags
+        };
+      });
+      
+      res.json({ tasks: tasksWithParsedTags });
     });
 });
 
 // Create new task
 router.post('/', async (req, res) => {
-  const { title, description, priority = 'medium' } = req.body;
+  const { title, description, priority = 'medium', status = 'backlog', tags } = req.body;
   const userId = req.user.id;
   
   if (!title || title.trim().length === 0) {
     return res.status(400).json({ error: 'Title is required' });
   }
 
+  // Convert tags array to JSON string for storage
+  const tagsJson = tags && Array.isArray(tags) ? JSON.stringify(tags) : null;
+
   try {
     // Insert task into database
-    db.run(`INSERT INTO tasks (user_id, title, description, priority, status) 
-            VALUES (?, ?, ?, ?, 'backlog')`,
-      [userId, title.trim(), description?.trim() || null, priority], 
+    db.run(`INSERT INTO tasks (user_id, title, description, priority, status, tags) 
+            VALUES (?, ?, ?, ?, ?, ?)`,
+      [userId, title.trim(), description?.trim() || null, priority, status, tagsJson], 
       function(err) {
         if (err) {
           console.error('Error creating task:', err);
@@ -53,6 +73,16 @@ router.post('/', async (req, res) => {
             return res.status(500).json({ error: 'Task created but failed to fetch details' });
           }
           
+          // Parse tags back to array
+          let parsedTags = null;
+          if (task.tags) {
+            try {
+              parsedTags = JSON.parse(task.tags);
+            } catch (e) {
+              console.error('Error parsing task tags:', e);
+            }
+          }
+          
           res.status(201).json({ 
             task: {
               id: task.id,
@@ -60,6 +90,7 @@ router.post('/', async (req, res) => {
               description: task.description,
               status: task.status,
               priority: task.priority,
+              tags: parsedTags,
               created_at: task.created_at,
               updated_at: task.updated_at
             }
