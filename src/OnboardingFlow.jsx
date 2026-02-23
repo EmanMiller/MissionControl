@@ -92,6 +92,25 @@ export default function OnboardingFlow({ onAuthSuccess }) {
     setError('Apple Sign In requires additional configuration. Please use Google or GitHub for now.');
   }
 
+  async function handleDemoLogin() {
+    setIsAuthenticating(true);
+    setError(null);
+    
+    try {
+      const response = await apiClient.loginWithDemo();
+      if (response.success) {
+        onAuthSuccess(response);
+      } else {
+        setError('Demo authentication failed');
+      }
+    } catch (error) {
+      console.error('Demo auth error:', error);
+      setError(error.message || 'Demo authentication failed. Please try again.');
+    } finally {
+      setIsAuthenticating(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-md sm:max-w-lg lg:max-w-xl">
@@ -118,21 +137,46 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             </div>
           )}
 
+          {/* Temporary Demo Mode for Testing */}
+          <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-lg p-4">
+            <h3 className="text-[#F59E0B] text-sm font-semibold mb-2">🧪 Development Testing</h3>
+            <p className="text-[#9CA3AF] text-xs mb-3">OAuth is configured but may need Google Cloud setup. Use demo mode for testing:</p>
+            <button
+              onClick={handleDemoLogin}
+              disabled={isAuthenticating}
+              className="w-full bg-[#F59E0B] hover:bg-[#D97706] text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+            >
+              {isAuthenticating ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                '🚀'
+              )}
+              {isAuthenticating ? 'Signing in...' : 'Demo Mode (Testing)'}
+            </button>
+          </div>
+
           {/* Google OAuth */}
           {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
-            <div className="flex flex-col">
+            <div className="w-full">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
-                onError={() => setError('Google Sign In failed - check console for details')}
+                onError={(error) => {
+                  console.error('Google Sign In error:', error);
+                  setError('Google Sign In failed. Please check your OAuth configuration or try GitHub.');
+                }}
                 theme="filled_black"
                 shape="pill"
-                width="100%"
+                size="large"
+                text="continue_with"
                 disabled={isAuthenticating}
+                useOneTap={false}
+                auto_select={false}
+                cancel_on_tap_outside={false}
               />
             </div>
           ) : (
             <button
-              onClick={handleGoogleSuccess}
+              onClick={() => setError('Google OAuth not configured. Please set VITE_GOOGLE_CLIENT_ID in .env.local')}
               disabled={isAuthenticating}
               className="w-full bg-[#4285F4] hover:bg-[#3367D6] border-none text-white text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
               style={{ fontFamily: 'inherit' }}
