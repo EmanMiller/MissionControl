@@ -115,65 +115,156 @@ function CustomModal({ isOpen, onClose, title, children }) {
 }
 
 function TeamOfficeView({ user }) {
-  const agents = [
-    { id: 1, name: 'Marcus', role: 'COO Agent', status: 'active', color: 0x06B6D4 },
-    { id: 2, name: 'Alex', role: 'Dev Agent', status: 'active', color: 0x8B5CF6 },
-    { id: 3, name: 'Emma', role: 'Research Agent', status: 'idle', color: 0x10B981 }
-  ];
+  const [agents, setAgents] = useState([]);
+  const [openclawConnected, setOpenclawConnected] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadAgentsAndStatus();
+  }, []);
+
+  async function loadAgentsAndStatus() {
+    try {
+      // Check if OpenClaw is configured and connected
+      const config = await apiClient.getOpenClawConfig();
+      const isConnected = config?.endpoint && config.endpoint !== '';
+      setOpenclawConnected(isConnected);
+
+      // Build dynamic agents array based on system state
+      const dynamicAgents = [];
+      
+      // Main Agent (OpenClaw instance) - shown when connected
+      if (isConnected) {
+        dynamicAgents.push({
+          id: 'main-agent',
+          name: 'OpenClaw',
+          role: 'Main Agent',
+          status: 'active',
+          color: 0x06B6D4, // Cyan - matches brand
+          type: 'main'
+        });
+      }
+
+      // TODO: Sync with OpenClaw to get additional spawned agents
+      // This would fetch from something like /api/agents/list-sessions
+      // For now, use placeholder that disappears if no OpenClaw
+      if (isConnected) {
+        // Example: Additional agents discovered from OpenClaw
+        // These would come from actual OpenClaw API call in production
+        dynamicAgents.push(
+          {
+            id: 'agent-1',
+            name: 'Codex',
+            role: 'Code Agent',
+            status: 'idle',
+            color: 0x8B5CF6, // Purple
+            type: 'sub'
+          }
+        );
+      }
+
+      setAgents(dynamicAgents);
+    } catch (error) {
+      console.error('Failed to load agents:', error);
+      setOpenclawConnected(false);
+      setAgents([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex-1 p-6 bg-[#0A0A0A] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-2 border-[#06B6D4] border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-[#9CA3AF]">Loading team...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-6 bg-[#0A0A0A]">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2">Team</h2>
-          <p className="text-[#9CA3AF] text-sm">Your AI agents and their current status</p>
+          <p className="text-[#9CA3AF] text-sm">
+            {openclawConnected 
+              ? 'Your AI agents and their current status'
+              : 'Connect OpenClaw to see your AI team'}
+          </p>
         </div>
 
         {/* 3D Voxel Office Scene */}
         <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6">
-          <VoxelOffice3D user={user} agents={agents} />
-          
-          {/* Character Name Labels */}
-          <div className="mt-4 flex justify-center gap-8 text-xs text-[#9CA3AF]">
-            <div className="text-center">
-              <div className="w-3 h-3 bg-[#F59E0B] rounded mx-auto mb-1"></div>
-              <span>{user.name}</span>
-            </div>
-            {agents.map((agent) => (
-              <div key={agent.id} className="text-center">
-                <div 
-                  className="w-3 h-3 rounded mx-auto mb-1"
-                  style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
-                ></div>
-                <span>{agent.name}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Agent Status Panel */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {agents.map((agent) => (
-              <div key={agent.id} className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <div 
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
-                  ></div>
-                  <h4 className="text-[#F9FAFB] font-medium">{agent.name}</h4>
-                  <span 
-                    className={`px-2 py-1 text-xs rounded-full ${
-                      agent.status === 'active' 
-                        ? 'bg-[#10B981]/20 text-[#10B981]' 
-                        : 'bg-[#6B7280]/20 text-[#6B7280]'
-                    }`}
-                  >
-                    {agent.status}
-                  </span>
+          {openclawConnected ? (
+            <>
+              <VoxelOffice3D user={user} agents={agents} />
+              
+              {/* Character Name Labels */}
+              <div className="mt-4 flex justify-center gap-8 text-xs text-[#9CA3AF]">
+                <div className="text-center">
+                  <div className="w-3 h-3 bg-[#F59E0B] rounded mx-auto mb-1"></div>
+                  <span>{user.name}</span>
+                  <p className="text-[#6B7280] text-[10px]">You</p>
                 </div>
-                <p className="text-[#9CA3AF] text-sm">{agent.role}</p>
+                {agents.map((agent) => (
+                  <div key={agent.id} className="text-center">
+                    <div 
+                      className="w-3 h-3 rounded mx-auto mb-1"
+                      style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
+                    ></div>
+                    <span>{agent.name}</span>
+                    <p className="text-[#6B7280] text-[10px]">{agent.type === 'main' ? 'Main Agent' : 'Agent'}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+
+              {/* Agent Status Panel */}
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {agents.map((agent) => (
+                  <div key={agent.id} className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div 
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
+                      ></div>
+                      <h4 className="text-[#F9FAFB] font-medium">{agent.name}</h4>
+                      <span 
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          agent.status === 'active' 
+                            ? 'bg-[#10B981]/20 text-[#10B981]' 
+                            : 'bg-[#6B7280]/20 text-[#6B7280]'
+                        }`}
+                      >
+                        {agent.status}
+                      </span>
+                    </div>
+                    <p className="text-[#9CA3AF] text-sm">{agent.role}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            /* Empty State - No OpenClaw Connected */
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-[#1A1A1A] rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Users size={32} className="text-[#6B7280]" />
+              </div>
+              <h3 className="text-[#F9FAFB] text-lg font-semibold mb-2">No agents yet</h3>
+              <p className="text-[#9CA3AF] text-sm mb-6 max-w-md mx-auto">
+                Connect your OpenClaw instance to see your AI team. Once connected, 
+                agents will appear here as they're spun up.
+              </p>
+              <button
+                onClick={() => window.location.href = '/settings'}
+                className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Connect OpenClaw
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

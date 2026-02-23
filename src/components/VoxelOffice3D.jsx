@@ -229,28 +229,74 @@ function createPhone(scene, x, y, z) {
 }
 
 function createCharacters(scene, user, agents) {
-  // Desk positions spread across the room
-  const deskPositions = [
-    { x: 0, z: -2 },      // Center front (user)
-    { x: -5, z: -2 },     // Left front (agent 1)
-    { x: 5, z: -2 },      // Right front (agent 2) 
-    { x: -5, z: 3 },      // Left back (agent 3)
-    { x: 5, z: 3 },       // Right back (agent 4)
-    { x: 0, z: 3 }        // Center back (agent 5)
-  ];
+  // Generate desk positions dynamically based on number of agents
+  // Layout: User center front, agents in semi-circle behind/beside
+  const deskPositions = generateDeskPositions(agents.length);
 
-  // Create desk and character for user
+  // Create desk and character for user (always at position 0)
   createDesk(scene, deskPositions[0].x, 0.5, deskPositions[0].z, 0x654321);
-  createVoxelCharacter(scene, deskPositions[0].x, 1, deskPositions[0].z + 1, 0xF59E0B, user.name);
+  createVoxelCharacter(scene, deskPositions[0].x, 1, deskPositions[0].z + 1, 0xF59E0B, user.name, 'active');
   
   // Create desk and character for each agent
   agents.forEach((agent, index) => {
     const pos = deskPositions[index + 1]; // Skip position 0 (user)
     if (pos) {
-      createDesk(scene, pos.x, 0.5, pos.z, 0x654321);
+      // Vary desk color slightly for visual variety
+      const deskColor = 0x654321 + (index * 0x111111); 
+      createDesk(scene, pos.x, 0.5, pos.z, deskColor);
       createVoxelCharacter(scene, pos.x, 1, pos.z + 1, agent.color, agent.name, agent.status);
     }
   });
+}
+
+// Dynamically generate desk positions based on number of agents
+function generateDeskPositions(agentCount) {
+  const positions = [{ x: 0, z: -2 }]; // User always center front
+  
+  // Start with 1 user position, add agents in semi-circle pattern
+  // Layout grows outward: start close, expand circle as needed
+  
+  if (agentCount === 0) {
+    return positions; // Just user
+  }
+  
+  if (agentCount === 1) {
+    // One agent - position to the side
+    positions.push({ x: -5, z: -2 });
+  } else if (agentCount === 2) {
+    // Two agents - one on each side
+    positions.push({ x: -5, z: -2 });
+    positions.push({ x: 5, z: -2 });
+  } else if (agentCount <= 4) {
+    // 3-4 agents: semi-circle behind and beside user
+    positions.push({ x: -5, z: -2 });
+    positions.push({ x: 5, z: -2 });
+    positions.push({ x: -5, z: 3 });
+    if (agentCount === 4) {
+      positions.push({ x: 5, z: 3 });
+    }
+  } else {
+    // 5+ agents: Expand outward in a larger pattern
+    const basePositions = [
+      { x: -5, z: -2 },
+      { x: 5, z: -2 },
+      { x: -5, z: 3 },
+      { x: 5, z: 3 },
+      { x: 0, z: 3 }
+    ];
+    positions.push(...basePositions);
+    
+    // For agents 6+, add to outer ring
+    for (let i = 5; i < agentCount; i++) {
+      const angle = ((i - 5) / (agentCount - 5)) * Math.PI; // Semi-circle
+      const radius = 6;
+      const x = -radius * Math.cos(angle); // Left side emphasis
+      const z = -2 + radius * Math.sin(angle) * 0.5;
+      positions.push({ x, z });
+    }
+  }
+  
+  return positions;
 }
 
 function createVoxelCharacter(scene, x, y, z, color, name, status = 'active') {
