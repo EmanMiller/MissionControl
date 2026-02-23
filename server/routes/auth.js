@@ -301,41 +301,7 @@ router.post('/verify', (req, res) => {
   }
 });
 
-// Temporary demo mode for development testing
-router.post('/demo', async (req, res) => {
-  try {
-    console.log('Demo authentication requested');
-    
-    // Create or find demo user
-    const demoUserData = {
-      email: 'demo@missioncontrol.dev',
-      name: 'Demo User',
-      avatar_url: 'https://api.dicebear.com/7.x/initials/svg?seed=Demo User',
-      provider: 'demo',
-      provider_id: 'demo-user-1'
-    };
-
-    const userId = await upsertUser(demoUserData);
-
-    // Generate JWT
-    const token = generateToken(userId);
-
-    res.json({
-      success: true,
-      token,
-      user: {
-        id: userId,
-        email: demoUserData.email,
-        name: demoUserData.name,
-        avatar_url: demoUserData.avatar_url
-      }
-    });
-
-  } catch (error) {
-    console.error('Demo authentication error:', error);
-    res.status(500).json({ error: 'Demo authentication failed' });
-  }
-});
+// Production OAuth only - demo mode removed
 
 // Logout endpoint (client-side mostly, but useful for cleanup)
 router.post('/logout', (req, res) => {

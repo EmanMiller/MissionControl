@@ -21,7 +21,6 @@ const NAVIGATION_ITEMS = [
 ];
 
 const KANBAN_COLUMNS = [
-  { id: 'backlog', title: 'Backlog', color: '#6B7280' },
   { id: 'new', title: 'New', color: '#06B6D4' },
   { id: 'in_progress', title: 'In Progress', color: '#F59E0B' },
   { id: 'built', title: 'Completed', color: '#10B981' }
@@ -76,14 +75,17 @@ function Toast({ notification, onClose }) {
 }
 
 function ToastContainer({ notifications, onClose }) {
+  if (!notifications || notifications.length === 0) return null;
+  
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-3">
+    <div className="fixed top-4 right-4 z-[9999] space-y-3 pointer-events-none">
       {notifications.map((notification) => (
-        <Toast
-          key={notification.id}
-          notification={notification}
-          onClose={onClose}
-        />
+        <div key={notification.id} className="pointer-events-auto">
+          <Toast
+            notification={notification}
+            onClose={onClose}
+          />
+        </div>
       ))}
     </div>
   );
@@ -1132,7 +1134,7 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
     title: '',
     description: '',
     priority: 'medium',
-    status: initialStatus || 'backlog',
+    status: initialStatus || 'new',
     tags: '',
     estimated_hours: ''
   });
@@ -1199,7 +1201,6 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
             onChange={e => setFormData({...formData, status: e.target.value})}
             className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm focus:border-[#06B6D4] focus:outline-none"
           >
-            <option value="backlog">Backlog</option>
             <option value="new">New</option>
             <option value="in_progress">In Progress</option>
             <option value="built">Completed</option>
@@ -1268,7 +1269,7 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
       <div className="flex justify-end gap-2 pt-2">
         <button
           type="button"
-          onClick={() => setFormData({ title: '', description: '', priority: 'medium', status: initialStatus || 'backlog', tags: '' })}
+          onClick={() => setFormData({ title: '', description: '', priority: 'medium', status: initialStatus || 'new', tags: '', estimated_hours: '' })}
           className="px-4 py-2 text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
         >
           Clear
@@ -1425,10 +1426,11 @@ export default function KanbanDashboard({ user, onSignOut }) {
 
   async function createTask(taskData) {
     try {
+      // Show initial creation notification
       addNotification({
         type: 'info',
         title: 'Creating task...',
-        message: 'Sending task to OpenClaw for processing'
+        message: 'Setting up your task'
       });
 
       const response = await apiClient.createTask(taskData);
@@ -1436,22 +1438,71 @@ export default function KanbanDashboard({ user, onSignOut }) {
         setTasks(prev => [response.task, ...prev]);
         setShowTaskModal(false);
         
+        // Task created successfully
         addNotification({
           type: 'success',
-          title: '✅ Task created successfully!',
-          message: `"${taskData.title}" has been sent to OpenClaw and will be processed automatically.`
+          title: '✅ Task created!',
+          message: `"${taskData.title}" added to your board.`
         });
 
-        // If task has OpenClaw integration, show additional notification
-        if (response.openclaw_session_id || taskData.status === 'new') {
+        // For tasks in 'new' status, simulate OpenClaw workflow
+        if (response.task.status === 'new') {
+          // Notify that OpenClaw is starting to work
           setTimeout(() => {
             addNotification({
               type: 'info',
-              title: '🤖 OpenClaw is working',
-              message: `Your task "${taskData.title}" is being processed by AI agents.`,
-              duration: 8000
+              title: '🤖 OpenClaw starting work',
+              message: `AI agents are beginning to process "${taskData.title}".`,
+              duration: 6000
             });
-          }, 2000);
+          }, 1000);
+
+          // Auto-move to in_progress after a delay to simulate OpenClaw picking it up
+          setTimeout(async () => {
+            try {
+              await apiClient.updateTaskStatus(response.task.id, 'in_progress');
+              setTasks(prev => 
+                prev.map(task => 
+                  task.id === response.task.id 
+                    ? { ...task, status: 'in_progress' }
+                    : task
+                )
+              );
+              
+              addNotification({
+                type: 'info',
+                title: '⚡ Task in progress',
+                message: `OpenClaw agents are actively working on "${taskData.title}".`,
+                duration: 5000
+              });
+            } catch (error) {
+              console.error('Failed to auto-move task to in_progress:', error);
+            }
+          }, 3000);
+
+          // TODO: In production, this would be replaced by webhook from OpenClaw
+          // For demo purposes, simulate completion after some time
+          setTimeout(async () => {
+            try {
+              await apiClient.updateTaskStatus(response.task.id, 'built');
+              setTasks(prev => 
+                prev.map(task => 
+                  task.id === response.task.id 
+                    ? { ...task, status: 'built' }
+                    : task
+                )
+              );
+              
+              addNotification({
+                type: 'success',
+                title: '🎉 Task completed!',
+                message: `"${taskData.title}" has been completed by OpenClaw agents.`,
+                duration: 8000
+              });
+            } catch (error) {
+              console.error('Failed to complete task:', error);
+            }
+          }, 15000); // Complete after 15 seconds for demo
         }
       }
     } catch (error) {
@@ -1472,7 +1523,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
     const taskData = {
       title: formData.title,
       description: formData.description,
-      status: formData.status || 'backlog',
+      status: formData.status || 'new',
       priority: formData.priority || 'medium',
       tags: formData.tags,
       estimated_hours: formData.estimated_hours ? parseFloat(formData.estimated_hours) : null

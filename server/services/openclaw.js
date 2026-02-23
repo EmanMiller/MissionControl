@@ -7,6 +7,11 @@ const DEFAULT_OPENCLAW_ENDPOINT = 'http://localhost:18789';
 
 export async function testOpenClawConnection(endpoint, token) {
   try {
+    // Validate URL format first
+    if (!endpoint || typeof endpoint !== 'string') {
+      throw new Error('Invalid endpoint URL');
+    }
+
     const headers = {};
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
@@ -17,16 +22,43 @@ export async function testOpenClawConnection(endpoint, token) {
       timeout: 10000 // 10 second timeout
     });
     
+    // Validate that this is actually an OpenClaw instance
+    // OpenClaw should return specific fields in its status response
+    if (!response.data) {
+      throw new Error('Invalid response from endpoint - not an OpenClaw instance');
+    }
+
+    // Check for OpenClaw-specific status indicators
+    const isOpenClaw = 
+      response.data.hasOwnProperty('status') && 
+      (response.data.version || response.data.service === 'openclaw' || response.data.name === 'OpenClaw');
+
+    if (!isOpenClaw) {
+      throw new Error('Endpoint is not a valid OpenClaw instance');
+    }
+    
     return {
       success: true,
       version: response.data.version || 'unknown',
-      status: response.data.status || 'unknown'
+      status: response.data.status || 'ok',
+      service: response.data.service || 'openclaw'
     };
   } catch (error) {
     console.error('OpenClaw connection test failed:', error.message);
+    
+    // Provide more helpful error messages
+    let errorMessage = error.message;
+    if (error.code === 'ECONNREFUSED') {
+      errorMessage = 'Connection refused - OpenClaw is not running at this URL';
+    } else if (error.code === 'ENOTFOUND') {
+      errorMessage = 'Host not found - please check the URL';
+    } else if (error.code === 'ETIMEDOUT') {
+      errorMessage = 'Connection timed out - OpenClaw may not be responding';
+    }
+    
     return {
       success: false,
-      error: error.message,
+      error: errorMessage,
       code: error.code
     };
   }
