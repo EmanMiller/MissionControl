@@ -92,24 +92,7 @@ export default function OnboardingFlow({ onAuthSuccess }) {
     setError('Apple Sign In requires additional configuration. Please use Google or GitHub for now.');
   }
 
-  async function handleDemoLogin() {
-    setIsAuthenticating(true);
-    setError(null);
-    
-    try {
-      const response = await apiClient.loginWithDemo();
-      if (response.success) {
-        onAuthSuccess(response);
-      } else {
-        setError('Demo authentication failed');
-      }
-    } catch (error) {
-      console.error('Demo auth error:', error);
-      setError(error.message || 'Demo authentication failed. Please try again.');
-    } finally {
-      setIsAuthenticating(false);
-    }
-  }
+  // Demo mode removed for production
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -137,23 +120,7 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             </div>
           )}
 
-          {/* Temporary Demo Mode for Testing */}
-          <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-lg p-4">
-            <h3 className="text-[#F59E0B] text-sm font-semibold mb-2">🧪 Development Testing</h3>
-            <p className="text-[#9CA3AF] text-xs mb-3">OAuth is configured but may need Google Cloud setup. Use demo mode for testing:</p>
-            <button
-              onClick={handleDemoLogin}
-              disabled={isAuthenticating}
-              className="w-full bg-[#F59E0B] hover:bg-[#D97706] text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-            >
-              {isAuthenticating ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                '🚀'
-              )}
-              {isAuthenticating ? 'Signing in...' : 'Demo Mode (Testing)'}
-            </button>
-          </div>
+          {/* Production OAuth only - no demo mode */}
 
           {/* Google OAuth */}
           {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
@@ -162,7 +129,7 @@ export default function OnboardingFlow({ onAuthSuccess }) {
                 onSuccess={handleGoogleSuccess}
                 onError={(error) => {
                   console.error('Google Sign In error:', error);
-                  setError('Google Sign In failed. Please check your OAuth configuration or try GitHub.');
+                  setError('Google Sign In failed. Please contact support if this issue persists.');
                 }}
                 theme="filled_black"
                 shape="pill"
@@ -175,19 +142,12 @@ export default function OnboardingFlow({ onAuthSuccess }) {
               />
             </div>
           ) : (
-            <button
-              onClick={() => setError('Google OAuth not configured. Please set VITE_GOOGLE_CLIENT_ID in .env.local')}
-              disabled={isAuthenticating}
-              className="w-full bg-[#4285F4] hover:bg-[#3367D6] border-none text-white text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
-              style={{ fontFamily: 'inherit' }}
-            >
-              {isAuthenticating ? (
-                <Loader2 size={18} className="animate-spin" />
-              ) : (
-                <GoogleIcon />
-              )}
-              Continue with Google
-            </button>
+            <div className="bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-lg p-4">
+              <h3 className="text-[#EF4444] text-sm font-semibold mb-2">OAuth Configuration Required</h3>
+              <p className="text-[#9CA3AF] text-xs">
+                Google authentication is not configured. Please contact your administrator to set up OAuth credentials.
+              </p>
+            </div>
           )}
 
           {/* GitHub OAuth */}
