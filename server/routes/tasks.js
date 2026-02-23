@@ -166,16 +166,17 @@ router.put('/:taskId/status', async (req, res) => {
           return res.status(404).json({ error: 'Task not found' });
         }
         
-        // If moving to "in_progress", try to send to OpenClaw (optional)
+        // If moving to "in_progress", require OpenClaw config; block and do not update task if missing
         if (status === 'in_progress' && task.status !== 'in_progress') {
-          // OpenClaw requires endpoint and token; block if token missing
-          if (req.user.openclaw_endpoint && !req.user.openclaw_token) {
+          const hasEndpoint = !!(req.user.openclaw_endpoint && req.user.openclaw_endpoint.trim());
+          const hasToken = !!(req.user.openclaw_token && req.user.openclaw_token.trim());
+          if (!hasEndpoint || !hasToken) {
             return res.status(403).json({
-              error: 'Authentication token required',
-              details: 'To send tasks to OpenClaw, set an Authentication Token in Settings. Add to ~/.openclaw/openclaw.json: "hooks": { "enabled": true, "token": "<same-token>" }.'
+              error: 'To run tasks in OpenClaw, add your OpenClaw endpoint and Authentication Token in Settings.',
+              details: 'Go to Settings → OpenClaw Integration, enter the endpoint and token, then Save. You can then move tasks to In Progress.'
             });
           }
-          // Check if OpenClaw is configured
+          // OpenClaw is configured; send task and update status
           if (req.user.openclaw_endpoint) {
             try {
               const sessionId = await sendTaskToOpenClaw(req.user, task);

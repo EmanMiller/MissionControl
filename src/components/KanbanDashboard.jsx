@@ -1414,7 +1414,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
       toast.success('Task updated');
     } catch (error) {
       console.error('Failed to update task status:', error);
-      toast.error('Failed to move task');
+      toast.error(error?.message || 'Failed to move task');
     }
   }
 
