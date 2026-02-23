@@ -97,46 +97,74 @@ router.put('/:taskId/status', async (req, res) => {
           return res.status(404).json({ error: 'Task not found' });
         }
         
-        // If moving to "in_progress", send to OpenClaw
+        // If moving to "in_progress", try to send to OpenClaw (optional)
         if (status === 'in_progress' && task.status !== 'in_progress') {
-          try {
-            const sessionId = await sendTaskToOpenClaw(req.user, task);
-            
-            // Update task with OpenClaw session ID
+          // Check if OpenClaw is configured
+          if (req.user.openclaw_endpoint) {
+            try {
+              const sessionId = await sendTaskToOpenClaw(req.user, task);
+              
+              // Update task with OpenClaw session ID
+              db.run(`UPDATE tasks SET 
+                       status = ?, openclaw_session_id = ?, updated_at = CURRENT_TIMESTAMP
+                       WHERE id = ?`,
+                [status, sessionId, taskId], (err) => {
+                  if (err) {
+                    console.error('Error updating task with OpenClaw session:', err);
+                    return res.status(500).json({ error: 'Failed to update task' });
+                  }
+                  
+                  res.json({ 
+                    task: {
+                      ...task,
+                      status,
+                      openclaw_session_id: sessionId,
+                      updated_at: new Date().toISOString()
+                    }
+                  });
+                });
+            } catch (openclawError) {
+              console.error('OpenClaw integration error:', openclawError);
+              
+              // Still update status to in_progress, but without OpenClaw session
+              // This allows the UI to work even if OpenClaw is misconfigured
+              db.run(`UPDATE tasks SET 
+                       status = ?, updated_at = CURRENT_TIMESTAMP
+                       WHERE id = ?`,
+                [status, taskId], (err) => {
+                  if (err) {
+                    console.error('Error updating task status:', err);
+                    return res.status(500).json({ error: 'Failed to update task status' });
+                  }
+                  
+                  res.json({ 
+                    task: {
+                      ...task,
+                      status,
+                      updated_at: new Date().toISOString()
+                    },
+                    warning: 'Task moved to in_progress, but OpenClaw integration failed'
+                  });
+                });
+            }
+          } else {
+            // No OpenClaw configured - just update status
             db.run(`UPDATE tasks SET 
-                     status = ?, openclaw_session_id = ?, updated_at = CURRENT_TIMESTAMP
+                     status = ?, updated_at = CURRENT_TIMESTAMP
                      WHERE id = ?`,
-              [status, sessionId, taskId], (err) => {
+              [status, taskId], (err) => {
                 if (err) {
-                  console.error('Error updating task with OpenClaw session:', err);
-                  return res.status(500).json({ error: 'Failed to update task' });
+                  console.error('Error updating task status:', err);
+                  return res.status(500).json({ error: 'Failed to update task status' });
                 }
                 
                 res.json({ 
                   task: {
                     ...task,
                     status,
-                    openclaw_session_id: sessionId,
                     updated_at: new Date().toISOString()
-                  }
-                });
-              });
-          } catch (openclawError) {
-            console.error('OpenClaw integration error:', openclawError);
-            
-            // Update status to failed
-            db.run(`UPDATE tasks SET 
-                     status = 'failed', updated_at = CURRENT_TIMESTAMP
-                     WHERE id = ?`,
-              [taskId], (err) => {
-                if (err) {
-                  console.error('Error updating failed task status:', err);
-                  return res.status(500).json({ error: 'Failed to update task status' });
-                }
-                
-                res.status(500).json({ 
-                  error: 'Failed to send task to OpenClaw',
-                  details: openclawError.message 
+                  },
+                  info: 'Task moved to in_progress. Configure OpenClaw for automated processing.'
                 });
               });
           }
