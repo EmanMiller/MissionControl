@@ -28,9 +28,10 @@ import './services/polling.js'; // Start polling service
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Security middleware
+// Security middleware (crossOriginOpenerPolicy: false so Google Sign-In popup can postMessage)
 app.use(helmet({
   crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: false,
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],

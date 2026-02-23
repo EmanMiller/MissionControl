@@ -12,7 +12,9 @@ function baseUrl(endpoint) {
 
 /** Webhook URL OpenClaw should POST when task is done (must be reachable from OpenClaw). */
 function getWebhookPublicUrl() {
-  return (process.env.PUBLIC_URL || 'http://localhost:3001').replace(/\/+$/, '');
+  if (process.env.PUBLIC_URL) return process.env.PUBLIC_URL.replace(/\/+$/, '');
+  const port = process.env.PORT || 3001;
+  return `http://localhost:${port}`;
 }
 
 /**
@@ -379,21 +381,23 @@ When you have completed this task, POST the result to ${webhookUrl} with the fol
 export function handleOpenClawWebhook(webhookData) {
   return new Promise((resolve, reject) => {
     try {
-      const { session_id, status, metadata, result } = webhookData;
+      // Accept both session_id and sessionId (camelCase)
+      const sessionId = webhookData.session_id ?? webhookData.sessionId;
+      const { status, metadata, result } = webhookData;
       
-      if (!session_id) {
+      if (!sessionId) {
         return reject(new Error('No session ID in webhook data'));
       }
       
-      // Find task by OpenClaw session ID
+      // Find task by OpenClaw session ID (we store hook:task-<id> for webhook runs)
       db.get('SELECT * FROM tasks WHERE openclaw_session_id = ?', 
-        [session_id], (err, task) => {
+        [String(sessionId).trim()], (err, task) => {
           if (err) {
             return reject(new Error(`Database error: ${err.message}`));
           }
           
           if (!task) {
-            console.log(`No task found for OpenClaw session ${session_id}`);
+            console.warn(`[OpenClaw webhook] No task found for session_id="${sessionId}". Ensure OpenClaw sends the exact session_id from the completion instruction (e.g. hook:task-123).`);
             return resolve(null);
           }
           

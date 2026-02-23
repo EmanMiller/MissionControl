@@ -312,6 +312,7 @@ function AddTaskModal({ isOpen, onClose, onSubmit }) {
 
 function SettingsPanel({ user, onSignOut }) {
   const [openClawConfig, setOpenClawConfig] = useState({ endpoint: '', token: '' });
+  const [tokenConfigured, setTokenConfigured] = useState(false); // true when API says token is already set
   const [testResult, setTestResult] = useState(null);
   const [isTesting, setIsTesting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -323,9 +324,11 @@ function SettingsPanel({ user, onSignOut }) {
   async function loadOpenClawConfig() {
     try {
       const config = await apiClient.getOpenClawConfig();
+      const isConfigured = config.token === '***CONFIGURED***';
+      setTokenConfigured(!!isConfigured);
       setOpenClawConfig({
         endpoint: config.endpoint || '',
-        token: config.token === '***CONFIGURED***' ? '' : (config.token || '')
+        token: isConfigured ? '' : (config.token || '')
       });
     } catch (error) {
       console.error('Failed to load OpenClaw config:', error);
@@ -344,7 +347,7 @@ function SettingsPanel({ user, onSignOut }) {
     try {
       const result = await apiClient.testOpenClawConnection(
         openClawConfig.endpoint, 
-        openClawConfig.token || null
+        openClawConfig.token?.trim() || (tokenConfigured ? '***CONFIGURED***' : null)
       );
       setTestResult(result);
     } catch (error) {
@@ -364,9 +367,10 @@ function SettingsPanel({ user, onSignOut }) {
     try {
       await apiClient.saveOpenClawConfig(
         openClawConfig.endpoint,
-        openClawConfig.token || null
+        openClawConfig.token?.trim() || (tokenConfigured ? '***CONFIGURED***' : null)
       );
       toast.success('OpenClaw configuration saved');
+      setTokenConfigured(true);
       setTestResult(null);
     } catch (error) {
       toast.error(error?.message || 'Failed to save configuration');
@@ -415,10 +419,13 @@ function SettingsPanel({ user, onSignOut }) {
                 type="password"
                 value={openClawConfig.token}
                 onChange={e => setOpenClawConfig({...openClawConfig, token: e.target.value})}
-                placeholder="Required; set hooks.token in ~/.openclaw/openclaw.json"
+                placeholder={tokenConfigured ? 'Token set — enter a new value to change' : 'Required; set hooks.token in ~/.openclaw/openclaw.json'}
                 className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors placeholder-[#4B5563]"
                 style={{ fontFamily: 'inherit' }}
               />
+              {tokenConfigured && !openClawConfig.token && (
+                <p className="text-[#10B981] text-xs mt-1 m-0">Token is saved. Re-enter only to change it.</p>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-3">
@@ -433,7 +440,7 @@ function SettingsPanel({ user, onSignOut }) {
               
               <button
                 onClick={saveConfig}
-                disabled={isSaving || !openClawConfig.endpoint || !openClawConfig.token?.trim()}
+                disabled={isSaving || !openClawConfig.endpoint || (!openClawConfig.token?.trim() && !tokenConfigured)}
                 className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold px-3 sm:px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
                 style={{ fontFamily: 'inherit' }}
               >
