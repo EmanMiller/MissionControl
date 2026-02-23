@@ -92,69 +92,29 @@ export default function OnboardingFlow({ onAuthSuccess }) {
     setError('Apple Sign In requires additional configuration. Please use Google or GitHub for now.');
   }
 
-  async function handleDemoLogin() {
-    setIsAuthenticating(true);
-    setError(null);
-    
-    try {
-      const response = await apiClient.loginWithDemo();
-      if (response.success) {
-        onAuthSuccess(response);
-      } else {
-        setError('Demo authentication failed');
-      }
-    } catch (error) {
-      console.error('Demo auth error:', error);
-      setError(error.message);
-    } finally {
-      setIsAuthenticating(false);
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-md sm:max-w-lg lg:max-w-xl">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-xl flex items-center justify-center">
-              <Zap size={24} className="text-white" />
+        <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+          <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-xl flex items-center justify-center">
+              <Zap size={24} className="text-white sm:w-7 sm:h-7 lg:w-8 lg:h-8" />
             </div>
           </div>
           
-          <h1 className="text-[#F9FAFB] text-2xl font-bold mb-2">Welcome to Mission Control</h1>
-          <p className="text-[#9CA3AF] text-sm leading-relaxed">
+          <h1 className="text-[#F9FAFB] text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3">Welcome to Mission Control</h1>
+          <p className="text-[#9CA3AF] text-sm sm:text-base lg:text-lg leading-relaxed px-2 sm:px-4">
             An autonomous network of AI agents that operates around the clock, 
             executing tasks and generating value continuously.
           </p>
         </div>
 
         {/* Authentication Options */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {error && (
-            <div className="bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-lg p-3 text-[#EF4444] text-sm">
+            <div className="bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-lg p-3 sm:p-4 text-[#EF4444] text-sm sm:text-base">
               {error}
-            </div>
-          )}
-
-          {/* Development Mode Bypass */}
-          {import.meta.env.VITE_DEV_MODE === 'true' && (
-            <div className="bg-[#06B6D4]/10 border border-[#06B6D4]/20 rounded-lg p-4">
-              <h3 className="text-[#06B6D4] text-sm font-semibold mb-2">Development Mode</h3>
-              <p className="text-[#9CA3AF] text-xs mb-3">OAuth providers need to be configured. Use demo mode for testing:</p>
-              <button
-                onClick={handleDemoLogin}
-                disabled={isAuthenticating}
-                className="w-full bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
-                style={{ fontFamily: 'inherit' }}
-              >
-                {isAuthenticating ? (
-                  <Loader2 size={18} className="animate-spin" />
-                ) : (
-                  '🚀'
-                )}
-                {isAuthenticating ? 'Authenticating...' : 'Continue as Demo User'}
-              </button>
             </div>
           )}
 
@@ -171,18 +131,26 @@ export default function OnboardingFlow({ onAuthSuccess }) {
               />
             </div>
           ) : (
-            <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-lg p-3">
-              <p className="text-[#F59E0B] text-sm">
-                <strong>Google OAuth not configured.</strong> Add VITE_GOOGLE_CLIENT_ID to .env.local
-              </p>
-            </div>
+            <button
+              onClick={handleGoogleSuccess}
+              disabled={isAuthenticating}
+              className="w-full bg-[#4285F4] hover:bg-[#3367D6] border-none text-white text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+              style={{ fontFamily: 'inherit' }}
+            >
+              {isAuthenticating ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <GoogleIcon />
+              )}
+              Continue with Google
+            </button>
           )}
 
           {/* GitHub OAuth */}
           <button
             onClick={handleGitHubLogin}
             disabled={isAuthenticating}
-            className="w-full bg-[#24292F] hover:bg-[#32383F] border-none text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+            className="w-full bg-[#24292F] hover:bg-[#32383F] border-none text-white text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
             style={{ fontFamily: 'inherit' }}
           >
             {isAuthenticating ? (
@@ -197,7 +165,7 @@ export default function OnboardingFlow({ onAuthSuccess }) {
           <button
             onClick={handleAppleLogin}
             disabled={isAuthenticating}
-            className="w-full bg-[#000000] hover:bg-[#1D1D1F] border border-[#2A2A2A] text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+            className="w-full bg-[#000000] hover:bg-[#1D1D1F] border border-[#2A2A2A] text-white text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
             style={{ fontFamily: 'inherit' }}
           >
             <Apple size={18} />
@@ -206,31 +174,37 @@ export default function OnboardingFlow({ onAuthSuccess }) {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-[#6B7280] text-xs leading-relaxed">
+        <div className="text-center mt-6 sm:mt-8">
+          <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed px-2">
             By signing in, you agree to connect your OpenClaw instance to Mission Control 
             for autonomous task processing and management.
           </p>
           
-          {/* OAuth Setup Guide */}
-          <div className="mt-4 p-3 bg-[#111111] border border-[#2A2A2A] rounded-lg text-left">
+          {/* OAuth Setup Guide - Hidden on mobile to save space */}
+          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-[#111111] border border-[#2A2A2A] rounded-lg text-left hidden sm:block">
             <h4 className="text-[#F9FAFB] text-sm font-semibold mb-2">OAuth Setup Guide</h4>
             <div className="space-y-2 text-xs text-[#9CA3AF]">
               <p><strong>Google:</strong> Create OAuth client at <span className="text-[#06B6D4]">console.cloud.google.com</span></p>
               <p><strong>Authorized origins:</strong> http://localhost:5173</p>
               <p><strong>GitHub:</strong> Create OAuth app at <span className="text-[#06B6D4]">github.com/settings/developers</span></p>
               <p><strong>Callback URL:</strong> http://localhost:5173</p>
-              <p className="text-[#F59E0B]">For now, use <strong>Demo Mode</strong> to test the system!</p>
             </div>
+          </div>
+
+          {/* Simplified mobile setup hint */}
+          <div className="mt-4 p-3 bg-[#111111] border border-[#2A2A2A] rounded-lg text-center sm:hidden">
+            <p className="text-[#9CA3AF] text-xs">
+              Need help setting up OAuth? <span className="text-[#06B6D4]">View setup guide on desktop</span>
+            </p>
           </div>
         </div>
 
         {/* Loading Overlay */}
         {isAuthenticating && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 flex items-center gap-3">
+            <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 flex items-center gap-3 mx-4">
               <Loader2 size={20} className="animate-spin text-[#06B6D4]" />
-              <span className="text-[#F9FAFB] text-sm">Authenticating...</span>
+              <span className="text-[#F9FAFB] text-sm sm:text-base">Authenticating...</span>
             </div>
           </div>
         )}

@@ -300,43 +300,7 @@ router.post('/verify', (req, res) => {
   }
 });
 
-// Demo mode authentication (for development/testing)
-router.post('/demo', async (req, res) => {
-  try {
-    if (process.env.NODE_ENV === 'production') {
-      return res.status(403).json({ error: 'Demo mode not available in production' });
-    }
-
-    // Create or find demo user
-    const demoUserData = {
-      email: 'demo@missioncontrol.dev',
-      name: 'Demo User',
-      avatar_url: 'https://via.placeholder.com/64/06B6D4/FFFFFF?text=DU',
-      provider: 'demo',
-      provider_id: 'demo-user-1'
-    };
-
-    const userId = await upsertUser(demoUserData);
-
-    // Generate JWT
-    const token = generateToken(userId);
-
-    res.json({
-      success: true,
-      token,
-      user: {
-        id: userId,
-        email: demoUserData.email,
-        name: demoUserData.name,
-        avatar_url: demoUserData.avatar_url
-      }
-    });
-
-  } catch (error) {
-    console.error('Demo authentication error:', error);
-    res.status(500).json({ error: 'Demo authentication failed' });
-  }
-});
+// Removed demo mode - production OAuth only
 
 // Logout endpoint (client-side mostly, but useful for cleanup)
 router.post('/logout', (req, res) => {
