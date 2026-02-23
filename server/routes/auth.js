@@ -301,7 +301,32 @@ router.post('/verify', (req, res) => {
   }
 });
 
-// Production OAuth only - demo mode removed
+// Demo auth for development/E2E only (no OAuth)
+const allowDemoAuth = process.env.ALLOW_DEMO_AUTH === '1' || process.env.NODE_ENV !== 'production';
+if (allowDemoAuth) {
+  router.post('/demo', async (req, res) => {
+    try {
+      const userId = await upsertUser({
+        email: 'demo@missioncontrol.local',
+        name: 'Demo User',
+        avatar_url: null,
+        provider: 'demo',
+        provider_id: 'demo-1'
+      });
+      const token = generateToken(userId);
+      const user = await new Promise((resolve, reject) => {
+        db.get('SELECT id, email, name, avatar_url FROM users WHERE id = ?', [userId], (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        });
+      });
+      res.json({ success: true, token, user: { id: user.id, email: user.email, name: user.name, avatar_url: user.avatar_url } });
+    } catch (error) {
+      console.error('Demo auth error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+}
 
 // Logout endpoint (client-side mostly, but useful for cleanup)
 router.post('/logout', (req, res) => {

@@ -26,13 +26,22 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# Local env
+# Local env and secrets (never commit)
 .env
 .env.local
 .env.*.local
 server/.env
 server/.env.local
-server/mission-control.db
+server/.env.development
+server/.env.staging
+server/.env.production
+*.db
+server/*.db
+
+# Build / output
+dist/
+build/
+web-build/
 
 # TypeScript
 *.tsbuildinfo
@@ -49,8 +58,15 @@ theme/
 
 # Prototypes / scratch files
 dashboard.html
+
 # Environment files (contain secrets)
 .env.local
 server/.env
 server/.env.development
 server/.env.staging
+
+# QA and testing files
+QA_REPORT.md
+
+# Other project / local
+backend/

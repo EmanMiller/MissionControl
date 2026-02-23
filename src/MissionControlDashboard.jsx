@@ -6,13 +6,13 @@ import apiClient from './services/api.js';
 
 function MetricCard({ title, value, icon: Icon, color = '#06B6D4' }) {
   return (
-    <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-[#9CA3AF] text-xs m-0 mb-1">{title}</p>
-          <p className="text-[#F9FAFB] text-xl font-bold m-0" style={{ color }}>{value}</p>
+    <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-3 sm:p-4 min-w-0">
+      <div className="flex items-center justify-between gap-2 min-w-0">
+        <div className="min-w-0 flex-1">
+          <p className="text-[#9CA3AF] text-[10px] sm:text-xs m-0 mb-1 truncate">{title}</p>
+          <p className="text-[#F9FAFB] text-base sm:text-xl font-bold m-0 truncate" style={{ color }}>{value}</p>
         </div>
-        <Icon size={24} style={{ color: color, opacity: 0.7 }} />
+        <Icon size={20} className="sm:w-6 sm:h-6 flex-shrink-0" style={{ color: color, opacity: 0.7 }} />
       </div>
     </div>
   );
@@ -74,17 +74,17 @@ export default function MissionControlDashboard({ tasks }) {
   const taskStats = dashboardData?.task_stats || {};
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto bg-[#0A0A0A] p-4">
+    <div className="flex flex-col h-full overflow-y-auto overflow-x-hidden bg-[#0A0A0A] p-3 sm:p-4 min-w-0">
       {/* Mission Statement Header */}
-      <div className="mb-6">
-        <div className="bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] p-6 rounded-xl">
-          <div className="flex items-center gap-3 mb-4">
-            <Zap size={24} className="text-white" />
-            <h1 className="text-white text-xl font-bold m-0">Mission Control</h1>
+      <div className="mb-4 sm:mb-6">
+        <div className="bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] p-4 sm:p-6 rounded-xl min-w-0">
+          <div className="flex items-center gap-3 mb-3 sm:mb-4 min-w-0">
+            <Zap size={24} className="text-white flex-shrink-0" />
+            <h1 className="text-white text-lg sm:text-xl font-bold m-0 truncate">Mission Control</h1>
           </div>
-          <div className="bg-black/20 backdrop-blur rounded-lg p-4">
-            <h2 className="text-white text-lg font-semibold mb-2 m-0">Mission Statement</h2>
-            <p className="text-white/90 text-sm leading-relaxed m-0">
+          <div className="bg-black/20 backdrop-blur rounded-lg p-3 sm:p-4 min-w-0">
+            <h2 className="text-white text-base sm:text-lg font-semibold mb-2 m-0">Mission Statement</h2>
+            <p className="text-white/90 text-xs sm:text-sm leading-relaxed m-0">
               An autonomous network of AI agents that operates around the clock, 
               executing tasks and generating value continuously at a highly cost-efficient rate.
             </p>
@@ -93,7 +93,7 @@ export default function MissionControlDashboard({ tasks }) {
       </div>
 
       {/* System Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6 min-w-0">
         <MetricCard 
           title="Total Tasks" 
           value={metrics.totalTasks} 
@@ -121,24 +121,24 @@ export default function MissionControlDashboard({ tasks }) {
       </div>
 
       {/* OpenClaw Connection Status */}
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-4">
-          <Zap size={20} className="text-[#F59E0B]" />
-          <h3 className="text-[#F9FAFB] text-lg font-semibold m-0">OpenClaw Connection</h3>
+      <div className="mb-4 sm:mb-6 min-w-0">
+        <div className="flex items-center gap-3 mb-3 sm:mb-4 min-w-0">
+          <Zap size={20} className="text-[#F59E0B] flex-shrink-0" />
+          <h3 className="text-[#F9FAFB] text-base sm:text-lg font-semibold m-0 truncate">OpenClaw Connection</h3>
         </div>
         
         {openClawStatus?.connected ? (
-          <div className="bg-[#111111] border border-[#10B981] rounded-lg p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-3 h-3 rounded-full bg-[#10B981]" />
-              <span className="text-[#F9FAFB] font-medium">Connected to OpenClaw</span>
-              <span className="text-xs rounded px-2 py-0.5 font-medium bg-[#10B981]20 text-[#10B981] border border-[#10B981]40">
+          <div className="bg-[#111111] border border-[#10B981] rounded-lg p-3 sm:p-4 min-w-0 overflow-hidden">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 min-w-0">
+              <div className="w-3 h-3 rounded-full bg-[#10B981] flex-shrink-0" />
+              <span className="text-[#F9FAFB] font-medium text-sm sm:text-base truncate">Connected to OpenClaw</span>
+              <span className="text-xs rounded px-2 py-0.5 font-medium bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40 flex-shrink-0">
                 Active
               </span>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm min-w-0">
+              <div className="min-w-0">
                 <span className="text-[#9CA3AF]">Endpoint:</span>
                 <p className="text-[#F9FAFB] m-0 truncate">{openClawStatus.endpoint}</p>
               </div>
@@ -172,9 +172,9 @@ export default function MissionControlDashboard({ tasks }) {
       </div>
 
       {/* Active Tasks Summary */}
-      <div className="mb-4">
-        <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Task Overview</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="mb-4 min-w-0">
+        <h3 className="text-[#F9FAFB] text-base sm:text-lg font-semibold mb-3 sm:mb-4 m-0">Task Overview</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {['backlog', 'new', 'in_progress', 'built'].map(status => {
             const count = taskStats[status] || 0;
             const colors = {
@@ -192,15 +192,15 @@ export default function MissionControlDashboard({ tasks }) {
             };
             
             return (
-              <div key={status} className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-3">
-                <div className="text-center">
+              <div key={status} className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-2 sm:p-3 min-w-0">
+                <div className="text-center min-w-0">
                   <div 
-                    className="text-2xl font-bold mb-1"
+                    className="text-xl sm:text-2xl font-bold mb-1 truncate"
                     style={{ color: colors[status] }}
                   >
                     {count}
                   </div>
-                  <div className="text-[#9CA3AF] text-xs">{labels[status]}</div>
+                  <div className="text-[#9CA3AF] text-[10px] sm:text-xs truncate">{labels[status]}</div>
                 </div>
               </div>
             );
@@ -210,16 +210,16 @@ export default function MissionControlDashboard({ tasks }) {
 
       {/* Recent Activity */}
       {dashboardData?.recent_activity?.length > 0 && (
-        <div className="mb-4">
-          <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Recent Activity</h3>
-          <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg">
+        <div className="mb-4 min-w-0">
+          <h3 className="text-[#F9FAFB] text-base sm:text-lg font-semibold mb-3 sm:mb-4 m-0">Recent Activity</h3>
+          <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg overflow-hidden">
             {dashboardData.recent_activity.slice(0, 5).map((task, index) => (
               <div 
                 key={task.id} 
-                className={`p-3 ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}`}
+                className={`p-2 sm:p-3 min-w-0 ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                     <div 
                       className="w-2 h-2 rounded-full flex-shrink-0"
                       style={{ backgroundColor: 

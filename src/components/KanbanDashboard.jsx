@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
   LayoutDashboard, FileText, CheckSquare, Users, Calendar,
@@ -97,18 +98,18 @@ function CustomModal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg max-w-md w-full mx-4">
-        <div className="flex items-center justify-between p-4 border-b border-[#2A2A2A]">
-          <h3 className="text-[#F9FAFB] font-semibold">{title}</h3>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg max-w-md w-full my-auto max-h-[90vh] flex flex-col min-w-0">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-[#2A2A2A] flex-shrink-0">
+          <h3 className="text-[#F9FAFB] font-semibold text-sm sm:text-base truncate pr-2">{title}</h3>
           <button
             onClick={onClose}
-            className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+            className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors flex-shrink-0"
           >
             <X size={20} />
           </button>
         </div>
-        <div className="p-4">
+        <div className="p-3 sm:p-4 overflow-y-auto min-h-0">
           {children}
         </div>
       </div>
@@ -187,86 +188,58 @@ function TeamOfficeView({ user }) {
   }
 
   return (
-    <div className="flex-1 p-6 bg-[#0A0A0A]">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2">Team</h2>
-          <p className="text-[#9CA3AF] text-sm">
-            {openclawConnected 
-              ? 'Your AI agents and their current status'
-              : 'Connect OpenClaw to see your AI team'}
-          </p>
+    <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
+      <div className="max-w-4xl mx-auto min-w-0">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Team</h2>
+          <p className="text-[#9CA3AF] text-xs sm:text-sm">Your AI agents and their current status</p>
         </div>
 
         {/* 3D Voxel Office Scene */}
-        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6">
-          {openclawConnected ? (
-            <>
-              <VoxelOffice3D user={user} agents={agents} />
-              
-              {/* Character Name Labels */}
-              <div className="mt-4 flex justify-center gap-8 text-xs text-[#9CA3AF]">
-                <div className="text-center">
-                  <div className="w-3 h-3 bg-[#F59E0B] rounded mx-auto mb-1"></div>
-                  <span>{user.name}</span>
-                  <p className="text-[#6B7280] text-[10px]">You</p>
-                </div>
-                {agents.map((agent) => (
-                  <div key={agent.id} className="text-center">
-                    <div 
-                      className="w-3 h-3 rounded mx-auto mb-1"
-                      style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
-                    ></div>
-                    <span>{agent.name}</span>
-                    <p className="text-[#6B7280] text-[10px]">{agent.type === 'main' ? 'Main Agent' : 'Agent'}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Agent Status Panel */}
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {agents.map((agent) => (
-                  <div key={agent.id} className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-4">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div 
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
-                      ></div>
-                      <h4 className="text-[#F9FAFB] font-medium">{agent.name}</h4>
-                      <span 
-                        className={`px-2 py-1 text-xs rounded-full ${
-                          agent.status === 'active' 
-                            ? 'bg-[#10B981]/20 text-[#10B981]' 
-                            : 'bg-[#6B7280]/20 text-[#6B7280]'
-                        }`}
-                      >
-                        {agent.status}
-                      </span>
-                    </div>
-                    <p className="text-[#9CA3AF] text-sm">{agent.role}</p>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            /* Empty State - No OpenClaw Connected */
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-[#1A1A1A] rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users size={32} className="text-[#6B7280]" />
-              </div>
-              <h3 className="text-[#F9FAFB] text-lg font-semibold mb-2">No agents yet</h3>
-              <p className="text-[#9CA3AF] text-sm mb-6 max-w-md mx-auto">
-                Connect your OpenClaw instance to see your AI team. Once connected, 
-                agents will appear here as they're spun up.
-              </p>
-              <button
-                onClick={() => window.location.href = '/settings'}
-                className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              >
-                Connect OpenClaw
-              </button>
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 overflow-hidden">
+          <VoxelOffice3D user={user} agents={agents} />
+          
+          {/* Character Name Labels */}
+          <div className="mt-4 flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-8 text-xs text-[#9CA3AF]">
+            <div className="text-center">
+              <div className="w-3 h-3 bg-[#F59E0B] rounded mx-auto mb-1"></div>
+              <span>{user.name}</span>
             </div>
-          )}
+            {agents.map((agent) => (
+              <div key={agent.id} className="text-center">
+                <div 
+                  className="w-3 h-3 rounded mx-auto mb-1"
+                  style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
+                ></div>
+                <span>{agent.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Agent Status Panel */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {agents.map((agent) => (
+              <div key={agent.id} className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: `#${agent.color.toString(16).padStart(6, '0')}` }}
+                  ></div>
+                  <h4 className="text-[#F9FAFB] font-medium">{agent.name}</h4>
+                  <span 
+                    className={`px-2 py-1 text-xs rounded-full ${
+                      agent.status === 'active' 
+                        ? 'bg-[#10B981]/20 text-[#10B981]' 
+                        : 'bg-[#6B7280]/20 text-[#6B7280]'
+                    }`}
+                  >
+                    {agent.status}
+                  </span>
+                </div>
+                <p className="text-[#9CA3AF] text-sm">{agent.role || ''}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -322,17 +295,17 @@ function CalendarView({ user }) {
   }
 
   return (
-    <div className="flex-1 p-6 bg-[#0A0A0A]">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2">Calendar</h2>
-              <p className="text-[#9CA3AF] text-sm">OpenClaw agent schedule and planned tasks</p>
+    <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
+      <div className="max-w-4xl mx-auto min-w-0">
+        <div className="mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Calendar</h2>
+              <p className="text-[#9CA3AF] text-xs sm:text-sm">OpenClaw agent schedule and planned tasks</p>
             </div>
             <button
               onClick={loadCalendarEvents}
-              className="flex items-center gap-2 bg-[#374151] hover:bg-[#4B5563] text-white px-3 py-2 rounded-lg text-sm transition-colors"
+              className="flex items-center justify-center gap-2 bg-[#374151] hover:bg-[#4B5563] text-white px-3 py-2 rounded-lg text-sm transition-colors flex-shrink-0"
             >
               <RefreshCw size={16} />
               Refresh
@@ -361,15 +334,15 @@ function CalendarView({ user }) {
               ) : (
                 <div className="space-y-3">
                   {events.map((event) => (
-                    <div key={event.id} className="flex items-center gap-4 p-3 bg-[#1A1A1A] rounded-lg">
-                      <div className="text-[#06B6D4] text-sm font-medium min-w-16">
+                    <div key={event.id} className="flex flex-wrap items-center gap-2 sm:gap-4 p-3 bg-[#1A1A1A] rounded-lg min-w-0">
+                      <div className="text-[#06B6D4] text-sm font-medium flex-shrink-0">
                         {event.time}
                       </div>
-                      <div className="flex-1">
-                        <h4 className="text-[#F9FAFB] font-medium">{event.title}</h4>
-                        <p className="text-[#9CA3AF] text-sm">{event.duration}</p>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-[#F9FAFB] font-medium text-sm sm:text-base truncate">{event.title}</h4>
+                        <p className="text-[#9CA3AF] text-xs sm:text-sm">{event.duration}</p>
                       </div>
-                      <div className={`px-2 py-1 text-xs rounded-full ${
+                      <div className={`px-2 py-1 text-xs rounded-full flex-shrink-0 ${
                         event.status === 'in_progress' ? 'bg-[#F59E0B]/20 text-[#F59E0B]' :
                         event.status === 'upcoming' ? 'bg-[#06B6D4]/20 text-[#06B6D4]' :
                         'bg-[#6B7280]/20 text-[#6B7280]'
@@ -432,11 +405,11 @@ function ProjectsView({ user }) {
   }
 
   return (
-    <div className="flex-1 p-6 bg-[#0A0A0A]">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2">Projects</h2>
-          <p className="text-[#9CA3AF] text-sm">Manage your active projects and initiatives</p>
+    <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
+      <div className="max-w-4xl mx-auto min-w-0">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Projects</h2>
+          <p className="text-[#9CA3AF] text-xs sm:text-sm">Manage your active projects and initiatives</p>
         </div>
 
         {loading ? (
@@ -458,15 +431,15 @@ function ProjectsView({ user }) {
             {projects.map((project) => (
               <div 
                 key={project.id} 
-                className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 hover:border-[#06B6D4]/50 transition-colors cursor-pointer"
+                className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 hover:border-[#06B6D4]/50 transition-colors cursor-pointer min-w-0"
                 onClick={() => setSelectedProject(project)}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-[#F9FAFB] font-semibold text-lg">{project.name}</h3>
-                    <p className="text-[#9CA3AF] text-sm mt-1">{project.description}</p>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[#F9FAFB] font-semibold text-base sm:text-lg truncate">{project.name}</h3>
+                    <p className="text-[#9CA3AF] text-xs sm:text-sm mt-1 line-clamp-2">{project.description}</p>
                   </div>
-                  <span className={`px-3 py-1 text-xs rounded-full ${
+                  <span className={`px-3 py-1 text-xs rounded-full flex-shrink-0 w-fit ${
                     project.status === 'active' ? 'bg-[#10B981]/20 text-[#10B981]' :
                     project.status === 'planning' ? 'bg-[#F59E0B]/20 text-[#F59E0B]' :
                     'bg-[#6B7280]/20 text-[#6B7280]'
@@ -475,14 +448,13 @@ function ProjectsView({ user }) {
                   </span>
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm text-[#9CA3AF]">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-[#9CA3AF]">
                     <span>{project.completedTasks}/{project.tasks} tasks</span>
-                    <span>•</span>
+                    <span className="hidden sm:inline">•</span>
                     <span>{project.progress}% complete</span>
                   </div>
-                  
-                  <div className="w-32 h-2 bg-[#1A1A1A] rounded-full overflow-hidden">
+                  <div className="w-full sm:w-32 h-2 bg-[#1A1A1A] rounded-full overflow-hidden flex-shrink-0">
                     <div 
                       className="h-full bg-[#06B6D4] transition-all duration-300"
                       style={{ width: `${project.progress}%` }}
@@ -506,7 +478,7 @@ function ProjectsView({ user }) {
             <h4 className="text-[#F9FAFB] font-semibold text-lg mb-2">{selectedProject.name}</h4>
             <p className="text-[#9CA3AF] text-sm mb-4">{selectedProject.description}</p>
             
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="text-[#9CA3AF] text-xs">Status</label>
                 <p className="text-[#F9FAFB] capitalize">{selectedProject.status}</p>
@@ -517,7 +489,7 @@ function ProjectsView({ user }) {
               </div>
             </div>
             
-            <div className="flex justify-end gap-2">
+            <div className="flex flex-wrap justify-end gap-2">
               <button 
                 onClick={() => setSelectedProject(null)}
                 className="px-4 py-2 text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
@@ -569,11 +541,11 @@ function ApprovalsView({ user }) {
   }
 
   return (
-    <div className="flex-1 p-6 bg-[#0A0A0A]">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2">Approvals</h2>
-          <p className="text-[#9CA3AF] text-sm">Review and approve agent actions and requests</p>
+    <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
+      <div className="max-w-4xl mx-auto min-w-0">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Approvals</h2>
+          <p className="text-[#9CA3AF] text-xs sm:text-sm">Review and approve agent actions and requests</p>
         </div>
 
         {loading ? (
@@ -590,18 +562,18 @@ function ApprovalsView({ user }) {
         ) : (
           <div className="space-y-4">
             {approvals.map((approval) => (
-              <div key={approval.id} className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-[#F9FAFB] font-semibold">{approval.title}</h3>
-                    <p className="text-[#9CA3AF] text-sm mt-1">{approval.description}</p>
-                    <div className="flex items-center gap-2 mt-2 text-xs text-[#6B7280]">
+              <div key={approval.id} className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[#F9FAFB] font-semibold text-sm sm:text-base truncate">{approval.title}</h3>
+                    <p className="text-[#9CA3AF] text-xs sm:text-sm mt-1 line-clamp-2">{approval.description}</p>
+                    <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-[#6B7280]">
                       <span>Requested by {approval.agent}</span>
-                      <span>•</span>
+                      <span className="hidden sm:inline">•</span>
                       <span>{approval.timestamp}</span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2 flex-shrink-0">
                     <button
                       onClick={() => handleApproval(approval.id, 'reject')}
                       className="px-3 py-1 bg-[#EF4444]/20 text-[#EF4444] text-sm rounded hover:bg-[#EF4444]/30 transition-colors"
@@ -627,7 +599,7 @@ function ApprovalsView({ user }) {
 
 function Sidebar({ activeItem, onItemClick, onSignOut }) {
   return (
-    <div className="w-60 bg-[#111111] border-r border-[#2A2A2A] flex flex-col">
+    <div className="w-60 bg-[#111111] border-r border-[#2A2A2A] flex flex-col flex-shrink-0">
       {/* Header */}
       <div className="p-4 border-b border-[#2A2A2A]">
         <h1 className="text-[#F9FAFB] font-semibold text-lg">Mission Control</h1>
@@ -692,25 +664,25 @@ function StatsBar({ tasks }) {
   const completion = total > 0 ? Math.round((completed / total) * 100) : 0;
   
   return (
-    <div className="flex items-center gap-8 px-6 py-4 border-b border-[#2A2A2A]">
-      <div className="flex items-center gap-2">
-        <span className="text-3xl font-bold text-[#10B981]">{thisWeek}</span>
-        <span className="text-[#9CA3AF] text-sm">This week</span>
+    <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 px-3 sm:px-6 py-3 sm:py-4 border-b border-[#2A2A2A] min-w-0 overflow-x-auto">
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <span className="text-xl sm:text-3xl font-bold text-[#10B981]">{thisWeek}</span>
+        <span className="text-[#9CA3AF] text-xs sm:text-sm">This week</span>
       </div>
       
-      <div className="flex items-center gap-2">
-        <span className="text-3xl font-bold text-[#F59E0B]">{inProgress}</span>
-        <span className="text-[#9CA3AF] text-sm">In progress</span>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <span className="text-xl sm:text-3xl font-bold text-[#F59E0B]">{inProgress}</span>
+        <span className="text-[#9CA3AF] text-xs sm:text-sm">In progress</span>
       </div>
       
-      <div className="flex items-center gap-2">
-        <span className="text-3xl font-bold text-[#06B6D4]">{total}</span>
-        <span className="text-[#9CA3AF] text-sm">Total</span>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <span className="text-xl sm:text-3xl font-bold text-[#06B6D4]">{total}</span>
+        <span className="text-[#9CA3AF] text-xs sm:text-sm">Total</span>
       </div>
       
-      <div className="flex items-center gap-2">
-        <span className="text-3xl font-bold text-[#8B5CF6]">{completion}%</span>
-        <span className="text-[#9CA3AF] text-sm">Completion</span>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <span className="text-xl sm:text-3xl font-bold text-[#8B5CF6]">{completion}%</span>
+        <span className="text-[#9CA3AF] text-xs sm:text-sm">Completion</span>
       </div>
     </div>
   );
@@ -899,7 +871,7 @@ function ActivitySidebar({ tasks }) {
     .slice(0, 5);
 
   return (
-    <div className="hidden lg:block w-80 bg-[#111111] border-l border-[#2A2A2A] p-4">
+    <div className="hidden lg:block w-80 bg-[#111111] border-l border-[#2A2A2A] p-4 flex-shrink-0 overflow-y-auto min-w-0">
       <div className="flex items-center gap-2 mb-6">
         <Activity size={16} className="text-[#9CA3AF]" />
         <h2 className="text-[#F9FAFB] font-medium text-sm">Live Activity</h2>
@@ -949,6 +921,7 @@ function ActivitySidebar({ tasks }) {
 
 function SettingsContent({ user, onSignOut }) {
   const [openClawConfig, setOpenClawConfig] = useState({ endpoint: '', token: '' });
+  const [tokenConfigured, setTokenConfigured] = useState(false);
   const [testResult, setTestResult] = useState(null);
   const [isTesting, setIsTesting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -960,9 +933,11 @@ function SettingsContent({ user, onSignOut }) {
   async function loadOpenClawConfig() {
     try {
       const config = await apiClient.getOpenClawConfig();
+      const isConfigured = config.token === '***CONFIGURED***';
+      setTokenConfigured(!!isConfigured);
       setOpenClawConfig({
         endpoint: config.endpoint || '',
-        token: config.token === '***CONFIGURED***' ? '' : (config.token || '')
+        token: isConfigured ? '' : (config.token || '')
       });
     } catch (error) {
       console.error('Failed to load OpenClaw config:', error);
@@ -971,7 +946,7 @@ function SettingsContent({ user, onSignOut }) {
 
   async function testConnection() {
     if (!openClawConfig.endpoint) {
-      alert('Please enter an OpenClaw endpoint first');
+      toast.error('Please enter an OpenClaw endpoint first');
       return;
     }
 
@@ -980,12 +955,15 @@ function SettingsContent({ user, onSignOut }) {
     
     try {
       const result = await apiClient.testOpenClawConnection(
-        openClawConfig.endpoint, 
-        openClawConfig.token || null
+        openClawConfig.endpoint,
+        openClawConfig.token?.trim() || (tokenConfigured ? '***CONFIGURED***' : null)
       );
       setTestResult(result);
+      if (result?.success) toast.success('Connection successful');
+      else toast.error(result?.error || 'Connection failed');
     } catch (error) {
       setTestResult({ success: false, error: error.message });
+      toast.error(error?.message || 'Connection test failed');
     } finally {
       setIsTesting(false);
     }
@@ -993,7 +971,7 @@ function SettingsContent({ user, onSignOut }) {
 
   async function saveConfig() {
     if (!openClawConfig.endpoint) {
-      alert('Please enter an OpenClaw endpoint');
+      toast.error('Please enter an OpenClaw endpoint');
       return;
     }
 
@@ -1001,27 +979,28 @@ function SettingsContent({ user, onSignOut }) {
     try {
       await apiClient.saveOpenClawConfig(
         openClawConfig.endpoint,
-        openClawConfig.token || null
+        openClawConfig.token?.trim() || (tokenConfigured ? '***CONFIGURED***' : null)
       );
-      alert('OpenClaw configuration saved successfully!');
+      toast.success('OpenClaw configuration saved');
+      setTokenConfigured(true);
       setTestResult(null);
     } catch (error) {
-      alert('Failed to save configuration: ' + error.message);
+      toast.error(error?.message || 'Failed to save configuration');
     } finally {
       setIsSaving(false);
     }
   }
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0A0A0A] p-6">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2 m-0">Settings</h2>
-          <p className="text-[#9CA3AF] text-sm m-0">Configure your Mission Control system</p>
+    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[#0A0A0A] p-3 sm:p-6 min-w-0">
+      <div className="max-w-2xl mx-auto min-w-0">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2 m-0">Settings</h2>
+          <p className="text-[#9CA3AF] text-xs sm:text-sm m-0">Configure your Mission Control system</p>
         </div>
 
         {/* OpenClaw Configuration */}
-        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 mb-6">
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
           <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">OpenClaw Integration</h3>
           
           <div className="space-y-4">
@@ -1030,10 +1009,12 @@ function SettingsContent({ user, onSignOut }) {
                 OpenClaw Endpoint *
               </label>
               <input
-                type="url"
+                type="text"
+                inputMode="url"
+                autoComplete="url"
                 value={openClawConfig.endpoint}
                 onChange={e => setOpenClawConfig({...openClawConfig, endpoint: e.target.value})}
-                placeholder="http://localhost:18789"
+                placeholder="http://localhost:18789 or http://127.0.0.1:18789"
                 className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors placeholder-[#4B5563]"
                 style={{ fontFamily: 'inherit' }}
               />
@@ -1044,23 +1025,26 @@ function SettingsContent({ user, onSignOut }) {
 
             <div>
               <label className="text-[#9CA3AF] text-sm block mb-2">
-                Authentication Token (Optional)
+                Authentication Token
               </label>
               <input
                 type="password"
                 value={openClawConfig.token}
                 onChange={e => setOpenClawConfig({...openClawConfig, token: e.target.value})}
-                placeholder="Optional authentication token"
+                placeholder={tokenConfigured ? 'Token set — enter a new value to change' : 'Required; set hooks.token in ~/.openclaw/openclaw.json'}
                 className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors placeholder-[#4B5563]"
                 style={{ fontFamily: 'inherit' }}
               />
+              {tokenConfigured && !openClawConfig.token && (
+                <p className="text-[#10B981] text-xs mt-1 m-0">Token is saved. Re-enter only to change it.</p>
+              )}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <button
                 onClick={testConnection}
                 disabled={isTesting || !openClawConfig.endpoint}
-                className="bg-[#374151] hover:bg-[#4B5563] border-none text-white text-sm px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
+                className="bg-[#374151] hover:bg-[#4B5563] border-none text-white text-sm px-3 sm:px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
                 style={{ fontFamily: 'inherit' }}
               >
                 {isTesting ? 'Testing...' : 'Test Connection'}
@@ -1068,8 +1052,8 @@ function SettingsContent({ user, onSignOut }) {
               
               <button
                 onClick={saveConfig}
-                disabled={isSaving || !openClawConfig.endpoint}
-                className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
+                disabled={isSaving || !openClawConfig.endpoint || (!openClawConfig.token?.trim() && !tokenConfigured)}
+                className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold px-3 sm:px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
                 style={{ fontFamily: 'inherit' }}
               >
                 {isSaving ? 'Saving...' : 'Save Configuration'}
@@ -1094,26 +1078,26 @@ function SettingsContent({ user, onSignOut }) {
         </div>
 
         {/* Profile */}
-        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 mb-6">
-          <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Profile</h3>
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+          <h3 className="text-[#F9FAFB] text-base sm:text-lg font-semibold mb-4 m-0">Profile</h3>
           
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 min-w-0">
             {user.avatar_url && (
               <img 
                 src={user.avatar_url} 
                 alt={user.name}
-                className="w-12 h-12 rounded-full"
+                className="w-12 h-12 rounded-full flex-shrink-0"
               />
             )}
-            <div>
-              <div className="text-[#F9FAFB] font-medium">{user.name}</div>
-              <div className="text-[#9CA3AF] text-sm">{user.email}</div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[#F9FAFB] font-medium truncate">{user.name}</div>
+              <div className="text-[#9CA3AF] text-xs sm:text-sm truncate">{user.email}</div>
             </div>
           </div>
         </div>
 
         {/* Sign Out */}
-        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6">
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6">
           <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Account</h3>
           
           <button
@@ -1180,7 +1164,7 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="text-[#9CA3AF] text-sm block mb-2">Priority</label>
           <select
@@ -1266,17 +1250,17 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
         )}
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="flex flex-wrap justify-end gap-2 pt-2">
         <button
           type="button"
-          onClick={() => setFormData({ title: '', description: '', priority: 'medium', status: initialStatus || 'new', tags: '', estimated_hours: '' })}
-          className="px-4 py-2 text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+          onClick={() => setFormData({ title: '', description: '', priority: 'medium', status: initialStatus || 'backlog', tags: '', estimated_hours: '' })}
+          className="px-3 sm:px-4 py-2 text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors text-sm"
         >
           Clear
         </button>
         <button
           type="submit"
-          className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors"
         >
           Create Task
         </button>
@@ -1287,27 +1271,27 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
 
 /* ─── Mobile Sidebar Component ──────────────────────────────────────────── */
 
-function MobileSidebar({ activeItem, onItemClick, onSignOut, onClose }) {
+function MobileSidebar({ user, activeItem, onItemClick, onSignOut, onClose }) {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-w-0 overflow-y-auto">
       {/* Header */}
-      <div className="p-4 border-b border-[#2A2A2A] flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-lg flex items-center justify-center">
+      <div className="p-4 border-b border-[#2A2A2A] flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-8 h-8 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-lg flex items-center justify-center flex-shrink-0">
             <LayoutDashboard size={16} className="text-white" />
           </div>
-          <span className="text-[#F9FAFB] font-semibold">Mission Control</span>
+          <span className="text-[#F9FAFB] font-semibold truncate">Mission Control</span>
         </div>
         <button
           onClick={onClose}
-          className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+          className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors flex-shrink-0"
         >
           <X size={20} />
         </button>
       </div>
       
       {/* Navigation Items */}
-      <div className="flex-1 p-4 space-y-2">
+      <div className="flex-1 p-4 space-y-2 overflow-y-auto min-h-0">
         {NAVIGATION_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = activeItem === item.id;
@@ -1322,26 +1306,28 @@ function MobileSidebar({ activeItem, onItemClick, onSignOut, onClose }) {
                   : 'text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-[#1A1A1A]'
               }`}
             >
-              <Icon size={18} />
-              <span className="text-sm font-medium">{item.label}</span>
+              <Icon size={18} className="flex-shrink-0" />
+              <span className="text-sm font-medium truncate">{item.label}</span>
             </button>
           );
         })}
       </div>
       
       {/* User Section */}
-      <div className="p-4 border-t border-[#2A2A2A]">
-        <div className="flex items-center gap-3 mb-3">
-          <img
-            src={user.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`}
-            alt={user.name}
-            className="w-8 h-8 rounded-full"
-          />
-          <div className="flex-1 min-w-0">
-            <div className="text-[#F9FAFB] text-sm font-medium truncate">{user.name}</div>
-            <div className="text-[#6B7280] text-xs truncate">{user.email}</div>
+      <div className="p-4 border-t border-[#2A2A2A] flex-shrink-0">
+        {user && (
+          <div className="flex items-center gap-3 mb-3 min-w-0">
+            <img
+              src={user.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`}
+              alt={user.name}
+              className="w-8 h-8 rounded-full flex-shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="text-[#F9FAFB] text-sm font-medium truncate">{user.name}</div>
+              <div className="text-[#6B7280] text-xs truncate">{user.email}</div>
+            </div>
           </div>
-        </div>
+        )}
         
         <button
           onClick={() => onItemClick('settings')}
@@ -1351,7 +1337,7 @@ function MobileSidebar({ activeItem, onItemClick, onSignOut, onClose }) {
               : 'text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-[#1A1A1A]'
           }`}
         >
-          <Settings size={18} />
+          <Settings size={18} className="flex-shrink-0" />
           <span className="text-sm font-medium">Settings</span>
         </button>
         
@@ -1359,7 +1345,7 @@ function MobileSidebar({ activeItem, onItemClick, onSignOut, onClose }) {
           onClick={onSignOut}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[#9CA3AF] hover:text-[#EF4444] hover:bg-[#EF4444]/10 transition-colors"
         >
-          <User size={18} />
+          <User size={18} className="flex-shrink-0" />
           <span className="text-sm font-medium">Sign Out</span>
         </button>
       </div>
@@ -1380,6 +1366,14 @@ export default function KanbanDashboard({ user, onSignOut }) {
   useEffect(() => {
     loadTasks();
   }, []);
+
+  // Poll task list while any task is in progress (so webhook completion updates the board)
+  const hasInProgress = tasks.some(t => t.status === 'in_progress');
+  useEffect(() => {
+    if (!hasInProgress) return;
+    const interval = setInterval(loadTasks, 15000);
+    return () => clearInterval(interval);
+  }, [hasInProgress]);
 
   // Notification functions
   function addNotification(notification) {
@@ -1410,17 +1404,17 @@ export default function KanbanDashboard({ user, onSignOut }) {
 
     try {
       await apiClient.updateTaskStatus(parseInt(draggableId), destination.droppableId);
-      
-      // Update local state
-      setTasks(prevTasks => 
-        prevTasks.map(task => 
-          task.id.toString() === draggableId 
+      setTasks(prevTasks =>
+        prevTasks.map(task =>
+          task.id.toString() === draggableId
             ? { ...task, status: destination.droppableId }
             : task
         )
       );
+      toast.success('Task updated');
     } catch (error) {
       console.error('Failed to update task status:', error);
+      toast.error(error?.message || 'Failed to move task');
     }
   }
 
@@ -1437,81 +1431,11 @@ export default function KanbanDashboard({ user, onSignOut }) {
       if (response.task) {
         setTasks(prev => [response.task, ...prev]);
         setShowTaskModal(false);
-        
-        // Task created successfully
-        addNotification({
-          type: 'success',
-          title: '✅ Task created!',
-          message: `"${taskData.title}" added to your board.`
-        });
-
-        // For tasks in 'new' status, simulate OpenClaw workflow
-        if (response.task.status === 'new') {
-          // Notify that OpenClaw is starting to work
-          setTimeout(() => {
-            addNotification({
-              type: 'info',
-              title: '🤖 OpenClaw starting work',
-              message: `AI agents are beginning to process "${taskData.title}".`,
-              duration: 6000
-            });
-          }, 1000);
-
-          // Auto-move to in_progress after a delay to simulate OpenClaw picking it up
-          setTimeout(async () => {
-            try {
-              await apiClient.updateTaskStatus(response.task.id, 'in_progress');
-              setTasks(prev => 
-                prev.map(task => 
-                  task.id === response.task.id 
-                    ? { ...task, status: 'in_progress' }
-                    : task
-                )
-              );
-              
-              addNotification({
-                type: 'info',
-                title: '⚡ Task in progress',
-                message: `OpenClaw agents are actively working on "${taskData.title}".`,
-                duration: 5000
-              });
-            } catch (error) {
-              console.error('Failed to auto-move task to in_progress:', error);
-            }
-          }, 3000);
-
-          // TODO: In production, this would be replaced by webhook from OpenClaw
-          // For demo purposes, simulate completion after some time
-          setTimeout(async () => {
-            try {
-              await apiClient.updateTaskStatus(response.task.id, 'built');
-              setTasks(prev => 
-                prev.map(task => 
-                  task.id === response.task.id 
-                    ? { ...task, status: 'built' }
-                    : task
-                )
-              );
-              
-              addNotification({
-                type: 'success',
-                title: '🎉 Task completed!',
-                message: `"${taskData.title}" has been completed by OpenClaw agents.`,
-                duration: 8000
-              });
-            } catch (error) {
-              console.error('Failed to complete task:', error);
-            }
-          }, 15000); // Complete after 15 seconds for demo
-        }
+        toast.success('Task created');
       }
     } catch (error) {
       console.error('Failed to create task:', error);
-      addNotification({
-        type: 'error',
-        title: 'Failed to create task',
-        message: error.message || 'Something went wrong. Please try again.'
-      });
+      toast.error(error?.message || 'Failed to create task');
     }
   }
 
@@ -1556,18 +1480,18 @@ export default function KanbanDashboard({ user, onSignOut }) {
   }
 
   return (
-    <div className="h-screen bg-[#0A0A0A] flex flex-col lg:flex-row">
+    <div className="h-screen bg-[#0A0A0A] flex flex-col lg:flex-row overflow-hidden min-w-0">
       {/* Mobile Header */}
-      <div className="lg:hidden bg-[#111111] border-b border-[#2A2A2A] p-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-lg flex items-center justify-center">
+      <div className="lg:hidden bg-[#111111] border-b border-[#2A2A2A] p-3 sm:p-4 flex items-center justify-between flex-shrink-0 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="w-8 h-8 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-lg flex items-center justify-center flex-shrink-0">
             <LayoutDashboard size={16} className="text-white" />
           </div>
-          <span className="text-[#F9FAFB] font-semibold">Mission Control</span>
+          <span className="text-[#F9FAFB] font-semibold truncate text-sm sm:text-base">Mission Control</span>
         </div>
         <button
           onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+          className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors flex-shrink-0 p-1"
         >
           <MoreHorizontal size={20} />
         </button>
@@ -1576,8 +1500,9 @@ export default function KanbanDashboard({ user, onSignOut }) {
       {/* Mobile Navigation Overlay */}
       {mobileSidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setMobileSidebarOpen(false)}>
-          <div className="bg-[#111111] border-r border-[#2A2A2A] w-64 h-full" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[#111111] border-r border-[#2A2A2A] w-[min(16rem,85vw)] max-w-64 h-full flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <MobileSidebar 
+              user={user}
               activeItem={activeNav} 
               onItemClick={(item) => {
                 setActiveNav(item);
@@ -1602,7 +1527,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
       {/* Main Content - Route to different views based on navigation */}
       {activeNav === 'tasks' ? (
         <>
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
             {/* Stats Bar */}
             <StatsBar tasks={tasks} />
             
@@ -1638,9 +1563,9 @@ export default function KanbanDashboard({ user, onSignOut }) {
             </div>
             
             {/* Kanban Board */}
-            <div className="flex-1 p-3 sm:p-6 overflow-x-auto">
+            <div className="flex-1 p-3 sm:p-6 overflow-hidden min-h-0 min-w-0 flex flex-col">
               <DragDropContext onDragEnd={handleDragEnd}>
-                <div className="flex gap-3 sm:gap-6 h-full overflow-x-auto kanban-scroll pb-4 pr-4 min-w-max">
+                <div className="flex gap-3 sm:gap-6 h-full overflow-x-auto overflow-y-hidden pb-4 min-w-max scroll-smooth touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
                   {KANBAN_COLUMNS.map(column => (
                     <KanbanColumn
                       key={column.id}
