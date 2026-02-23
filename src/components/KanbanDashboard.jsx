@@ -664,27 +664,27 @@ function KanbanColumn({ column, tasks, onAddTask }) {
   const taskCount = tasks.length;
   
   return (
-    <div className="flex-1 min-w-80">
+    <div className="flex-1 min-w-64 sm:min-w-80 max-w-xs sm:max-w-none">
       {/* Column Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div 
-            className="w-3 h-3 rounded-full"
+            className="w-3 h-3 rounded-full flex-shrink-0"
             style={{ backgroundColor: column.color }}
           />
-          <h2 className="text-[#F9FAFB] font-medium text-sm">
+          <h2 className="text-[#F9FAFB] font-medium text-xs sm:text-sm truncate">
             {column.title}
           </h2>
-          <span className="bg-[#2A2A2A] text-[#9CA3AF] text-xs px-2 py-1 rounded-full">
+          <span className="bg-[#2A2A2A] text-[#9CA3AF] text-xs px-2 py-0.5 sm:py-1 rounded-full flex-shrink-0">
             {taskCount}
           </span>
         </div>
         
         <button
           onClick={() => onAddTask(column.id)}
-          className="text-[#6B7280] hover:text-[#9CA3AF] transition-colors p-1"
+          className="text-[#6B7280] hover:text-[#9CA3AF] transition-colors p-1 flex-shrink-0"
         >
-          <Plus size={16} />
+          <Plus size={14} className="sm:w-4 sm:h-4" />
         </button>
       </div>
       
@@ -721,7 +721,7 @@ function ActivitySidebar({ tasks }) {
     .slice(0, 5);
 
   return (
-    <div className="w-80 bg-[#111111] border-l border-[#2A2A2A] p-4">
+    <div className="hidden lg:block w-80 bg-[#111111] border-l border-[#2A2A2A] p-4">
       <div className="flex items-center gap-2 mb-6">
         <Activity size={16} className="text-[#9CA3AF]" />
         <h2 className="text-[#F9FAFB] font-medium text-sm">Live Activity</h2>
@@ -1084,6 +1084,88 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
   );
 }
 
+/* ─── Mobile Sidebar Component ──────────────────────────────────────────── */
+
+function MobileSidebar({ activeItem, onItemClick, onSignOut, onClose }) {
+  return (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="p-4 border-b border-[#2A2A2A] flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-lg flex items-center justify-center">
+            <LayoutDashboard size={16} className="text-white" />
+          </div>
+          <span className="text-[#F9FAFB] font-semibold">Mission Control</span>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+        >
+          <X size={20} />
+        </button>
+      </div>
+      
+      {/* Navigation Items */}
+      <div className="flex-1 p-4 space-y-2">
+        {NAVIGATION_ITEMS.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeItem === item.id;
+          
+          return (
+            <button
+              key={item.id}
+              onClick={() => onItemClick(item.id)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${
+                isActive 
+                  ? 'bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20' 
+                  : 'text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-[#1A1A1A]'
+              }`}
+            >
+              <Icon size={18} />
+              <span className="text-sm font-medium">{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+      
+      {/* User Section */}
+      <div className="p-4 border-t border-[#2A2A2A]">
+        <div className="flex items-center gap-3 mb-3">
+          <img
+            src={user.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`}
+            alt={user.name}
+            className="w-8 h-8 rounded-full"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="text-[#F9FAFB] text-sm font-medium truncate">{user.name}</div>
+            <div className="text-[#6B7280] text-xs truncate">{user.email}</div>
+          </div>
+        </div>
+        
+        <button
+          onClick={() => onItemClick('settings')}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors mb-2 ${
+            activeItem === 'settings'
+              ? 'bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20' 
+              : 'text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-[#1A1A1A]'
+          }`}
+        >
+          <Settings size={18} />
+          <span className="text-sm font-medium">Settings</span>
+        </button>
+        
+        <button
+          onClick={onSignOut}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[#9CA3AF] hover:text-[#EF4444] hover:bg-[#EF4444]/10 transition-colors"
+        >
+          <User size={18} />
+          <span className="text-sm font-medium">Sign Out</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function KanbanDashboard({ user, onSignOut }) {
   const [tasks, setTasks] = useState([]);
   const [activeNav, setActiveNav] = useState('tasks');
@@ -1091,6 +1173,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
   const [showAddTask, setShowAddTask] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState('');
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     loadTasks();
@@ -1178,13 +1261,48 @@ export default function KanbanDashboard({ user, onSignOut }) {
   }
 
   return (
-    <div className="h-screen bg-[#0A0A0A] flex">
-      {/* Sidebar */}
-      <Sidebar 
-        activeItem={activeNav} 
-        onItemClick={setActiveNav}
-        onSignOut={onSignOut}
-      />
+    <div className="h-screen bg-[#0A0A0A] flex flex-col lg:flex-row">
+      {/* Mobile Header */}
+      <div className="lg:hidden bg-[#111111] border-b border-[#2A2A2A] p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-lg flex items-center justify-center">
+            <LayoutDashboard size={16} className="text-white" />
+          </div>
+          <span className="text-[#F9FAFB] font-semibold">Mission Control</span>
+        </div>
+        <button
+          onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+          className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+        >
+          <MoreHorizontal size={20} />
+        </button>
+      </div>
+      
+      {/* Mobile Navigation Overlay */}
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setMobileSidebarOpen(false)}>
+          <div className="bg-[#111111] border-r border-[#2A2A2A] w-64 h-full" onClick={(e) => e.stopPropagation()}>
+            <MobileSidebar 
+              activeItem={activeNav} 
+              onItemClick={(item) => {
+                setActiveNav(item);
+                setMobileSidebarOpen(false);
+              }}
+              onSignOut={onSignOut}
+              onClose={() => setMobileSidebarOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+      
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block">
+        <Sidebar 
+          activeItem={activeNav} 
+          onItemClick={setActiveNav}
+          onSignOut={onSignOut}
+        />
+      </div>
       
       {/* Main Content - Route to different views based on navigation */}
       {activeNav === 'tasks' ? (
@@ -1194,39 +1312,40 @@ export default function KanbanDashboard({ user, onSignOut }) {
             <StatsBar tasks={tasks} />
             
             {/* Action Bar with Tag Filtering */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2A2A]">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-3 sm:px-6 py-3 sm:py-4 border-b border-[#2A2A2A] gap-3 sm:gap-0">
+              <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <button
                   onClick={() => handleAddTask('new')}
-                  className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
+                  className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-2 transition-colors"
                 >
-                  <Plus size={16} />
-                  New task
+                  <Plus size={14} className="sm:w-4 sm:h-4" />
+                  <span className="hidden xs:inline">New task</span>
+                  <span className="xs:hidden">New</span>
                 </button>
                 
                 {/* Tag Filter */}
                 {allTags.length > 0 && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-initial">
                     <select
                       value={selectedTag}
                       onChange={(e) => setSelectedTag(e.target.value)}
-                      className="bg-[#1A1A1A] border border-[#2A2A2A] text-[#F9FAFB] text-sm px-3 py-2 rounded-lg focus:border-[#06B6D4] focus:outline-none"
+                      className="bg-[#1A1A1A] border border-[#2A2A2A] text-[#F9FAFB] text-xs sm:text-sm px-2 sm:px-3 py-2 rounded-lg focus:border-[#06B6D4] focus:outline-none flex-1 sm:flex-initial min-w-0"
                     >
                       <option value="">All tags</option>
                       {allTags.map(tag => (
                         <option key={tag} value={tag}>#{tag}</option>
                       ))}
                     </select>
-                    <Filter size={14} className="text-[#9CA3AF]" />
+                    <Filter size={12} className="text-[#9CA3AF] sm:w-3.5 sm:h-3.5 flex-shrink-0" />
                   </div>
                 )}
               </div>
             </div>
             
             {/* Kanban Board */}
-            <div className="flex-1 p-6">
+            <div className="flex-1 p-3 sm:p-6 overflow-hidden">
               <DragDropContext onDragEnd={handleDragEnd}>
-                <div className="flex gap-6 h-full">
+                <div className="flex gap-3 sm:gap-6 h-full overflow-x-auto min-w-max sm:min-w-0 pb-4">
                   {KANBAN_COLUMNS.map(column => (
                     <KanbanColumn
                       key={column.id}

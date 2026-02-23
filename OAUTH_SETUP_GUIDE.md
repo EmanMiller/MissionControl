@@ -1,84 +1,212 @@
-# OAuth Setup Guide - Fix "Access blocked" Errors
+# 🔐 OAuth Setup Guide - Mission Control
 
-## 🚨 Current Issue: Invalid Google OAuth Client
+This guide will walk you through setting up OAuth authentication for Google, GitHub, and Apple Sign In.
 
-The error you're seeing (`Error 401: invalid_client`) is because we need to configure real OAuth applications. Here's how to fix it:
+**⚠️ Demo mode has been removed. You must configure OAuth to use Mission Control.**
 
-## 🚀 Immediate Solution (Test Now)
+---
 
-**For immediate testing, I've enabled development mode:**
+## 🟦 Google OAuth Setup
 
-1. **Refresh your browser** at http://localhost:5173
-2. **Click the blue "🚀 Continue as Demo User" button** 
-3. **You'll bypass OAuth and get into the system immediately**
+### 1. Go to Google Cloud Console
+Visit: https://console.cloud.google.com/apis/credentials
 
-## 🔧 Proper OAuth Setup (Production Ready)
+### 2. Create a Project (if needed)
+- Click "Select a project" dropdown
+- Click "New Project" 
+- Name it "Mission Control"
 
-### Google OAuth Setup
+### 3. Enable Google+ API
+- Go to "APIs & Services" > "Library"
+- Search for "Google+ API" and enable it
 
-1. **Go to [Google Cloud Console](https://console.cloud.google.com)**
-2. **Create a new project** or select existing
-3. **Enable Google+ API:**
-   - Go to "APIs & Services" → "Library"
-   - Search for "Google+ API" and enable it
-4. **Create OAuth credentials:**
-   - Go to "APIs & Services" → "Credentials" 
-   - Click "Create Credentials" → "OAuth 2.0 Client IDs"
-   - Application type: **Web application**
-   - Name: **Mission Control Local**
-   - Authorized JavaScript origins: **`http://localhost:5173`**
-   - Authorized redirect URIs: **`http://localhost:5173`**
-5. **Copy the Client ID** and add to `.env.local`:
-   ```bash
-   VITE_GOOGLE_CLIENT_ID=your_real_client_id_here.apps.googleusercontent.com
-   ```
+### 4. Create OAuth 2.0 Client ID
+- Go to "APIs & Services" > "Credentials"
+- Click "Create Credentials" > "OAuth client ID"
+- Choose "Web application"
+- Name: "Mission Control Web"
 
-### GitHub OAuth Setup
-
-1. **Go to [GitHub Settings](https://github.com/settings/developers)**
-2. **Click "New OAuth App"**
-3. **Fill in details:**
-   - Application name: **Mission Control Local**
-   - Homepage URL: **`http://localhost:5173`**
-   - Authorization callback URL: **`http://localhost:5173`**
-4. **Copy credentials:**
-   - Client ID → Add to `.env.local` as `VITE_GITHUB_CLIENT_ID`
-   - Client Secret → Add to `server/.env` as `GITHUB_CLIENT_SECRET`
-
-## 🛠️ Quick Setup Script
-
-I can create a setup script to help:
-
-```bash
-# Run this to check your current configuration
-cd /path/to/mission-control
-node oauth-diagnostics.js
+### 5. Configure URLs
+**Authorized JavaScript origins:**
+```
+http://localhost:5173
+https://yourdomain.com
 ```
 
-## ⚡ Current Status
+**Authorized redirect URIs:**
+```
+http://localhost:5173
+https://yourdomain.com
+```
 
-- ✅ **Development mode enabled** - You can test immediately
-- ⚠️ **Google OAuth needs real client ID**
-- ⚠️ **GitHub OAuth needs proper configuration**
-- ✅ **Backend and database fully operational**
+### 6. Get Credentials
+Copy the Client ID and Client Secret to:
+- **Frontend**: `VITE_GOOGLE_CLIENT_ID` in `.env.local`
+- **Backend**: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `server/.env`
 
-## 🎯 Next Steps
+---
 
-1. **Test the system now** using Demo Mode
-2. **Set up Google OAuth** for production (5 minutes)
-3. **Set up GitHub OAuth** for production (5 minutes) 
-4. **Disable development mode** by setting `VITE_DEV_MODE=false`
+## 🐙 GitHub OAuth Setup
 
-## 🔍 Troubleshooting
+### 1. Go to GitHub Developer Settings
+Visit: https://github.com/settings/developers
 
-**Still getting "Access blocked"?**
-- Clear browser cookies for localhost:5173
-- Make sure you're using the Demo Mode button
-- Check that VITE_DEV_MODE=true in .env.local
+### 2. Create New OAuth App
+- Click "New OAuth App"
+- **Application name**: "Mission Control"
+- **Homepage URL**: `http://localhost:5173`
+- **Authorization callback URL**: `http://localhost:5173`
 
-**Google OAuth still not working?**
-- Verify authorized origins exactly match: `http://localhost:5173`
-- Check that the OAuth client ID ends with `.apps.googleusercontent.com`
-- Ensure Google+ API is enabled for your project
+### 3. Generate Client Secret
+- After creating, click "Generate a new client secret"
 
-**Questions?** The system is now working in demo mode - you can explore the full Mission Control experience!
+### 4. Copy Credentials
+Copy the Client ID and Client Secret to:
+- **Frontend**: `VITE_GITHUB_CLIENT_ID` in `.env.local`  
+- **Backend**: `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `server/.env`
+
+---
+
+## 🍎 Apple Sign In Setup
+
+### 1. Apple Developer Account Required
+You need a paid Apple Developer account ($99/year)
+
+### 2. Create App ID
+- Go to https://developer.apple.com/account/resources/identifiers/
+- Click "+" to create new identifier
+- Choose "App IDs"
+- Description: "Mission Control"
+- Bundle ID: `com.yourcompany.missioncontrol`
+- Enable "Sign In with Apple"
+
+### 3. Create Services ID
+- Create another identifier, choose "Services IDs"
+- Description: "Mission Control Web"
+- Identifier: `com.yourcompany.missioncontrol.web`
+- Enable "Sign In with Apple"
+- Configure:
+  - **Primary App ID**: Select the App ID you just created
+  - **Web Domain**: `localhost` (for development)
+  - **Return URLs**: `http://localhost:5173`
+
+### 4. Create Key
+- Go to https://developer.apple.com/account/resources/authkeys/
+- Click "+" to create new key
+- Key Name: "Mission Control Sign In"
+- Enable "Sign In with Apple"
+- Download the key file (`.p8`)
+
+### 5. Configure Backend
+Update `server/.env`:
+```
+APPLE_CLIENT_ID=com.yourcompany.missioncontrol.web
+APPLE_TEAM_ID=YOUR_TEAM_ID
+APPLE_KEY_ID=YOUR_KEY_ID
+APPLE_PRIVATE_KEY_PATH=./apple_private_key.p8
+```
+
+Place the downloaded `.p8` file in the `server/` directory as `apple_private_key.p8`
+
+---
+
+## 🔧 Environment File Templates
+
+### Frontend (.env.local)
+```bash
+VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
+VITE_GITHUB_CLIENT_ID=your_github_client_id_here
+VITE_APPLE_CLIENT_ID=com.yourcompany.missioncontrol.web
+VITE_API_URL=http://localhost:3001/api
+```
+
+### Backend (server/.env)
+```bash
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+
+# GitHub OAuth  
+GITHUB_CLIENT_ID=your_github_client_id_here
+GITHUB_CLIENT_SECRET=your_github_client_secret_here
+GITHUB_REDIRECT_URI=http://localhost:5173/auth/github/callback
+
+# Apple Sign In
+APPLE_CLIENT_ID=com.yourcompany.missioncontrol.web
+APPLE_TEAM_ID=your_apple_team_id_here
+APPLE_KEY_ID=your_apple_key_id_here
+APPLE_PRIVATE_KEY_PATH=./apple_private_key.p8
+```
+
+---
+
+## 🚀 Production Configuration
+
+### For Production Deployment:
+
+1. **Update URLs**: Replace `localhost:5173` with your production domain
+2. **HTTPS Required**: All OAuth providers require HTTPS in production
+3. **Environment Variables**: Use secure environment variable management
+4. **Key Security**: Keep OAuth secrets secure and never commit them to git
+
+### Example Production URLs:
+```
+https://missioncontrol.yourdomain.com
+```
+
+---
+
+## ✅ Testing OAuth
+
+1. Start your servers:
+   ```bash
+   # Backend
+   cd server && npm run dev
+   
+   # Frontend
+   npm run dev
+   ```
+
+2. Visit http://localhost:5173
+
+3. Try signing in with each OAuth provider
+
+4. Check browser console and server logs for any errors
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues:
+
+**"OAuth not configured" errors:**
+- Make sure environment variables are set correctly
+- Restart both frontend and backend servers after changing .env files
+
+**"Redirect URI mismatch" errors:**
+- Check that your configured redirect URIs exactly match what you're using
+- Include both `http://localhost:5173` and `http://localhost:5173/` (with trailing slash)
+
+**Apple Sign In "invalid_client" errors:**
+- Make sure your Services ID is correctly configured
+- Verify the .p8 key file is in the right location
+- Check that Team ID and Key ID are correct
+
+**CORS errors:**
+- Check that `FRONTEND_URL` in backend .env matches your frontend URL
+- Make sure backend is running on port 3001
+
+---
+
+## 📧 Support
+
+If you run into issues:
+
+1. Check the browser console for JavaScript errors
+2. Check the backend server logs for API errors  
+3. Verify all environment variables are set correctly
+4. Make sure OAuth apps are configured with the correct redirect URLs
+
+---
+
+**🎯 Goal: Replace all placeholder OAuth credentials with real values to enable production-ready authentication.**
