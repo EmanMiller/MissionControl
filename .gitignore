@@ -44,7 +44,7 @@ server/mission-control.db
 app/
 app.json
 babel.config.js
-components/
+/components/
 theme/
 
 # Prototypes / scratch files
