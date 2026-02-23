@@ -28,26 +28,24 @@ export async function testOpenClawConnection(endpoint, token) {
       timeout: 10000 // 10 second timeout
     });
     
-    // Validate that this is actually an OpenClaw instance
-    // OpenClaw should return specific fields in its status response
-    if (!response.data) {
-      throw new Error('Invalid response from endpoint - not an OpenClaw instance');
-    }
-
-    // Check for OpenClaw-specific status indicators
-    const isOpenClaw = 
-      response.data.hasOwnProperty('status') && 
-      (response.data.version || response.data.service === 'openclaw' || response.data.name === 'OpenClaw');
-
-    if (!isOpenClaw) {
-      throw new Error('Endpoint is not a valid OpenClaw instance');
+    // 204 No Content or 2xx with no body = endpoint is reachable, accept as valid
+    const status = response.status;
+    if (status === 204 || !response.data) {
+      return {
+        success: true,
+        version: 'unknown',
+        status: status === 204 ? 'no content' : 'ok',
+        service: 'openclaw'
+      };
     }
     
+    // If we got a body that isn't JSON object, still accept (e.g. plain text or empty)
+    const d = typeof response.data === 'object' ? response.data : {};
     return {
       success: true,
-      version: response.data.version || 'unknown',
-      status: response.data.status || 'ok',
-      service: response.data.service || 'openclaw'
+      version: d.version || 'unknown',
+      status: d.status || 'ok',
+      service: d.service || 'openclaw'
     };
   } catch (error) {
     console.error('OpenClaw connection test failed:', error.message);
@@ -74,57 +72,82 @@ export async function sendTaskToOpenClaw(user, task) {
   const endpoint = user.openclaw_endpoint || DEFAULT_OPENCLAW_ENDPOINT;
   const base = baseUrl(endpoint);
   const token = user.openclaw_token;
-  
+  const prompt = createTaskPrompt(task);
+
   if (!base) {
     throw new Error('OpenClaw endpoint not configured');
   }
-  
+
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  // 1) Try OpenClaw Tools Invoke API (documented): POST /tools/invoke with sessions_spawn
+  //    Requires OpenClaw config: gateway.tools.allow: ["sessions_spawn"] (sessions_spawn is denied over HTTP by default)
+  const toolsInvokeUrl = `${base}/tools/invoke`;
+  console.log(`[OpenClaw] Sending task ${task.id} to ${toolsInvokeUrl} (tool: sessions_spawn)`);
   try {
-    const headers = {
-      'Content-Type': 'application/json'
-    };
-    
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+    const response = await axios.post(
+      toolsInvokeUrl,
+      {
+        tool: 'sessions_spawn',
+        args: { task: prompt },
+        sessionKey: 'main'
+      },
+      { headers, timeout: 15000 }
+    );
+    const result = response.data?.result;
+    const runId = result?.runId || result?.childSessionKey;
+    if (runId) {
+      console.log(`[OpenClaw] Task ${task.id} accepted, runId/childSessionKey=${runId}`);
+      return runId;
     }
-    
-    // Create a detailed prompt for the AI agent
-    const prompt = createTaskPrompt(task);
-    
-    // Send task to OpenClaw
-    const response = await axios.post(`${base}/api/sessions`, {
-      message: prompt,
-      session_key: `mission-control-${task.id}-${uuidv4()}`,
-      metadata: {
-        source: 'mission-control',
-        task_id: task.id,
-        priority: task.priority,
-        created_at: task.created_at
-      }
-    }, {
-      headers,
-      timeout: 30000 // 30 second timeout
-    });
-    
-    const sessionId = response.data.session_id || response.data.sessionId;
-    
-    if (!sessionId) {
-      throw new Error('OpenClaw did not return a session ID');
-    }
-    
-    console.log(`Task ${task.id} sent to OpenClaw with session ${sessionId}`);
-    return sessionId;
-    
-  } catch (error) {
-    console.error('Failed to send task to OpenClaw:', error);
-    
-    if (error.response) {
-      throw new Error(`OpenClaw API error: ${error.response.status} - ${error.response.data?.message || error.response.statusText}`);
-    } else if (error.request) {
-      throw new Error('Cannot reach OpenClaw instance - check endpoint and network connectivity');
+  } catch (err) {
+    if (err.response?.status === 404) {
+      console.log(`[OpenClaw] /tools/invoke not available (404). Try enabling gateway.tools.allow: ["sessions_spawn"] in OpenClaw.`);
     } else {
-      throw new Error(`OpenClaw integration error: ${error.message}`);
+      console.warn(`[OpenClaw] /tools/invoke failed for task ${task.id}:`, err.response?.status || err.code, err.response?.data || err.message);
     }
+  }
+
+  // 2) Fallback: legacy POST /api/sessions (some deployments may expose this)
+  const sessionsUrl = `${base}/api/sessions`;
+  console.log(`[OpenClaw] Trying ${sessionsUrl} for task ${task.id}`);
+  try {
+    const response = await axios.post(
+      sessionsUrl,
+      {
+        message: prompt,
+        session_key: `mission-control-${task.id}-${uuidv4()}`,
+        metadata: {
+          source: 'mission-control',
+          task_id: task.id,
+          priority: task.priority,
+          created_at: task.created_at
+        }
+      },
+      { headers, timeout: 30000 }
+    );
+    const sessionId = response.data?.session_id || response.data?.sessionId;
+    if (sessionId) {
+      console.log(`[OpenClaw] Task ${task.id} sent via /api/sessions, session=${sessionId}`);
+      return sessionId;
+    }
+    throw new Error('OpenClaw did not return a session ID');
+  } catch (error) {
+    if (error.response) {
+      console.error(`[OpenClaw] Task ${task.id} failed: ${error.response.status} ${sessionsUrl}`, error.response.data);
+      throw new Error(`OpenClaw API error: ${error.response.status} - ${error.response.data?.message || error.response.statusText}`);
+    }
+    if (error.request) {
+      console.error(`[OpenClaw] Task ${task.id} no response from ${sessionsUrl}`, error.code || error.message);
+      throw new Error('Cannot reach OpenClaw instance - check endpoint and network connectivity');
+    }
+    console.error(`[OpenClaw] Task ${task.id} error:`, error.message);
+    throw new Error(error.message || 'OpenClaw integration error');
   }
 }
 

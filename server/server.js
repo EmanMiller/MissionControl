@@ -1,14 +1,17 @@
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-// Load environment variables FIRST
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load environment variables: .env first, then .env.development (overrides) so credentials in .env.development are used
+dotenv.config({ path: join(__dirname, '.env') });
+dotenv.config({ path: join(__dirname, '.env.development') });
 
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
 // Import routes
 import authRoutes from './routes/auth.js';
 import taskRoutes from './routes/tasks.js';
@@ -21,9 +24,6 @@ import { authenticateToken } from './middleware/auth.js';
 // Import database and services
 import db from './database.js';
 import './services/polling.js'; // Start polling service
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -42,8 +42,17 @@ app.use(helmet({
   }
 }));
 
+// CORS: in development allow any localhost origin (e.g. 5173, 5174, 5176); in production use FRONTEND_URL
+const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true); // same-origin or non-browser
+    if (process.env.NODE_ENV !== 'production') {
+      if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true);
+    }
+    if (origin === allowedOrigin) return cb(null, true);
+    cb(null, false);
+  },
   credentials: true
 }));
 

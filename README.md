@@ -116,6 +116,22 @@ npm run dev
 4. **Test Connection** – Verify Mission Control can reach OpenClaw
 5. **Save Configuration**
 
+### OpenClaw: Allowing task submission over HTTP
+
+When you **move a task to "In Progress"**, Mission Control sends it to OpenClaw using the **Tools Invoke API**: `POST {endpoint}/tools/invoke` with tool `sessions_spawn`. By default OpenClaw **denies** `sessions_spawn` over HTTP. To allow Mission Control to submit tasks, add this to your OpenClaw config (e.g. `~/.openclaw/openclaw.json` or your gateway config):
+
+```json
+{
+  "gateway": {
+    "tools": {
+      "allow": ["sessions_spawn"]
+    }
+  }
+}
+```
+
+Restart OpenClaw after changing config. If you use Gateway auth, set the same token in Mission Control Settings (Authentication Token). Then move a task to **In Progress** and check the Mission Control server logs for `[OpenClaw] Sending task ...` and `Task ... accepted`; on the OpenClaw side you should see the new run/session.
+
 ### How It Works
 
 1. **Create Task** - Add a new task with title and description
@@ -231,8 +247,10 @@ JWT_SECRET=your_super_secret_jwt_key_change_this
 FRONTEND_URL=https://your-frontend-domain.com
 PUBLIC_URL=https://your-api-domain.com
 
-# OAuth secrets
+# OAuth (backend needs both client ID and secret for GitHub)
+GITHUB_CLIENT_ID=your_github_client_id
 GITHUB_CLIENT_SECRET=your_github_client_secret
+GITHUB_REDIRECT_URI=https://your-frontend-domain.com/auth/github/callback
 GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
@@ -250,6 +268,16 @@ npm start
 ## 🔍 Troubleshooting
 
 ### Common Issues
+
+**Google: "Access blocked: Authorization Error"**
+- Your Google OAuth app is in **Testing** mode: add your Google account under **Test users** in [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials → your OAuth 2.0 Client ID → Test users.
+- Or publish the app (OAuth consent screen → Publishing status → Production) so any Google user can sign in.
+- Ensure **Authorized redirect URIs** and **Authorized JavaScript origins** include the exact URL you use to open the app (e.g. `http://localhost:5173` or `http://localhost:5176` if Vite uses a different port). Add each origin you use.
+
+**GitHub: "Failed to connect" or "Cannot reach the server"**
+- Start the backend: `cd server && npm run dev` (default port 3001). The frontend calls `http://localhost:3001/api` unless you set `VITE_API_URL`.
+- If the frontend runs on a different port (e.g. 5176), CORS allows it in development. In production set `FRONTEND_URL` in the server `.env` to your frontend URL.
+- Ensure **GitHub OAuth** is configured: `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `server/.env`, and in GitHub OAuth App settings the callback URL is exactly `http://localhost:5173/auth/github/callback` (or your `FRONTEND_URL` + `/auth/github/callback`).
 
 **OAuth "Invalid Client" Error:**
 - Verify OAuth credentials in environment files

@@ -72,19 +72,24 @@ export default function OnboardingFlow({ onAuthSuccess }) {
   }
 
   async function handleGitHubLogin() {
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
     try {
-      // Get GitHub OAuth URL from backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/auth/github`);
-      const data = await response.json();
+      const response = await fetch(`${apiBase}/auth/github`);
+      const data = await response.json().catch(() => ({}));
       
-      if (data.authUrl) {
+      if (data.authUrl && response.ok) {
         window.location.href = data.authUrl;
       } else {
-        setError(data.details || data.error || 'Failed to initiate GitHub authentication');
+        setError(data.details || data.error || (response.ok ? 'Failed to initiate GitHub authentication' : `Server error (${response.status})`));
       }
     } catch (error) {
       console.error('GitHub login error:', error);
-      setError('Failed to connect to authentication server');
+      const msg = error?.message || '';
+      if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('Load failed')) {
+        setError('Cannot reach the server. Is the backend running at ' + apiBase.replace(/\/api$/, '') + '?');
+      } else {
+        setError('Failed to connect to authentication server. Check backend is running and CORS allows this origin.');
+      }
     }
   }
 
