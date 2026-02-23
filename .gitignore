@@ -49,3 +49,8 @@ theme/
 
 # Prototypes / scratch files
 dashboard.html
+# Environment files (contain secrets)
+.env.local
+server/.env
+server/.env.development
+server/.env.staging
