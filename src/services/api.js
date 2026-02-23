@@ -53,7 +53,7 @@ class ApiClient {
 
       return await response.text();
     } catch (error) {
-      console.error(`API request failed: ${method || 'GET'} ${url}`, error);
+      console.error(`API request failed: ${config.method || options.method || 'GET'} ${url}`, error);
       throw error;
     }
   }
@@ -102,6 +102,18 @@ class ApiClient {
     const response = await this.request('/auth/apple', {
       method: 'POST',
       body: { id_token: idToken, user }
+    });
+    
+    if (response.success && response.token) {
+      this.setToken(response.token);
+    }
+    
+    return response;
+  }
+
+  async loginWithDemo() {
+    const response = await this.request('/auth/demo', {
+      method: 'POST'
     });
     
     if (response.success && response.token) {

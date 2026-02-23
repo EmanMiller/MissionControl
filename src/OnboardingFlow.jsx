@@ -92,6 +92,25 @@ export default function OnboardingFlow({ onAuthSuccess }) {
     setError('Apple Sign In requires additional configuration. Please use Google or GitHub for now.');
   }
 
+  async function handleDemoLogin() {
+    setIsAuthenticating(true);
+    setError(null);
+    
+    try {
+      const response = await apiClient.loginWithDemo();
+      if (response.success) {
+        onAuthSuccess(response);
+      } else {
+        setError('Demo authentication failed');
+      }
+    } catch (error) {
+      console.error('Demo auth error:', error);
+      setError(error.message);
+    } finally {
+      setIsAuthenticating(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -124,22 +143,17 @@ export default function OnboardingFlow({ onAuthSuccess }) {
               <h3 className="text-[#06B6D4] text-sm font-semibold mb-2">Development Mode</h3>
               <p className="text-[#9CA3AF] text-xs mb-3">OAuth providers need to be configured. Use demo mode for testing:</p>
               <button
-                onClick={() => {
-                  onAuthSuccess({
-                    success: true,
-                    user: {
-                      id: 1,
-                      email: 'demo@missioncontrol.dev',
-                      name: 'Demo User',
-                      avatar_url: 'https://via.placeholder.com/64/06B6D4/FFFFFF?text=DU'
-                    }
-                  });
-                }}
+                onClick={handleDemoLogin}
                 disabled={isAuthenticating}
                 className="w-full bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
                 style={{ fontFamily: 'inherit' }}
               >
-                🚀 Continue as Demo User
+                {isAuthenticating ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  '🚀'
+                )}
+                {isAuthenticating ? 'Authenticating...' : 'Continue as Demo User'}
               </button>
             </div>
           )}
