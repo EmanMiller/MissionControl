@@ -10,10 +10,10 @@
 ## 🎉 What's New in v1.0 (Production Release)
 
 - ✅ **Demo Mode Removed** - Production-ready OAuth-only authentication
-- ✅ **Simplified Kanban Board** - Clean 3-column workflow (New → In Progress → Completed)  
+- ✅ **Simplified Kanban Board** - Clean 4-column workflow (Backlog → New → In Progress → Completed)  
 - ✅ **Enhanced Task Flow** - Automatic progression with real-time notifications
 - ✅ **Console Error Free** - Zero browser console errors for professional UX
-- ✅ **URL Validation** - Robust OpenClaw endpoint validation with helpful error messages
+- ✅ **URL Validation** - OpenClaw endpoint accepts URLs and IP addresses (e.g. `http://127.0.0.1:18789`, `http://192.168.1.5/`)
 - ✅ **Mobile Optimized** - Perfect responsive design across all device types
 - ✅ **Production Hardened** - Security enhancements, error handling, and performance optimizations
 
@@ -21,7 +21,7 @@
 
 - **🔐 Production OAuth Authentication** - Google, GitHub, and Apple Sign In (no demo mode)
 - **🤖 OpenClaw Integration** - Direct connection to your OpenClaw instance with enhanced validation
-- **📋 Streamlined Task Management** - Clean 3-column Kanban: New → In Progress → Completed
+- **📋 Streamlined Task Management** - Clean 4-column Kanban: Backlog → New → In Progress → Completed
 - **📊 Real-time Dashboard** - Monitor system status and task progress with toast notifications
 - **🎯 Dynamic Team Visualization** - 3D voxel office showing you + your AI agents
 - **📱 Mobile Responsive** - Works perfectly on desktop, tablet, and mobile devices
@@ -108,12 +108,12 @@ npm run dev
 
 ### Connecting Your OpenClaw Instance
 
-1. **Sign into Mission Control** using any OAuth provider
-2. **Go to Settings** (bottom navigation)
+1. **Sign into Mission Control** using Google or GitHub OAuth
+2. **Go to Settings** (sidebar or bottom navigation)
 3. **Configure OpenClaw Integration:**
-   - **Endpoint:** Your OpenClaw URL (e.g., `http://localhost:18789`)
+   - **Endpoint:** Your OpenClaw base URL (e.g. `http://localhost:18789`, `http://127.0.0.1:18789`, or `http://192.168.1.5/`). IP-based URLs and optional trailing slashes are supported.
    - **Token:** Optional authentication token
-4. **Test Connection** - Verify Mission Control can reach OpenClaw
+4. **Test Connection** – Verify Mission Control can reach OpenClaw
 5. **Save Configuration**
 
 ### How It Works
@@ -147,7 +147,8 @@ Webhook payload should include:
 - **Styling:** Tailwind CSS with dark theme
 - **Authentication:** Google OAuth, GitHub OAuth, Apple Sign In
 - **Icons:** Lucide React
-- **API Client:** Custom axios-based client
+- **Notifications:** react-hot-toast for success and error feedback
+- **API Client:** Custom fetch-based client
 
 ### Backend (Node.js + Express)
 - **Framework:** Express.js with ES modules
@@ -164,13 +165,13 @@ Webhook payload should include:
 
 ## 📋 API Endpoints
 
-### Authentication (Production OAuth Only)
+### Authentication (OAuth)
 - `POST /api/auth/google` - Google OAuth login
 - `POST /api/auth/github/callback` - GitHub OAuth callback  
 - `POST /api/auth/apple` - Apple Sign In
 - `POST /api/auth/verify` - Verify JWT token
 - `POST /api/auth/logout` - Sign out
-- ❌ **Demo endpoints removed** - Production uses real OAuth only
+- `POST /api/auth/demo` - Demo login (development only, not in production; no UI, API-only for testing)
 
 ### Tasks
 - `GET /api/tasks` - Get user's tasks
@@ -257,7 +258,7 @@ npm start
 
 **OpenClaw Connection Failed:**
 - Verify OpenClaw is running and accessible
-- Check endpoint URL format (include http:// or https://)
+- Use a valid base URL with protocol (e.g. `http://localhost:18789`, `http://127.0.0.1:18789`, or `http://192.168.1.5/`). IP-based URLs are supported; trailing slashes are optional.
 - Test authentication token if using secured OpenClaw
 
 **Database Errors:**
