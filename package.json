@@ -17,6 +17,7 @@
     "finish-feature": "./scripts/finish-feature.sh"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "@react-oauth/google": "^0.13.4",
     "axios": "^1.13.5",
     "lucide-react": "^0.575.0",
