@@ -6,6 +6,7 @@ import {
   Bell, ChevronDown,
 } from 'lucide-react';
 import OnboardingFlow from './OnboardingFlow.jsx';
+import MissionControlDashboard from './MissionControlDashboard.jsx';
 
 /* ─── SVG Icons ──────────────────────────────────────────────────────────── */
 
@@ -1518,6 +1519,7 @@ function Dashboard({ onSignOut }) {
   const [mobileView, setMobileView] = useState('list'); // 'list' | 'detail'
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showAddTask, setShowAddTask] = useState(false);
+  const [dragInfo, setDragInfo] = useState(null); // { taskId, fromStatus } | null
 
   const selectedTask = tasks.find(t => t.id === selected);
 
@@ -1578,23 +1580,60 @@ function Dashboard({ onSignOut }) {
 
         {activeNav === 'Dashboard' ? (
           <>
-            {/* Desktop: Kanban board */}
-            <KanbanBoard
-              tasks={tasks}
-              selected={selected}
-              onTaskClick={handleTaskClick}
-              onAddTask={() => setShowAddTask(true)}
-              onMoveTask={handleMoveTask}
-            />
+            {/* Desktop: Mission Control + Kanban board */}
+            <div className="hidden lg:flex lg:flex-col lg:flex-1 lg:overflow-hidden">
+              {/* Mission Control Dashboard */}
+              <div className="h-[60%] overflow-y-auto border-b border-[#2A2A2A]">
+                <MissionControlDashboard tasks={tasks} />
+              </div>
+              
+              {/* Kanban Board */}
+              <div className="h-[40%] flex flex-col overflow-hidden">
+                <div className="h-12 shrink-0 bg-[#111111] border-b border-[#2A2A2A] flex items-center justify-between px-4">
+                  <span className="text-[#F9FAFB] text-sm font-semibold">Task Management</span>
+                  <button
+                    onClick={() => setShowAddTask(true)}
+                    className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-[12px] font-semibold rounded-md px-3 cursor-pointer flex items-center gap-1.5 transition-colors select-none"
+                    style={{ fontFamily: 'inherit', paddingTop: 6, paddingBottom: 6 }}
+                  >
+                    + New Task
+                  </button>
+                </div>
+                <div className="flex gap-4 p-4 overflow-x-auto flex-1 min-h-0">
+                  {COLUMNS.map(col => (
+                    <KanbanColumn
+                      key={col.id}
+                      column={col}
+                      tasks={tasks.filter(t => t.status === col.id)}
+                      selected={selected}
+                      onTaskClick={handleTaskClick}
+                      dragInfo={dragInfo}
+                      onDragStart={setDragInfo}
+                      onDragEnd={() => setDragInfo(null)}
+                      onDropTask={(taskId, toStatus) => {
+                        handleMoveTask(taskId, toStatus);
+                        setDragInfo(null);
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
 
-            {/* Mobile: flat task list */}
-            <div className={mobileCenterClass}>
-              <CenterPanel
-                tasks={tasks}
-                selected={selected}
-                onTaskClick={handleTaskClick}
-                onBuildThis={handleBuildThis}
-              />
+            {/* Mobile: Mission Control Overview */}
+            <div className={`lg:hidden ${mobileView === 'list' ? 'flex flex-col flex-1' : 'hidden'} overflow-y-auto`}>
+              <MissionControlDashboard tasks={tasks} />
+              
+              {/* Mobile Task List */}
+              <div className="bg-[#0A0A0A] p-4">
+                <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Active Tasks</h3>
+                <CenterPanel
+                  tasks={tasks}
+                  selected={selected}
+                  onTaskClick={handleTaskClick}
+                  onBuildThis={handleBuildThis}
+                />
+              </div>
             </div>
 
             {/* Right panel: build detail */}
