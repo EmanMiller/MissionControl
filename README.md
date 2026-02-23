@@ -1,103 +1,275 @@
-# MissionControl
+# Mission Control
 
-**AI-powered personal assistant and delivery engine.** Fire a request in plain English, live your life, come back to completed work.
+> An autonomous network of AI agents that operates around the clock, executing tasks and generating value continuously at a highly cost-efficient rate.
 
-Two modes:
-- **Dev Mode** — plain English → code, branches, PRs
-- **Creator Mode** — plain English → research, content, strategy, copy
+Mission Control is a production-ready web application that connects to your OpenClaw instance, allowing you to create tasks that get automatically processed by AI agents. Simply add a task, watch it move through the pipeline, and receive the completed output.
 
----
+## ✨ Features
 
-## Status
+- **🔐 Full OAuth Authentication** - Google, GitHub, and Apple Sign In
+- **🤖 OpenClaw Integration** - Direct connection to your OpenClaw instance
+- **📋 Task Management** - Create, track, and manage AI tasks
+- **📊 Real-time Dashboard** - Monitor system status and task progress  
+- **🎯 Mission Statement Display** - Clear organizational purpose
+- **📱 Mobile Responsive** - Works on desktop and mobile devices
+- **🔄 Automatic Processing** - Tasks automatically sent to OpenClaw
+- **📈 Progress Tracking** - Visual task pipeline with status updates
 
-**Phase 1 (Core UI) — Complete**
-- Dark-themed web app shell
-- Kanban board with drag-and-drop task management
-- Ideas capture board → task queue
-- Approvals flow (review what was built before it ships)
-- Outputs library and History timeline
-- Onboarding flow with OAuth sign-in (Google, GitHub, Apple)
-- Settings: API key management, mode switching, notifications
+## 🚀 Quick Start
 
-**Coming next:** AI backends (FastAPI + Celery), real-time build log, WebSocket updates, Pro gating, mobile app.
-
----
-
-## Quick Start
+### 1. Clone and Install
 
 ```bash
-# 1. Clone
 git clone https://github.com/EmanMiller/MissionControl.git
 cd MissionControl
 
-# 2. Install
+# Install frontend dependencies
 npm install
 
-# 3. Set up environment
-cp .env.example .env.local
-# Fill in your OAuth credentials in .env.local
+# Install backend dependencies  
+cd server
+npm install
+cd ..
+```
 
-# 4. Run
+### 2. Configure Environment
+
+```bash
+# Frontend configuration
+cp .env.example .env.local
+# Edit .env.local with your OAuth credentials (see OAuth Setup below)
+
+# Backend configuration
+cd server
+cp .env.example .env
+# Edit .env with your configuration
+cd ..
+```
+
+### 3. Start the Application
+
+```bash
+# Terminal 1: Start backend server
+cd server
+npm run dev
+
+# Terminal 2: Start frontend (in separate terminal)
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+### 4. Open Application
 
----
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:3001
 
-## Environment Variables
+## 🔧 OAuth Setup
 
-Copy `.env.example` to `.env.local` and fill in your values:
+### Google OAuth
 
-| Variable | Description |
-|---|---|
-| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID ([console.cloud.google.com](https://console.cloud.google.com)) |
-| `VITE_APPLE_CLIENT_ID` | Apple Sign In service ID ([developer.apple.com](https://developer.apple.com)) |
-| `VITE_GITHUB_CLIENT_ID` | GitHub OAuth app client ID ([github.com/settings/developers](https://github.com/settings/developers)) |
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project or select existing
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials
+5. Add authorized origins: `http://localhost:5173`
+6. Add authorized redirect URIs: `http://localhost:5173/auth/google/callback`
+7. Copy Client ID to `.env.local` as `VITE_GOOGLE_CLIENT_ID`
 
-`.env.local` is gitignored — your credentials will never be committed.
+### GitHub OAuth
 
----
+1. Go to [GitHub Settings > Developer settings](https://github.com/settings/developers)
+2. Create new OAuth App
+3. Set Homepage URL: `http://localhost:5173`
+4. Set Authorization callback URL: `http://localhost:5173/auth/github/callback`
+5. Copy Client ID to `.env.local` as `VITE_GITHUB_CLIENT_ID`
+6. Copy Client Secret to `server/.env` as `GITHUB_CLIENT_SECRET`
 
-## Tech Stack
+### Apple Sign In
 
-| Layer | Tech |
-|---|---|
-| Frontend | React 18, Vite, Tailwind CSS, TypeScript |
-| Icons | Lucide React |
-| Auth | Google OAuth (`@react-oauth/google`), GitHub OAuth, Apple Sign In |
-| Backend *(planned)* | Python, FastAPI, Redis, Celery, Anthropic API, GitHub API |
-| Realtime *(planned)* | WebSockets |
+1. Go to [Apple Developer Console](https://developer.apple.com)
+2. Create Service ID for Sign in with Apple
+3. Configure domains and redirect URLs
+4. Copy Service ID to `.env.local` as `VITE_APPLE_CLIENT_ID`
 
----
+## 🔌 OpenClaw Integration
 
-## Design System (dark only)
+### Connecting Your OpenClaw Instance
 
-| Token | Value |
-|---|---|
-| Background | `#0A0A0A` |
-| Surface | `#111111` / `#1A1A1A` |
-| Border | `#2A2A2A` |
-| Primary | `#06B6D4` (cyan) |
-| Text | `#F9FAFB` / `#9CA3AF` |
-| Success | `#10B981` |
-| In Progress | `#F59E0B` |
-| Error | `#EF4444` |
+1. **Sign into Mission Control** using any OAuth provider
+2. **Go to Settings** (bottom navigation)
+3. **Configure OpenClaw Integration:**
+   - **Endpoint:** Your OpenClaw URL (e.g., `http://localhost:18789`)
+   - **Token:** Optional authentication token
+4. **Test Connection** - Verify Mission Control can reach OpenClaw
+5. **Save Configuration**
 
-Fonts: Inter (UI), JetBrains Mono (build log / code).
+### How It Works
 
----
+1. **Create Task** - Add a new task with title and description
+2. **Start Processing** - Click "Start Processing" to send to OpenClaw
+3. **Automatic Execution** - OpenClaw receives and processes the task
+4. **Status Updates** - Mission Control polls for completion
+5. **View Results** - Completed tasks show results and deliverables
 
-## Contributing
+### OpenClaw Webhook (Optional)
 
-PRs welcome. Open an issue first for anything significant.
+For faster updates, configure OpenClaw to send webhooks to:
+```
+POST http://localhost:3001/api/openclaw/webhook
+```
 
-1. Fork → branch → PR
-2. Keep the dark-only design system intact
-3. No hardcoded credentials — use `.env.local`
+Webhook payload should include:
+```json
+{
+  "session_id": "openclaw_session_id", 
+  "status": "completed|failed",
+  "result": "task_output_data"
+}
+```
 
----
+## 🏗️ Architecture
 
-## License
+### Frontend (React + Vite)
+- **Framework:** React 18 with Vite
+- **Styling:** Tailwind CSS with dark theme
+- **Authentication:** Google OAuth, GitHub OAuth, Apple Sign In
+- **Icons:** Lucide React
+- **API Client:** Custom axios-based client
 
-MIT — see [LICENSE](./LICENSE).
+### Backend (Node.js + Express)
+- **Framework:** Express.js with ES modules
+- **Database:** SQLite with automatic setup
+- **Authentication:** JWT tokens with OAuth validation
+- **OpenClaw Integration:** HTTP API with polling and webhooks
+- **Security:** Helmet, CORS, input validation
+
+### Database Schema
+- **users** - OAuth user profiles and OpenClaw config
+- **tasks** - Task management with OpenClaw session tracking  
+- **sessions** - JWT session management
+- **oauth_states** - OAuth security state validation
+
+## 📋 API Endpoints
+
+### Authentication
+- `POST /api/auth/google` - Google OAuth login
+- `POST /api/auth/github/callback` - GitHub OAuth callback
+- `POST /api/auth/apple` - Apple Sign In
+- `POST /api/auth/verify` - Verify JWT token
+- `POST /api/auth/logout` - Sign out
+
+### Tasks
+- `GET /api/tasks` - Get user's tasks
+- `POST /api/tasks` - Create new task
+- `PUT /api/tasks/:id/status` - Update task status
+- `GET /api/tasks/stats/summary` - Task statistics
+
+### OpenClaw
+- `GET /api/openclaw/config` - Get OpenClaw configuration
+- `POST /api/openclaw/config` - Save OpenClaw configuration  
+- `POST /api/openclaw/test` - Test OpenClaw connection
+- `POST /api/openclaw/webhook` - Webhook for task completion
+
+### Users
+- `GET /api/users/profile` - Get user profile
+- `PUT /api/users/profile` - Update user profile
+- `GET /api/users/dashboard` - Dashboard statistics
+
+## 🧪 Testing
+
+Run the comprehensive test suite:
+
+```bash
+npm run test-system
+```
+
+Tests validate:
+- ✅ Backend health and API endpoints
+- ✅ Authentication middleware protection
+- ✅ Database connectivity and schema
+- ✅ OpenClaw integration endpoints
+- ✅ Frontend accessibility and rendering
+- ✅ Error handling and security
+
+## 🚀 Deployment
+
+### Prerequisites
+- Node.js 18+ 
+- OpenClaw instance (local or remote)
+- OAuth app credentials from providers
+
+### Production Environment Variables
+
+**Frontend (.env.local):**
+```bash
+VITE_API_URL=https://your-api-domain.com/api
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+VITE_GITHUB_CLIENT_ID=your_github_client_id  
+VITE_APPLE_CLIENT_ID=your_apple_client_id
+```
+
+**Backend (.env):**
+```bash
+NODE_ENV=production
+PORT=3001
+JWT_SECRET=your_super_secret_jwt_key_change_this
+FRONTEND_URL=https://your-frontend-domain.com
+PUBLIC_URL=https://your-api-domain.com
+
+# OAuth secrets
+GITHUB_CLIENT_SECRET=your_github_client_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+```
+
+### Build and Deploy
+
+```bash
+# Build frontend
+npm run build
+
+# Start production server
+cd server
+npm start
+```
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+**OAuth "Invalid Client" Error:**
+- Verify OAuth credentials in environment files
+- Check authorized redirect URLs match exactly
+- Ensure OAuth apps are configured for correct domain
+
+**OpenClaw Connection Failed:**
+- Verify OpenClaw is running and accessible
+- Check endpoint URL format (include http:// or https://)
+- Test authentication token if using secured OpenClaw
+
+**Database Errors:**
+- Delete `server/mission-control.db` to reset database
+- Check file permissions in server directory
+- Verify SQLite3 is properly installed
+
+**Tasks Stuck "In Progress":**
+- Check OpenClaw logs for processing errors
+- Verify webhook URL configuration
+- Manual polling occurs every 2 minutes as fallback
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`) 
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **Repository:** https://github.com/EmanMiller/MissionControl
+- **OpenClaw:** https://openclaw.ai
+- **Issues:** https://github.com/EmanMiller/MissionControl/issues
+- **Discussions:** https://github.com/EmanMiller/MissionControl/discussions

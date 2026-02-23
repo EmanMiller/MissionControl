@@ -1,41 +1,6 @@
-import { useState } from 'react';
-import { Users, Activity, Zap, CheckSquare } from 'lucide-react';
-
-/* ─── Data ───────────────────────────────────────────────────────────────── */
-
-const AGENTS_DATA = [
-  {
-    id: '1',
-    name: 'Marcus',
-    status: 'active',
-    lastActivity: '2 minutes ago', 
-    currentTask: 'Monitoring system metrics',
-    completedTasks: 47
-  },
-  {
-    id: '2',
-    name: 'Research Agent',
-    status: 'active',
-    lastActivity: '5 minutes ago',
-    currentTask: 'Market analysis report', 
-    completedTasks: 23
-  },
-  {
-    id: '3',
-    name: 'Content Agent',
-    status: 'idle',
-    lastActivity: '1 hour ago',
-    currentTask: 'Awaiting new content requests',
-    completedTasks: 31
-  }
-];
-
-const SYSTEM_METRICS = {
-  totalTasks: 156,
-  completedToday: 23,
-  activeAgents: 2,
-  systemUptime: '7d 14h 23m'
-};
+import { useState, useEffect } from 'react';
+import { Users, Activity, Zap, CheckSquare, AlertCircle } from 'lucide-react';
+import apiClient from './services/api.js';
 
 /* ─── Components ─────────────────────────────────────────────────────────── */
 
@@ -53,70 +18,60 @@ function MetricCard({ title, value, icon: Icon, color = '#06B6D4' }) {
   );
 }
 
-function AgentCard({ agent }) {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'active': return '#10B981';
-      case 'idle': return '#F59E0B';
-      case 'offline': return '#EF4444';
-      default: return '#6B7280';
-    }
-  };
-
-  const getStatusBadge = (status) => {
-    const color = getStatusColor(status);
-    return (
-      <span 
-        className="text-xs rounded px-2 py-0.5 font-medium"
-        style={{ 
-          background: `${color}20`, 
-          color,
-          border: `1px solid ${color}40`
-        }}
-      >
-        {status}
-      </span>
-    );
-  };
-
-  return (
-    <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 hover:border-[#06B6D4] transition-colors cursor-pointer">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: getStatusColor(agent.status) }}
-          />
-          <span className="text-[#F9FAFB] font-medium">{agent.name}</span>
-          {getStatusBadge(agent.status)}
-        </div>
-        <span className="text-[#9CA3AF] text-xs">{agent.lastActivity}</span>
-      </div>
-
-      <div className="mb-2">
-        <span className="text-[#9CA3AF] text-xs">Current Task:</span>
-        <p className="text-[#F9FAFB] text-sm m-0">{agent.currentTask}</p>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <span className="text-[#9CA3AF] text-xs">Completed: {agent.completedTasks}</span>
-        <div className="w-16 bg-[#2A2A2A] rounded-full h-2">
-          <div 
-            className="h-2 rounded-full"
-            style={{ 
-              width: `${Math.min((agent.completedTasks / 50) * 100, 100)}%`,
-              background: '#06B6D4'
-            }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function MissionControlDashboard({ tasks }) {
-  const [agents] = useState(AGENTS_DATA);
-  const [metrics] = useState(SYSTEM_METRICS);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [openClawStatus, setOpenClawStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  async function fetchDashboardData() {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [dashboard, openClaw] = await Promise.all([
+        apiClient.getDashboard(),
+        apiClient.getOpenClawStatus().catch(() => ({ connected: false }))
+      ]);
+
+      setDashboardData(dashboard);
+      setOpenClawStatus(openClaw);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-[#9CA3AF] text-sm">Loading dashboard...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-[#EF4444] text-sm">Error: {error}</div>
+      </div>
+    );
+  }
+
+  const metrics = {
+    totalTasks: dashboardData?.total_tasks || 0,
+    completedToday: dashboardData?.completed_today || 0,
+    activeAgents: openClawStatus?.connected ? 1 : 0,
+    systemUptime: openClawStatus?.connected ? 'Connected' : 'Disconnected'
+  };
+
+  const taskStats = dashboardData?.task_stats || {};
 
   return (
     <div className="flex flex-col h-full overflow-y-auto bg-[#0A0A0A] p-4">
@@ -152,43 +107,88 @@ export default function MissionControlDashboard({ tasks }) {
           color="#10B981"
         />
         <MetricCard 
-          title="Active Agents" 
-          value={metrics.activeAgents} 
-          icon={Users}
-          color="#8B5CF6"
+          title="OpenClaw Status" 
+          value={openClawStatus?.connected ? 'Connected' : 'Offline'} 
+          icon={Zap}
+          color={openClawStatus?.connected ? '#10B981' : '#EF4444'}
         />
         <MetricCard 
-          title="System Uptime" 
-          value={metrics.systemUptime} 
-          icon={Zap}
+          title="Processing" 
+          value={taskStats.in_progress || 0} 
+          icon={Activity}
           color="#F59E0B"
         />
       </div>
 
-      {/* Agent Network */}
+      {/* OpenClaw Connection Status */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-4">
-          <Users size={20} className="text-[#8B5CF6]" />
-          <h3 className="text-[#F9FAFB] text-lg font-semibold m-0">Agent Network</h3>
+          <Zap size={20} className="text-[#F59E0B]" />
+          <h3 className="text-[#F9FAFB] text-lg font-semibold m-0">OpenClaw Connection</h3>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {agents.map((agent) => (
-            <AgentCard key={agent.id} agent={agent} />
-          ))}
-        </div>
+        
+        {openClawStatus?.connected ? (
+          <div className="bg-[#111111] border border-[#10B981] rounded-lg p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-3 h-3 rounded-full bg-[#10B981]" />
+              <span className="text-[#F9FAFB] font-medium">Connected to OpenClaw</span>
+              <span className="text-xs rounded px-2 py-0.5 font-medium bg-[#10B981]20 text-[#10B981] border border-[#10B981]40">
+                Active
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div>
+                <span className="text-[#9CA3AF]">Endpoint:</span>
+                <p className="text-[#F9FAFB] m-0 truncate">{openClawStatus.endpoint}</p>
+              </div>
+              <div>
+                <span className="text-[#9CA3AF]">Version:</span>
+                <p className="text-[#F9FAFB] m-0">{openClawStatus.version || 'Unknown'}</p>
+              </div>
+              <div>
+                <span className="text-[#9CA3AF]">Tasks Sent:</span>
+                <p className="text-[#F9FAFB] m-0">{openClawStatus.total_openclaw_tasks || 0}</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-[#111111] border border-[#F59E0B] rounded-lg p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <AlertCircle size={16} className="text-[#F59E0B]" />
+              <span className="text-[#F9FAFB] font-medium">OpenClaw Not Connected</span>
+            </div>
+            <p className="text-[#9CA3AF] text-sm mb-3 m-0">
+              Connect your OpenClaw instance to start processing tasks automatically.
+            </p>
+            <button
+              onClick={() => window.location.hash = '#settings'}
+              className="bg-[#F59E0B] hover:bg-[#D97706] text-white text-sm px-4 py-2 rounded-md transition-colors"
+            >
+              Configure OpenClaw
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Active Tasks Summary */}
       <div className="mb-4">
         <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Task Overview</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {['Backlog', 'New', 'In Progress', 'Built'].map(status => {
-            const count = tasks?.filter(t => t.status === status).length || 0;
+          {['backlog', 'new', 'in_progress', 'built'].map(status => {
+            const count = taskStats[status] || 0;
             const colors = {
-              'Backlog': '#4B5563',
-              'New': '#06B6D4', 
-              'In Progress': '#F59E0B',
-              'Built': '#10B981'
+              'backlog': '#4B5563',
+              'new': '#06B6D4', 
+              'in_progress': '#F59E0B',
+              'built': '#10B981'
+            };
+            
+            const labels = {
+              'backlog': 'Backlog',
+              'new': 'New',
+              'in_progress': 'In Progress',
+              'built': 'Completed'
             };
             
             return (
@@ -200,13 +200,45 @@ export default function MissionControlDashboard({ tasks }) {
                   >
                     {count}
                   </div>
-                  <div className="text-[#9CA3AF] text-xs">{status}</div>
+                  <div className="text-[#9CA3AF] text-xs">{labels[status]}</div>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Recent Activity */}
+      {dashboardData?.recent_activity?.length > 0 && (
+        <div className="mb-4">
+          <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Recent Activity</h3>
+          <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg">
+            {dashboardData.recent_activity.slice(0, 5).map((task, index) => (
+              <div 
+                key={task.id} 
+                className={`p-3 ${index > 0 ? 'border-t border-[#2A2A2A]' : ''}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div 
+                      className="w-2 h-2 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: 
+                        task.status === 'built' ? '#10B981' :
+                        task.status === 'in_progress' ? '#F59E0B' :
+                        task.status === 'new' ? '#06B6D4' : '#4B5563'
+                      }}
+                    />
+                    <span className="text-[#F9FAFB] text-sm truncate">{task.title}</span>
+                  </div>
+                  <span className="text-[#9CA3AF] text-xs flex-shrink-0 ml-2">
+                    {new Date(task.updated_at).toLocaleTimeString()}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Status Indicator */}
       <div className="text-center text-[#4B5563] text-xs mt-4">
