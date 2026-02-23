@@ -3,7 +3,7 @@ import {
   LogOut, LayoutDashboard, Lightbulb, CheckSquare,
   FolderOpen, FileText, Clock, Settings,
   Search, Trash2, Send, Download, Eye,
-  Bell, ChevronDown,
+  Bell, ChevronDown, Zap,
 } from 'lucide-react';
 import MissionControlDashboard from './MissionControlDashboard.jsx';
 import apiClient from './services/api.js';
@@ -124,6 +124,81 @@ function TaskCard({ task, isSelected, onClick, onStatusChange }) {
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+function OpenClawOnboardingModal({ isOpen, onClose, onGoToSettings }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black opacity-60" />
+
+      {/* Modal */}
+      <div className="relative bg-[#111111] border border-[#2A2A2A] rounded-xl p-8 w-full max-w-lg">
+        <div className="text-center">
+          {/* Icon */}
+          <div className="w-16 h-16 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-xl flex items-center justify-center mx-auto mb-4">
+            <Zap size={32} className="text-white" />
+          </div>
+          
+          {/* Title */}
+          <h2 className="text-[#F9FAFB] text-xl font-bold mb-3">Welcome to Mission Control!</h2>
+          
+          {/* Description */}
+          <p className="text-[#9CA3AF] text-sm leading-relaxed mb-6">
+            You're successfully authenticated! Now let's connect your OpenClaw instance 
+            so you can start creating tasks that get processed automatically by AI agents.
+          </p>
+          
+          {/* Features */}
+          <div className="text-left bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 mb-6">
+            <h3 className="text-[#F9FAFB] text-sm font-semibold mb-3">What you can do:</h3>
+            <ul className="space-y-2 text-[#9CA3AF] text-sm">
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-[#06B6D4] rounded-full" />
+                Create tasks in plain English
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-[#06B6D4] rounded-full" />
+                AI agents process them automatically
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-[#06B6D4] rounded-full" />
+                Get results delivered back to you
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-[#06B6D4] rounded-full" />
+                Track progress in real-time
+              </li>
+            </ul>
+          </div>
+          
+          {/* Actions */}
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 bg-transparent border border-[#2A2A2A] text-[#9CA3AF] text-sm rounded-lg px-4 py-3 cursor-pointer hover:text-[#F9FAFB] hover:border-[#3A3A3A] transition-colors select-none"
+              style={{ fontFamily: 'inherit' }}
+            >
+              Skip for now
+            </button>
+            
+            <button
+              onClick={() => {
+                onGoToSettings();
+                onClose();
+              }}
+              className="flex-1 bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold rounded-lg px-4 py-3 cursor-pointer transition-colors select-none"
+              style={{ fontFamily: 'inherit' }}
+            >
+              Connect OpenClaw
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -421,12 +496,27 @@ export default function Dashboard({ user, onSignOut }) {
   const [selectedTask, setSelectedTask] = useState(null);
   const [activeNav, setActiveNav] = useState('Dashboard');
   const [showAddTask, setShowAddTask] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     loadTasks();
+    // Check if user needs OpenClaw onboarding
+    checkOnboardingStatus();
   }, []);
+
+  async function checkOnboardingStatus() {
+    try {
+      const config = await apiClient.getOpenClawConfig();
+      if (!config.connected && tasks.length === 0) {
+        // New user without OpenClaw - show onboarding
+        setShowOnboarding(true);
+      }
+    } catch (error) {
+      console.error('Error checking onboarding status:', error);
+    }
+  }
 
   async function loadTasks() {
     try {
@@ -562,6 +652,12 @@ export default function Dashboard({ user, onSignOut }) {
         isOpen={showAddTask}
         onClose={() => setShowAddTask(false)}
         onSubmit={createTask}
+      />
+      
+      <OpenClawOnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onGoToSettings={() => setActiveNav('Settings')}
       />
     </div>
   );

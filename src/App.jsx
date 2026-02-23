@@ -66,17 +66,14 @@ export default function App() {
   }
 
   if (!user) {
-    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    // Use a development Google Client ID for testing
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '1234567890-abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com';
     
-    if (googleClientId) {
-      return (
-        <GoogleOAuthProvider clientId={googleClientId}>
-          <OnboardingFlow onAuthSuccess={handleAuthSuccess} />
-        </GoogleOAuthProvider>
-      );
-    } else {
-      return <OnboardingFlow onAuthSuccess={handleAuthSuccess} />;
-    }
+    return (
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <OnboardingFlow onAuthSuccess={handleAuthSuccess} />
+      </GoogleOAuthProvider>
+    );
   }
 
   return <Dashboard user={user} onSignOut={handleSignOut} />;

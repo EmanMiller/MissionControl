@@ -78,10 +78,17 @@ function upsertUser(userData) {
 // GitHub OAuth
 router.get('/github', async (req, res) => {
   try {
-    if (!process.env.GITHUB_CLIENT_ID) {
+    if (!process.env.GITHUB_CLIENT_ID || process.env.GITHUB_CLIENT_ID === 'your_github_oauth_app_client_id') {
       return res.status(400).json({ 
         error: 'GitHub OAuth not configured', 
-        details: 'GITHUB_CLIENT_ID environment variable is missing. Configure GitHub OAuth app in server/.env' 
+        details: 'GitHub OAuth app not set up. Create a GitHub OAuth app and add GITHUB_CLIENT_ID to server/.env. See OAUTH_SETUP.md for instructions.' 
+      });
+    }
+
+    if (!process.env.GITHUB_CLIENT_SECRET || process.env.GITHUB_CLIENT_SECRET === 'your_github_oauth_app_client_secret') {
+      return res.status(400).json({ 
+        error: 'GitHub OAuth not configured', 
+        details: 'GITHUB_CLIENT_SECRET missing in server/.env. See OAUTH_SETUP.md for setup instructions.' 
       });
     }
 
