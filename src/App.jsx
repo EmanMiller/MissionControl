@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OnboardingFlow from './OnboardingFlow.jsx';
-import Dashboard from './Dashboard.jsx';
+import KanbanDashboard from './components/KanbanDashboard.jsx';
 import apiClient from './services/api.js';
 
 export default function App() {
@@ -76,5 +76,5 @@ export default function App() {
     );
   }
 
-  return <Dashboard user={user} onSignOut={handleSignOut} />;
+  return <KanbanDashboard user={user} onSignOut={handleSignOut} />;
 }
