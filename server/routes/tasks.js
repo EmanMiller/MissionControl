@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const userId = req.user.id;
   
-  db.all(`SELECT id, title, description, status, priority, tags,
+  db.all(`SELECT id, title, description, status, priority, tags, estimated_hours,
                  result_url, created_at, updated_at, completed_at,
                  openclaw_session_id
           FROM tasks 
@@ -43,7 +43,7 @@ router.get('/', (req, res) => {
 
 // Create new task
 router.post('/', async (req, res) => {
-  const { title, description, priority = 'medium', status = 'backlog', tags } = req.body;
+  const { title, description, priority = 'medium', status = 'backlog', tags, estimated_hours } = req.body;
   const userId = req.user.id;
   
   if (!title || title.trim().length === 0) {
@@ -55,9 +55,9 @@ router.post('/', async (req, res) => {
 
   try {
     // Insert task into database
-    db.run(`INSERT INTO tasks (user_id, title, description, priority, status, tags) 
-            VALUES (?, ?, ?, ?, ?, ?)`,
-      [userId, title.trim(), description?.trim() || null, priority, status, tagsJson], 
+    db.run(`INSERT INTO tasks (user_id, title, description, priority, status, tags, estimated_hours) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [userId, title.trim(), description?.trim() || null, priority, status, tagsJson, estimated_hours || null], 
       function(err) {
         if (err) {
           console.error('Error creating task:', err);
@@ -91,6 +91,7 @@ router.post('/', async (req, res) => {
               status: task.status,
               priority: task.priority,
               tags: parsedTags,
+              estimated_hours: task.estimated_hours,
               created_at: task.created_at,
               updated_at: task.updated_at
             }

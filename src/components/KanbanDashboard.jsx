@@ -4,7 +4,8 @@ import {
   LayoutDashboard, FileText, CheckSquare, Users, Calendar,
   FolderOpen, BookOpen, User, Building, Settings,
   Plus, Filter, MoreHorizontal, Activity, Clock, Tag,
-  X, Search, RefreshCw, MapPin, Phone, Monitor
+  X, Search, RefreshCw, MapPin, Phone, Monitor, CheckCircle,
+  AlertCircle, Info, Timer
 } from 'lucide-react';
 import apiClient from '../services/api.js';
 import VoxelOffice3D from './VoxelOffice3D.jsx';
@@ -25,6 +26,68 @@ const KANBAN_COLUMNS = [
   { id: 'in_progress', title: 'In Progress', color: '#F59E0B' },
   { id: 'built', title: 'Completed', color: '#10B981' }
 ];
+
+/* ─── Toast Notification Component ──────────────────────────────────────── */
+
+function Toast({ notification, onClose }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose(notification.id);
+    }, notification.duration || 5000);
+
+    return () => clearTimeout(timer);
+  }, [notification, onClose]);
+
+  const getIcon = () => {
+    switch (notification.type) {
+      case 'success': return <CheckCircle size={20} className="text-[#10B981]" />;
+      case 'error': return <AlertCircle size={20} className="text-[#EF4444]" />;
+      case 'info': return <Info size={20} className="text-[#06B6D4]" />;
+      default: return <Info size={20} className="text-[#06B6D4]" />;
+    }
+  };
+
+  const getBgColor = () => {
+    switch (notification.type) {
+      case 'success': return 'bg-[#10B981]/10 border-[#10B981]/20';
+      case 'error': return 'bg-[#EF4444]/10 border-[#EF4444]/20';
+      case 'info': return 'bg-[#06B6D4]/10 border-[#06B6D4]/20';
+      default: return 'bg-[#06B6D4]/10 border-[#06B6D4]/20';
+    }
+  };
+
+  return (
+    <div className={`${getBgColor()} border rounded-lg p-4 flex items-start gap-3 min-w-80 max-w-md shadow-lg backdrop-blur-sm`}>
+      {getIcon()}
+      <div className="flex-1 min-w-0">
+        <h4 className="text-[#F9FAFB] font-medium text-sm">{notification.title}</h4>
+        {notification.message && (
+          <p className="text-[#9CA3AF] text-xs mt-1">{notification.message}</p>
+        )}
+      </div>
+      <button
+        onClick={() => onClose(notification.id)}
+        className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors flex-shrink-0"
+      >
+        <X size={16} />
+      </button>
+    </div>
+  );
+}
+
+function ToastContainer({ notifications, onClose }) {
+  return (
+    <div className="fixed top-4 right-4 z-50 space-y-3">
+      {notifications.map((notification) => (
+        <Toast
+          key={notification.id}
+          notification={notification}
+          onClose={onClose}
+        />
+      ))}
+    </div>
+  );
+}
 
 /* ─── Components ─────────────────────────────────────────────────────────── */
 
@@ -634,6 +697,21 @@ function TaskCard({ task, index }) {
             </div>
           )}
           
+          {/* Time Estimate */}
+          {task.estimated_hours && (
+            <div className="flex items-center gap-1 mb-2 text-[#9CA3AF]">
+              <Timer size={12} />
+              <span className="text-xs">
+                {task.estimated_hours < 1 
+                  ? `${task.estimated_hours * 60}m`
+                  : task.estimated_hours < 8 
+                    ? `${task.estimated_hours}h`
+                    : `${Math.ceil(task.estimated_hours / 8)}d`
+                }
+              </span>
+            </div>
+          )}
+
           {/* Footer */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -957,7 +1035,8 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
     description: '',
     priority: 'medium',
     status: initialStatus || 'backlog',
-    tags: ''
+    tags: '',
+    estimated_hours: ''
   });
 
   function handleSubmit(e) {
@@ -1001,7 +1080,7 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div>
           <label className="text-[#9CA3AF] text-sm block mb-2">Priority</label>
           <select
@@ -1026,6 +1105,29 @@ function TaskCreateForm({ onSubmit, initialStatus, availableTags }) {
             <option value="new">New</option>
             <option value="in_progress">In Progress</option>
             <option value="built">Completed</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-[#9CA3AF] text-sm block mb-2 flex items-center gap-1">
+            <Timer size={14} />
+            Time Estimate
+          </label>
+          <select
+            value={formData.estimated_hours}
+            onChange={e => setFormData({...formData, estimated_hours: e.target.value})}
+            className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm focus:border-[#06B6D4] focus:outline-none"
+          >
+            <option value="">No estimate</option>
+            <option value="0.5">30 minutes</option>
+            <option value="1">1 hour</option>
+            <option value="2">2 hours</option>
+            <option value="4">4 hours</option>
+            <option value="8">8 hours</option>
+            <option value="16">2 days</option>
+            <option value="24">3 days</option>
+            <option value="40">1 week</option>
+            <option value="80">2 weeks</option>
           </select>
         </div>
       </div>
@@ -1174,10 +1276,21 @@ export default function KanbanDashboard({ user, onSignOut }) {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState('');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     loadTasks();
   }, []);
+
+  // Notification functions
+  function addNotification(notification) {
+    const id = Date.now().toString();
+    setNotifications(prev => [...prev, { ...notification, id }]);
+  }
+
+  function removeNotification(id) {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  }
 
   async function loadTasks() {
     try {
@@ -1214,13 +1327,42 @@ export default function KanbanDashboard({ user, onSignOut }) {
 
   async function createTask(taskData) {
     try {
+      addNotification({
+        type: 'info',
+        title: 'Creating task...',
+        message: 'Sending task to OpenClaw for processing'
+      });
+
       const response = await apiClient.createTask(taskData);
       if (response.task) {
         setTasks(prev => [response.task, ...prev]);
         setShowTaskModal(false);
+        
+        addNotification({
+          type: 'success',
+          title: '✅ Task created successfully!',
+          message: `"${taskData.title}" has been sent to OpenClaw and will be processed automatically.`
+        });
+
+        // If task has OpenClaw integration, show additional notification
+        if (response.openclaw_session_id || taskData.status === 'new') {
+          setTimeout(() => {
+            addNotification({
+              type: 'info',
+              title: '🤖 OpenClaw is working',
+              message: `Your task "${taskData.title}" is being processed by AI agents.`,
+              duration: 8000
+            });
+          }, 2000);
+        }
       }
     } catch (error) {
       console.error('Failed to create task:', error);
+      addNotification({
+        type: 'error',
+        title: 'Failed to create task',
+        message: error.message || 'Something went wrong. Please try again.'
+      });
     }
   }
 
@@ -1229,12 +1371,16 @@ export default function KanbanDashboard({ user, onSignOut }) {
   }
 
   function handleCreateTask(formData) {
-    createTask({
+    const taskData = {
       title: formData.title,
       description: formData.description,
       status: formData.status || 'backlog',
-      priority: formData.priority || 'medium'
-    });
+      priority: formData.priority || 'medium',
+      tags: formData.tags,
+      estimated_hours: formData.estimated_hours ? parseFloat(formData.estimated_hours) : null
+    };
+
+    createTask(taskData);
   }
 
   // Get all unique tags from tasks
@@ -1345,7 +1491,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
             {/* Kanban Board */}
             <div className="flex-1 p-3 sm:p-6 overflow-hidden">
               <DragDropContext onDragEnd={handleDragEnd}>
-                <div className="flex gap-3 sm:gap-6 h-full overflow-x-auto min-w-max sm:min-w-0 pb-4">
+                <div className="flex gap-3 sm:gap-6 h-full overflow-x-auto kanban-scroll pb-4 pr-4">
                   {KANBAN_COLUMNS.map(column => (
                     <KanbanColumn
                       key={column.id}
@@ -1354,6 +1500,8 @@ export default function KanbanDashboard({ user, onSignOut }) {
                       onAddTask={handleAddTask}
                     />
                   ))}
+                  {/* Scroll indicator for mobile */}
+                  <div className="flex-shrink-0 w-4 lg:w-0" />
                 </div>
               </DragDropContext>
             </div>
@@ -1407,6 +1555,12 @@ export default function KanbanDashboard({ user, onSignOut }) {
           availableTags={allTags}
         />
       </CustomModal>
+
+      {/* Toast Notifications */}
+      <ToastContainer 
+        notifications={notifications}
+        onClose={removeNotification}
+      />
     </div>
   );
 }

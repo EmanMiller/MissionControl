@@ -134,6 +134,11 @@ function runMigrations() {
       {
         name: 'add_tags_to_tasks',
         sql: 'ALTER TABLE tasks ADD COLUMN tags TEXT'
+      },
+      // Migration: Add estimated_hours column to tasks table
+      {
+        name: 'add_estimated_hours_to_tasks',
+        sql: 'ALTER TABLE tasks ADD COLUMN estimated_hours REAL'
       }
     ];
 
@@ -141,41 +146,35 @@ function runMigrations() {
     
     migrations.forEach((migration) => {
       // Check if column already exists
-      db.get("PRAGMA table_info(tasks)", (err, result) => {
+      db.all("PRAGMA table_info(tasks)", (err, columns) => {
         if (err) {
-          console.error(`Migration ${migration.name} check failed:`, err);
+          console.error(`Migration ${migration.name} failed:`, err);
           completed++;
           if (completed === migrations.length) resolve();
           return;
         }
 
-        // Check if tags column exists
-        db.all("PRAGMA table_info(tasks)", (err, columns) => {
-          if (err) {
-            console.error(`Migration ${migration.name} failed:`, err);
+        // Extract column name from migration (assumes ADD COLUMN syntax)
+        const columnMatch = migration.sql.match(/ADD COLUMN (\w+)/);
+        const columnName = columnMatch ? columnMatch[1] : null;
+        
+        const hasColumn = columnName && columns.some(col => col.name === columnName);
+        
+        if (!hasColumn && columnName) {
+          db.run(migration.sql, (err) => {
+            if (err) {
+              console.error(`Migration ${migration.name} failed:`, err);
+            } else {
+              console.log(`Migration ${migration.name} completed successfully`);
+            }
             completed++;
             if (completed === migrations.length) resolve();
-            return;
-          }
-
-          const hasTagsColumn = columns.some(col => col.name === 'tags');
-          
-          if (!hasTagsColumn) {
-            db.run(migration.sql, (err) => {
-              if (err) {
-                console.error(`Migration ${migration.name} failed:`, err);
-              } else {
-                console.log(`Migration ${migration.name} completed successfully`);
-              }
-              completed++;
-              if (completed === migrations.length) resolve();
-            });
-          } else {
-            console.log(`Migration ${migration.name} already applied`);
-            completed++;
-            if (completed === migrations.length) resolve();
-          }
-        });
+          });
+        } else {
+          console.log(`Migration ${migration.name} already applied`);
+          completed++;
+          if (completed === migrations.length) resolve();
+        }
       });
     });
   });

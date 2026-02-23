@@ -28,18 +28,38 @@ button {
 
 /* Slim custom scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #1A1A1A;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2A2A2A;
-  border-radius: 2px;
+  background: #374151;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
 }
 
 /* iOS momentum scroll helper — apply to any scrollable container */
 .scroll-touch {
   -webkit-overflow-scrolling: touch;
+}
+
+/* Kanban board scrolling improvements */
+.kanban-scroll {
+  /* Show scrollbar on mobile for better UX */
+  scrollbar-width: thin;
+  scrollbar-color: #374151 #1A1A1A;
+}
+
+@media (max-width: 1024px) {
+  .kanban-scroll::-webkit-scrollbar {
+    height: 8px;
+  }
+  .kanban-scroll::-webkit-scrollbar-thumb {
+    background: #06B6D4;
+  }
 }
