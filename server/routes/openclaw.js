@@ -69,6 +69,13 @@ router.post('/config', async (req, res) => {
     return res.status(400).json({ error: 'Endpoint is required' });
   }
 
+  if (!token || typeof token !== 'string' || !token.trim()) {
+    return res.status(400).json({
+      error: 'Authentication token is required',
+      details: 'Add to your OpenClaw config (~/.openclaw/openclaw.json): "hooks": { "enabled": true, "token": "your-secret-token" }. Use the same token here.'
+    });
+  }
+
   const normalized = normalizeOpenClawEndpoint(endpoint);
   if (!normalized) {
     return res.status(400).json({ error: 'Invalid endpoint URL: use http or https with a host (e.g. http://127.0.0.1:18789 or http://192.168.1.5/)' });
@@ -91,7 +98,7 @@ router.post('/config', async (req, res) => {
              openclaw_token = ?,
              updated_at = CURRENT_TIMESTAMP
              WHERE id = ?`,
-      [normalized, token || null, userId], (err) => {
+      [normalized, token.trim(), userId], (err) => {
         if (err) {
           console.error('Error saving OpenClaw config:', err);
           return res.status(500).json({ error: 'Failed to save configuration' });

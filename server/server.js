@@ -72,7 +72,11 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', authenticateToken, taskRoutes);
 app.use('/api/users', authenticateToken, userRoutes);
-app.use('/api/openclaw', authenticateToken, openclawRoutes);
+// OpenClaw: webhook must be public (OpenClaw agent POSTs without JWT); other routes require auth
+app.use('/api/openclaw', (req, res, next) => {
+  if (req.path === '/webhook' && req.method === 'POST') return next();
+  return authenticateToken(req, res, next);
+}, openclawRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

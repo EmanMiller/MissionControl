@@ -409,13 +409,13 @@ function SettingsPanel({ user, onSignOut }) {
 
             <div>
               <label className="text-[#9CA3AF] text-sm block mb-2">
-                Authentication Token (Optional)
+                Authentication Token
               </label>
               <input
                 type="password"
                 value={openClawConfig.token}
                 onChange={e => setOpenClawConfig({...openClawConfig, token: e.target.value})}
-                placeholder="Optional authentication token"
+                placeholder="Required; set hooks.token in ~/.openclaw/openclaw.json"
                 className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors placeholder-[#4B5563]"
                 style={{ fontFamily: 'inherit' }}
               />
@@ -433,7 +433,7 @@ function SettingsPanel({ user, onSignOut }) {
               
               <button
                 onClick={saveConfig}
-                disabled={isSaving || !openClawConfig.endpoint}
+                disabled={isSaving || !openClawConfig.endpoint || !openClawConfig.token?.trim()}
                 className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold px-3 sm:px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
                 style={{ fontFamily: 'inherit' }}
               >

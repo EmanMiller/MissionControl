@@ -112,25 +112,28 @@ npm run dev
 2. **Go to Settings** (sidebar or bottom navigation)
 3. **Configure OpenClaw Integration:**
    - **Endpoint:** Your OpenClaw base URL (e.g. `http://localhost:18789`, `http://127.0.0.1:18789`, or `http://192.168.1.5/`). IP-based URLs and optional trailing slashes are supported.
-   - **Token:** Optional authentication token
+   - **Authentication Token (required):** Must match `hooks.token` in OpenClaw. Add to `~/.openclaw/openclaw.json`:
+   ```json
+   "hooks": {
+     "enabled": true,
+     "token": "your-secret-token"
+   }
+   ```
+   Use the same token in Mission Control Settings. Without it you cannot create or send tasks to OpenClaw.
 4. **Test Connection** – Verify Mission Control can reach OpenClaw
 5. **Save Configuration**
 
-### OpenClaw: Allowing task submission over HTTP
+### OpenClaw: Getting tasks to run
 
-When you **move a task to "In Progress"**, Mission Control sends it to OpenClaw using the **Tools Invoke API**: `POST {endpoint}/tools/invoke` with tool `sessions_spawn`. By default OpenClaw **denies** `sessions_spawn` over HTTP. To allow Mission Control to submit tasks, add this to your OpenClaw config (e.g. `~/.openclaw/openclaw.json` or your gateway config):
+When you **move a task to "In Progress"** (or create a task in **New** with OpenClaw configured), Mission Control tries these in order:
 
-```json
-{
-  "gateway": {
-    "tools": {
-      "allow": ["sessions_spawn"]
-    }
-  }
-}
-```
+1. **Webhooks (recommended)** — `POST {endpoint}/hooks/agent` ([docs](https://docs.openclaw.ai/automation/webhook)). Enable in OpenClaw with `hooks.enabled` and `hooks.token` in `~/.openclaw/openclaw.json` (see above). Mission Control sends the task with a completion instruction; when OpenClaw finishes, it POSTs to Mission Control’s webhook URL and the task moves to **Completed** automatically.
 
-Restart OpenClaw after changing config. If you use Gateway auth, set the same token in Mission Control Settings (Authentication Token). Then move a task to **In Progress** and check the Mission Control server logs for `[OpenClaw] Sending task ...` and `Task ... accepted`; on the OpenClaw side you should see the new run/session.
+2. **Tools Invoke** — `POST {endpoint}/tools/invoke` with tool `sessions_spawn`. Requires `gateway.tools.allow: ["sessions_spawn"]` in OpenClaw.
+
+3. **Legacy** — `POST {endpoint}/api/sessions` if your deployment exposes it.
+
+4. **OpenResponses (auto-completion)** — If all of the above fail, Mission Control runs the task in the background via `POST {endpoint}/v1/responses` and updates the task to Completed/Failed when done. Enable with `gateway.http.endpoints.responses.enabled: true` in OpenClaw.
 
 ### How It Works
 
@@ -140,19 +143,19 @@ Restart OpenClaw after changing config. If you use Gateway auth, set the same to
 4. **Status Updates** - Mission Control polls for completion
 5. **View Results** - Completed tasks show results and deliverables
 
-### OpenClaw Webhook (Optional)
+### OpenClaw Webhook (auto-completion)
 
-For faster updates, configure OpenClaw to send webhooks to:
+When using webhooks, Mission Control injects an instruction so OpenClaw can report completion. Set `PUBLIC_URL` (or ensure the server is reachable) so the injected URL is correct. OpenClaw should POST to:
 ```
-POST http://localhost:3001/api/openclaw/webhook
+POST <PUBLIC_URL>/api/openclaw/webhook
 ```
 
-Webhook payload should include:
+Webhook payload:
 ```json
 {
-  "session_id": "openclaw_session_id", 
-  "status": "completed|failed",
-  "result": "task_output_data"
+  "session_id": "hook:task-<id> or OpenClaw session id",
+  "status": "completed",
+  "result": "task output or object"
 }
 ```
 

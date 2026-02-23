@@ -1,6 +1,6 @@
 import express from 'express';
 import db from '../database.js';
-import { sendTaskToOpenClaw } from '../services/openclaw.js';
+import { sendTaskToOpenClaw, runTaskViaOpenResponsesInBackground } from '../services/openclaw.js';
 
 const router = express.Router();
 
@@ -67,10 +67,47 @@ router.post('/', async (req, res) => {
         const taskId = this.lastID;
         
         // Get the created task
-        db.get('SELECT * FROM tasks WHERE id = ?', [taskId], (err, task) => {
+        db.get('SELECT * FROM tasks WHERE id = ?', [taskId], async (err, task) => {
           if (err) {
             console.error('Error fetching created task:', err);
             return res.status(500).json({ error: 'Task created but failed to fetch details' });
+          }
+          
+          // Auto-progression: if created in "new" and OpenClaw is configured with token, send immediately and move to in_progress
+          if (task.status === 'new' && req.user.openclaw_endpoint && req.user.openclaw_token) {
+            try {
+              const sessionId = await sendTaskToOpenClaw(req.user, task);
+              db.run(`UPDATE tasks SET status = 'in_progress', openclaw_session_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+                [sessionId, taskId], (updateErr) => {
+                  if (updateErr) {
+                    console.error('Error updating task after auto-send:', updateErr);
+                  }
+                  const finalStatus = updateErr ? task.status : 'in_progress';
+                  const finalSessionId = updateErr ? null : sessionId;
+                  let parsedTags = null;
+                  if (task.tags) {
+                    try { parsedTags = JSON.parse(task.tags); } catch (e) { /* ignore */ }
+                  }
+                  return res.status(201).json({
+                    task: {
+                      id: task.id,
+                      title: task.title,
+                      description: task.description,
+                      status: finalStatus,
+                      priority: task.priority,
+                      tags: parsedTags,
+                      estimated_hours: task.estimated_hours,
+                      created_at: task.created_at,
+                      updated_at: new Date().toISOString(),
+                      ...(finalSessionId && { openclaw_session_id: finalSessionId })
+                    }
+                  });
+                });
+              return;
+            } catch (openclawError) {
+              console.warn('Auto-send to OpenClaw on create failed:', openclawError?.message);
+              // Fall through and return task as created (status remains 'new')
+            }
           }
           
           // Parse tags back to array
@@ -131,6 +168,13 @@ router.put('/:taskId/status', async (req, res) => {
         
         // If moving to "in_progress", try to send to OpenClaw (optional)
         if (status === 'in_progress' && task.status !== 'in_progress') {
+          // OpenClaw requires endpoint and token; block if token missing
+          if (req.user.openclaw_endpoint && !req.user.openclaw_token) {
+            return res.status(403).json({
+              error: 'Authentication token required',
+              details: 'To send tasks to OpenClaw, set an Authentication Token in Settings. Add to ~/.openclaw/openclaw.json: "hooks": { "enabled": true, "token": "<same-token>" }.'
+            });
+          }
           // Check if OpenClaw is configured
           if (req.user.openclaw_endpoint) {
             try {
@@ -156,10 +200,8 @@ router.put('/:taskId/status', async (req, res) => {
                   });
                 });
             } catch (openclawError) {
-              console.error('OpenClaw integration error:', openclawError);
-              
-              // Still update status to in_progress, but without OpenClaw session
-              // This allows the UI to work even if OpenClaw is misconfigured
+              console.warn('OpenClaw session path failed, trying OpenResponses in background:', openclawError?.message);
+              // Update to in_progress and respond success; run task via OpenResponses in background (no hooks/session needed)
               db.run(`UPDATE tasks SET 
                        status = ?, updated_at = CURRENT_TIMESTAMP
                        WHERE id = ?`,
@@ -168,14 +210,13 @@ router.put('/:taskId/status', async (req, res) => {
                     console.error('Error updating task status:', err);
                     return res.status(500).json({ error: 'Failed to update task status' });
                   }
-                  
-                  res.json({ 
+                  runTaskViaOpenResponsesInBackground(taskId);
+                  res.json({
                     task: {
                       ...task,
                       status,
                       updated_at: new Date().toISOString()
-                    },
-                    warning: 'Task moved to in_progress, but OpenClaw integration failed'
+                    }
                   });
                 });
             }
