@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OnboardingFlow from './OnboardingFlow.jsx';
 import KanbanDashboard from './components/KanbanDashboard.jsx';
@@ -42,10 +43,11 @@ export default function App() {
     try {
       await apiClient.logout();
       setUser(null);
+      toast.success('Signed out');
     } catch (error) {
       console.error('Sign out error:', error);
-      // Force sign out even if API call fails
       setUser(null);
+      toast.success('Signed out');
     }
   }
 
@@ -76,5 +78,10 @@ export default function App() {
     );
   }
 
-  return <KanbanDashboard user={user} onSignOut={handleSignOut} />;
+  return (
+    <>
+      <Toaster position="top-right" toastOptions={{ duration: 4000, style: { background: '#111', color: '#F9FAFB', border: '1px solid #2A2A2A' } }} />
+      <KanbanDashboard user={user} onSignOut={handleSignOut} />
+    </>
+  );
 }

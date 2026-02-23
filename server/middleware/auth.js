@@ -27,7 +27,7 @@ export function authenticateToken(req, res, next) {
     }
 
     // Get user info
-    db.get('SELECT id, email, name, avatar_url, openclaw_endpoint FROM users WHERE id = ?', 
+db.get('SELECT id, email, name, avatar_url, openclaw_endpoint, openclaw_token FROM users WHERE id = ?',
       [decoded.userId], (err, user) => {
         if (err || !user) {
           return res.status(404).json({ error: 'User not found' });
@@ -49,7 +49,7 @@ export function optionalAuth(req, res, next) {
 
   jwt.verify(token, getJWTSecret(), (err, decoded) => {
     if (!err) {
-      db.get('SELECT id, email, name, avatar_url, openclaw_endpoint FROM users WHERE id = ?', 
+      db.get('SELECT id, email, name, avatar_url, openclaw_endpoint, openclaw_token FROM users WHERE id = ?',
         [decoded.userId], (err, user) => {
           if (!err && user) {
             req.user = user;

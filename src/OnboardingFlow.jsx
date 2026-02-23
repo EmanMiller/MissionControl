@@ -92,7 +92,23 @@ export default function OnboardingFlow({ onAuthSuccess }) {
     setError('Apple Sign In requires additional configuration. Please use Google or GitHub for now.');
   }
 
-  // Demo mode removed for production
+  async function handleDemoLogin() {
+    setIsAuthenticating(true);
+    setError(null);
+    try {
+      const response = await apiClient.loginWithDemo();
+      if (response.success) {
+        onAuthSuccess(response);
+      } else {
+        setError('Demo sign-in failed');
+      }
+    } catch (err) {
+      console.error('Demo login error:', err);
+      setError(err.message || 'Demo sign-in failed');
+    } finally {
+      setIsAuthenticating(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -148,6 +164,18 @@ export default function OnboardingFlow({ onAuthSuccess }) {
                 Google authentication is not configured. Please contact your administrator to set up OAuth credentials.
               </p>
             </div>
+          )}
+
+          {/* Demo sign-in (development / E2E) */}
+          {(import.meta.env.VITE_ALLOW_DEMO === 'true' || import.meta.env.DEV) && (
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={isAuthenticating}
+              className="w-full bg-[#374151] hover:bg-[#4B5563] border border-[#4B5563] text-[#E5E7EB] text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+            >
+              {isAuthenticating ? <Loader2 size={18} className="animate-spin" /> : 'Continue as Demo'}
+            </button>
           )}
 
           {/* GitHub OAuth */}

@@ -2,6 +2,22 @@ import express from 'express';
 import db from '../database.js';
 import { testOpenClawConnection, handleOpenClawWebhook } from '../services/openclaw.js';
 
+/** Normalize and validate OpenClaw endpoint: accept http(s) with host (domain or IP) and optional port. */
+function normalizeOpenClawEndpoint(input) {
+  if (!input || typeof input !== 'string') return null;
+  const trimmed = input.trim();
+  if (!trimmed) return null;
+  try {
+    const u = new URL(trimmed);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    if (!u.hostname) return null;
+    const normalized = `${u.protocol}//${u.host}`;
+    return normalized.replace(/\/+$/, '');
+  } catch {
+    return null;
+  }
+}
+
 const router = express.Router();
 
 // Get OpenClaw configuration for authenticated user
@@ -52,17 +68,15 @@ router.post('/config', async (req, res) => {
   if (!endpoint) {
     return res.status(400).json({ error: 'Endpoint is required' });
   }
-  
-  // Validate endpoint format
-  try {
-    new URL(endpoint);
-  } catch (error) {
-    return res.status(400).json({ error: 'Invalid endpoint URL format' });
+
+  const normalized = normalizeOpenClawEndpoint(endpoint);
+  if (!normalized) {
+    return res.status(400).json({ error: 'Invalid endpoint URL: use http or https with a host (e.g. http://127.0.0.1:18789 or http://192.168.1.5/)' });
   }
   
   try {
     // Test connection first
-    const testResult = await testOpenClawConnection(endpoint, token);
+    const testResult = await testOpenClawConnection(normalized, token);
     
     if (!testResult.success) {
       return res.status(400).json({ 
@@ -71,13 +85,13 @@ router.post('/config', async (req, res) => {
       });
     }
     
-    // Save configuration
+    // Save configuration (store normalized URL)
     db.run(`UPDATE users SET 
              openclaw_endpoint = ?, 
              openclaw_token = ?,
              updated_at = CURRENT_TIMESTAMP
              WHERE id = ?`,
-      [endpoint, token || null, userId], (err) => {
+      [normalized, token || null, userId], (err) => {
         if (err) {
           console.error('Error saving OpenClaw config:', err);
           return res.status(500).json({ error: 'Failed to save configuration' });

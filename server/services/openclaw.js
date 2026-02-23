@@ -5,7 +5,13 @@ import db from '../database.js';
 // Default OpenClaw endpoints if not configured
 const DEFAULT_OPENCLAW_ENDPOINT = 'http://localhost:18789';
 
+function baseUrl(endpoint) {
+  if (!endpoint) return endpoint;
+  return String(endpoint).replace(/\/+$/, '');
+}
+
 export async function testOpenClawConnection(endpoint, token) {
+  const base = baseUrl(endpoint);
   try {
     // Validate URL format first
     if (!endpoint || typeof endpoint !== 'string') {
@@ -17,7 +23,7 @@ export async function testOpenClawConnection(endpoint, token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const response = await axios.get(`${endpoint}/api/status`, {
+    const response = await axios.get(`${base}/api/status`, {
       headers,
       timeout: 10000 // 10 second timeout
     });
@@ -66,9 +72,10 @@ export async function testOpenClawConnection(endpoint, token) {
 
 export async function sendTaskToOpenClaw(user, task) {
   const endpoint = user.openclaw_endpoint || DEFAULT_OPENCLAW_ENDPOINT;
+  const base = baseUrl(endpoint);
   const token = user.openclaw_token;
   
-  if (!endpoint) {
+  if (!base) {
     throw new Error('OpenClaw endpoint not configured');
   }
   
@@ -85,7 +92,7 @@ export async function sendTaskToOpenClaw(user, task) {
     const prompt = createTaskPrompt(task);
     
     // Send task to OpenClaw
-    const response = await axios.post(`${endpoint}/api/sessions`, {
+    const response = await axios.post(`${base}/api/sessions`, {
       message: prompt,
       session_key: `mission-control-${task.id}-${uuidv4()}`,
       metadata: {
@@ -123,6 +130,7 @@ export async function sendTaskToOpenClaw(user, task) {
 
 export async function getOpenClawSessionStatus(user, sessionId) {
   const endpoint = user.openclaw_endpoint || DEFAULT_OPENCLAW_ENDPOINT;
+  const base = baseUrl(endpoint);
   const token = user.openclaw_token;
   
   try {
@@ -131,7 +139,7 @@ export async function getOpenClawSessionStatus(user, sessionId) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const response = await axios.get(`${endpoint}/api/sessions/${sessionId}`, {
+    const response = await axios.get(`${base}/api/sessions/${sessionId}`, {
       headers,
       timeout: 10000
     });
@@ -146,6 +154,7 @@ export async function getOpenClawSessionStatus(user, sessionId) {
 
 export async function getOpenClawSessionHistory(user, sessionId) {
   const endpoint = user.openclaw_endpoint || DEFAULT_OPENCLAW_ENDPOINT;
+  const base = baseUrl(endpoint);
   const token = user.openclaw_token;
   
   try {
@@ -154,7 +163,7 @@ export async function getOpenClawSessionHistory(user, sessionId) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    const response = await axios.get(`${endpoint}/api/sessions/${sessionId}/history`, {
+    const response = await axios.get(`${base}/api/sessions/${sessionId}/history`, {
       headers,
       timeout: 10000
     });

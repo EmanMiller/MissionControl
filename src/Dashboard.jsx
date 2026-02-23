@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import {
   LogOut, LayoutDashboard, Lightbulb, CheckSquare,
   FolderOpen, FileText, Clock, Settings,
@@ -80,31 +81,31 @@ function TaskCard({ task, isSelected, onClick, onStatusChange }) {
   return (
     <div
       onClick={onClick}
-      className={`bg-[#111111] border rounded-lg p-4 mb-2.5 cursor-pointer transition-colors duration-150 ${
+      className={`bg-[#111111] border rounded-lg p-3 sm:p-4 mb-2.5 cursor-pointer transition-colors duration-150 min-w-0 ${
         isSelected ? 'border-[#06B6D4]' : 'border-[#2A2A2A]'
       }`}
     >
       {/* Top row */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-1.5">
-          <span className="bg-[#1A1A1A] border border-[#2A2A2A] text-[#9CA3AF] text-[11px] rounded px-[7px] py-0.5 leading-4 inline-flex items-center gap-1">
+      <div className="flex items-center justify-between gap-2 mb-2 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0 flex-wrap">
+          <span className="bg-[#1A1A1A] border border-[#2A2A2A] text-[#9CA3AF] text-[10px] sm:text-[11px] rounded px-[6px] sm:px-[7px] py-0.5 leading-4 inline-flex items-center gap-1 flex-shrink-0">
             ✦ Task
           </span>
           <StatusBadge status={task.status} />
         </div>
-        <span className="text-[#9CA3AF] text-[11px]">
+        <span className="text-[#9CA3AF] text-[10px] sm:text-[11px] flex-shrink-0">
           {formatRelativeTime(task.created_at)}
         </span>
       </div>
 
       {/* Title */}
-      <p className="text-[#F9FAFB] text-[13px] leading-relaxed m-0 mb-2">
+      <p className="text-[#F9FAFB] text-xs sm:text-[13px] leading-relaxed m-0 mb-2 break-words line-clamp-2">
         {task.title}
       </p>
       
       {/* Description if exists */}
       {task.description && (
-        <p className="text-[#9CA3AF] text-[12px] leading-relaxed m-0 mb-2">
+        <p className="text-[#9CA3AF] text-[11px] sm:text-[12px] leading-relaxed m-0 mb-2 line-clamp-2 break-words">
           {task.description}
         </p>
       )}
@@ -132,13 +133,13 @@ function OpenClawOnboardingModal({ isOpen, onClose, onGoToSettings }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black opacity-60" />
 
       {/* Modal */}
-      <div className="relative bg-[#111111] border border-[#2A2A2A] rounded-xl p-8 w-full max-w-lg">
-        <div className="text-center">
+      <div className="relative bg-[#111111] border border-[#2A2A2A] rounded-xl p-4 sm:p-8 w-full max-w-lg max-h-[90vh] flex flex-col min-w-0 my-auto overflow-hidden">
+        <div className="text-center overflow-y-auto min-h-0 flex-1">
           {/* Icon */}
           <div className="w-16 h-16 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-xl flex items-center justify-center mx-auto mb-4">
             <Zap size={32} className="text-white" />
@@ -177,7 +178,7 @@ function OpenClawOnboardingModal({ isOpen, onClose, onGoToSettings }) {
           </div>
           
           {/* Actions */}
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={onClose}
               className="flex-1 bg-transparent border border-[#2A2A2A] text-[#9CA3AF] text-sm rounded-lg px-4 py-3 cursor-pointer hover:text-[#F9FAFB] hover:border-[#3A3A3A] transition-colors select-none"
@@ -229,19 +230,19 @@ function AddTaskModal({ isOpen, onClose, onSubmit }) {
       onClose();
     } catch (error) {
       console.error('Error creating task:', error);
-      alert('Failed to create task: ' + error.message);
+      toast.error(error?.message || 'Failed to create task');
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black opacity-60" onClick={onClose} />
 
       {/* Modal */}
-      <form onSubmit={handleSubmit} className="relative bg-[#111111] border border-[#2A2A2A] rounded-xl p-6 w-full max-w-md flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="relative bg-[#111111] border border-[#2A2A2A] rounded-xl p-4 sm:p-6 w-full max-w-md max-h-[90vh] flex flex-col gap-4 my-auto overflow-y-auto min-w-0">
         <h3 className="text-[#F9FAFB] text-lg font-semibold m-0">Create New Task</h3>
         
         <div>
@@ -333,7 +334,7 @@ function SettingsPanel({ user, onSignOut }) {
 
   async function testConnection() {
     if (!openClawConfig.endpoint) {
-      alert('Please enter an OpenClaw endpoint first');
+      toast.error('Please enter an OpenClaw endpoint first');
       return;
     }
 
@@ -355,7 +356,7 @@ function SettingsPanel({ user, onSignOut }) {
 
   async function saveConfig() {
     if (!openClawConfig.endpoint) {
-      alert('Please enter an OpenClaw endpoint');
+      toast.error('Please enter an OpenClaw endpoint');
       return;
     }
 
@@ -365,25 +366,25 @@ function SettingsPanel({ user, onSignOut }) {
         openClawConfig.endpoint,
         openClawConfig.token || null
       );
-      alert('OpenClaw configuration saved successfully!');
+      toast.success('OpenClaw configuration saved');
       setTestResult(null);
     } catch (error) {
-      alert('Failed to save configuration: ' + error.message);
+      toast.error(error?.message || 'Failed to save configuration');
     } finally {
       setIsSaving(false);
     }
   }
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0A0A0A] p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2 m-0">Settings</h2>
-          <p className="text-[#9CA3AF] text-sm m-0">Configure your Mission Control system</p>
+    <div className="flex-1 overflow-y-auto overflow-x-hidden bg-[#0A0A0A] p-3 sm:p-4 min-w-0">
+      <div className="max-w-2xl mx-auto min-w-0">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2 m-0">Settings</h2>
+          <p className="text-[#9CA3AF] text-xs sm:text-sm m-0">Configure your Mission Control system</p>
         </div>
 
         {/* OpenClaw Configuration */}
-        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 mb-6">
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
           <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">OpenClaw Integration</h3>
           
           <div className="space-y-4">
@@ -392,10 +393,12 @@ function SettingsPanel({ user, onSignOut }) {
                 OpenClaw Endpoint *
               </label>
               <input
-                type="url"
+                type="text"
+                inputMode="url"
+                autoComplete="url"
                 value={openClawConfig.endpoint}
                 onChange={e => setOpenClawConfig({...openClawConfig, endpoint: e.target.value})}
-                placeholder="http://localhost:18789"
+                placeholder="http://localhost:18789 or http://127.0.0.1:18789"
                 className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors placeholder-[#4B5563]"
                 style={{ fontFamily: 'inherit' }}
               />
@@ -418,11 +421,11 @@ function SettingsPanel({ user, onSignOut }) {
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <button
                 onClick={testConnection}
                 disabled={isTesting || !openClawConfig.endpoint}
-                className="bg-[#374151] hover:bg-[#4B5563] border-none text-white text-sm px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
+                className="bg-[#374151] hover:bg-[#4B5563] border-none text-white text-sm px-3 sm:px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
                 style={{ fontFamily: 'inherit' }}
               >
                 {isTesting ? 'Testing...' : 'Test Connection'}
@@ -431,7 +434,7 @@ function SettingsPanel({ user, onSignOut }) {
               <button
                 onClick={saveConfig}
                 disabled={isSaving || !openClawConfig.endpoint}
-                className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
+                className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold px-3 sm:px-4 py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50 select-none"
                 style={{ fontFamily: 'inherit' }}
               >
                 {isSaving ? 'Saving...' : 'Save Configuration'}
@@ -456,26 +459,26 @@ function SettingsPanel({ user, onSignOut }) {
         </div>
 
         {/* Profile */}
-        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 mb-6">
-          <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Profile</h3>
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+          <h3 className="text-[#F9FAFB] text-base sm:text-lg font-semibold mb-4 m-0">Profile</h3>
           
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 min-w-0">
             {user.avatar_url && (
               <img 
                 src={user.avatar_url} 
                 alt={user.name}
-                className="w-12 h-12 rounded-full"
+                className="w-12 h-12 rounded-full flex-shrink-0"
               />
             )}
-            <div>
-              <div className="text-[#F9FAFB] font-medium">{user.name}</div>
-              <div className="text-[#9CA3AF] text-sm">{user.email}</div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[#F9FAFB] font-medium truncate">{user.name}</div>
+              <div className="text-[#9CA3AF] text-xs sm:text-sm truncate">{user.email}</div>
             </div>
           </div>
         </div>
 
         {/* Sign Out */}
-        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6">
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-4 sm:p-6">
           <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Account</h3>
           
           <button
@@ -549,31 +552,31 @@ export default function Dashboard({ user, onSignOut }) {
       }
     } catch (error) {
       console.error('Failed to update task status:', error);
-      alert('Failed to update task: ' + error.message);
+      toast.error(error?.message || 'Failed to update task');
     }
   }
 
   if (activeNav === 'Settings') {
     return (
-      <div className="h-screen bg-[#0A0A0A] font-inter">
-        <div className="h-1 bg-[#F97316]" />
+      <div className="h-screen bg-[#0A0A0A] font-inter flex flex-col overflow-hidden min-w-0">
+        <div className="h-1 bg-[#F97316] flex-shrink-0" />
         <SettingsPanel user={user} onSignOut={onSignOut} />
       </div>
     );
   }
 
   return (
-    <div className="h-screen bg-[#0A0A0A] font-inter flex flex-col">
-      <div className="h-1 bg-[#F97316]" />
+    <div className="h-screen bg-[#0A0A0A] font-inter flex flex-col overflow-hidden min-w-0">
+      <div className="h-1 bg-[#F97316] flex-shrink-0" />
       
       {/* Top Bar */}
-      <div className="h-12 bg-[#111111] border-b border-[#2A2A2A] flex items-center justify-between px-4">
-        <div className="flex items-center gap-3">
-          <span className="text-[#F9FAFB] text-sm font-semibold">Mission Control</span>
+      <div className="h-12 bg-[#111111] border-b border-[#2A2A2A] flex items-center justify-between px-3 sm:px-4 flex-shrink-0 min-w-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-[#F9FAFB] text-sm font-semibold truncate">Mission Control</span>
         </div>
         <button
           onClick={() => setShowAddTask(true)}
-          className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-semibold rounded-md px-4 py-2 cursor-pointer transition-colors select-none"
+          className="bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-xs sm:text-sm font-semibold rounded-md px-3 sm:px-4 py-2 cursor-pointer transition-colors select-none flex-shrink-0"
           style={{ fontFamily: 'inherit' }}
         >
           + New Task
@@ -581,9 +584,9 @@ export default function Dashboard({ user, onSignOut }) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-w-0 min-h-0">
         {/* Mission Control Dashboard */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden min-w-0 min-h-0 flex flex-col">
           {activeNav === 'Dashboard' ? (
             <div className="h-full flex flex-col">
               <div className="flex-1 overflow-y-auto">
@@ -591,20 +594,20 @@ export default function Dashboard({ user, onSignOut }) {
               </div>
               
               {/* Task List */}
-              <div className="h-64 border-t border-[#2A2A2A] bg-[#0F0F0F] overflow-y-auto">
-                <div className="p-4">
-                  <h3 className="text-[#F9FAFB] text-lg font-semibold mb-4 m-0">Recent Tasks</h3>
+              <div className="h-64 border-t border-[#2A2A2A] bg-[#0F0F0F] overflow-y-auto overflow-x-hidden min-h-0">
+                <div className="p-3 sm:p-4 min-w-0">
+                  <h3 className="text-[#F9FAFB] text-base sm:text-lg font-semibold mb-4 m-0">Recent Tasks</h3>
                   
                   {loading ? (
                     <div className="text-[#9CA3AF] text-sm">Loading tasks...</div>
                   ) : error ? (
-                    <div className="text-[#EF4444] text-sm">Error: {error}</div>
+                    <div className="text-[#EF4444] text-sm break-words">Error: {error}</div>
                   ) : tasks.length === 0 ? (
                     <div className="text-[#6B7280] text-sm">
                       No tasks yet. Create your first task to get started!
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                       {tasks.slice(0, 6).map(task => (
                         <TaskCard
                           key={task.id}
@@ -628,20 +631,20 @@ export default function Dashboard({ user, onSignOut }) {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="h-16 bg-[#111111] border-t border-[#2A2A2A] flex items-center justify-around">
+      <nav className="h-14 sm:h-16 bg-[#111111] border-t border-[#2A2A2A] flex items-center justify-around flex-shrink-0 min-w-0">
         {BOTTOM_NAV_ITEMS.map(({ label, Icon }) => {
           const isActive = activeNav === label;
           return (
             <button
               key={label}
               onClick={() => setActiveNav(label)}
-              className={`flex flex-col items-center justify-center py-2 gap-1 cursor-pointer bg-transparent border-none select-none ${
+              className={`flex flex-col items-center justify-center py-2 gap-0.5 sm:gap-1 cursor-pointer bg-transparent border-none select-none min-w-0 flex-1 px-2 ${
                 isActive ? 'text-[#06B6D4]' : 'text-[#9CA3AF]'
               }`}
               style={{ fontFamily: 'inherit' }}
             >
               <Icon />
-              <span className="text-xs font-medium">{label}</span>
+              <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center">{label}</span>
             </button>
           );
         })}
