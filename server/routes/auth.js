@@ -78,10 +78,18 @@ function upsertUser(userData) {
 // GitHub OAuth
 router.get('/github', async (req, res) => {
   try {
+    if (!process.env.GITHUB_CLIENT_ID) {
+      return res.status(400).json({ 
+        error: 'GitHub OAuth not configured', 
+        details: 'GITHUB_CLIENT_ID environment variable is missing. Configure GitHub OAuth app in server/.env' 
+      });
+    }
+
     const state = await generateOAuthState('github');
     const scope = 'user:email';
+    const redirectUri = process.env.GITHUB_REDIRECT_URI || `${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth/github/callback`;
     
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=${scope}&state=${state}&redirect_uri=${process.env.GITHUB_REDIRECT_URI}`;
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=${scope}&state=${state}&redirect_uri=${redirectUri}`;
     
     res.json({ authUrl });
   } catch (error) {

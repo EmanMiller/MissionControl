@@ -80,7 +80,7 @@ export default function OnboardingFlow({ onAuthSuccess }) {
       if (data.authUrl) {
         window.location.href = data.authUrl;
       } else {
-        setError('Failed to initiate GitHub authentication');
+        setError(data.details || data.error || 'Failed to initiate GitHub authentication');
       }
     } catch (error) {
       console.error('GitHub login error:', error);
@@ -120,8 +120,30 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             </div>
           )}
 
+          {/* Development Mode Bypass */}
+          {import.meta.env.VITE_DEV_MODE === 'true' && (
+            <button
+              onClick={() => {
+                onAuthSuccess({
+                  success: true,
+                  user: {
+                    id: 1,
+                    email: 'demo@missioncontrol.dev',
+                    name: 'Demo User',
+                    avatar_url: 'https://via.placeholder.com/64/06B6D4/FFFFFF?text=DU'
+                  }
+                });
+              }}
+              disabled={isAuthenticating}
+              className="w-full bg-[#06B6D4] hover:bg-[#0891B2] border-none text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+              style={{ fontFamily: 'inherit' }}
+            >
+              🚀 Continue as Demo User (Dev Mode)
+            </button>
+          )}
+
           {/* Google OAuth */}
-          {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+          {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
             <div className="flex flex-col">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
@@ -132,6 +154,16 @@ export default function OnboardingFlow({ onAuthSuccess }) {
                 disabled={isAuthenticating}
               />
             </div>
+          ) : (
+            <button
+              onClick={() => setError('Google OAuth not configured. Add VITE_GOOGLE_CLIENT_ID to .env.local')}
+              disabled={isAuthenticating}
+              className="w-full bg-[#4285F4] hover:bg-[#357ae8] border-none text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+              style={{ fontFamily: 'inherit' }}
+            >
+              <GoogleIcon />
+              Continue with Google (Not Configured)
+            </button>
           )}
 
           {/* GitHub OAuth */}
@@ -149,18 +181,16 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             Continue with GitHub
           </button>
 
-          {/* Apple Sign In - Placeholder */}
-          {import.meta.env.VITE_APPLE_CLIENT_ID && (
-            <button
-              onClick={handleAppleLogin}
-              disabled={isAuthenticating}
-              className="w-full bg-[#000000] hover:bg-[#1D1D1F] border border-[#2A2A2A] text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
-              style={{ fontFamily: 'inherit' }}
-            >
-              <Apple size={18} />
-              Continue with Apple
-            </button>
-          )}
+          {/* Apple Sign In */}
+          <button
+            onClick={() => setError('Apple Sign In not yet implemented. Coming soon!')}
+            disabled={isAuthenticating}
+            className="w-full bg-[#000000] hover:bg-[#1D1D1F] border border-[#2A2A2A] text-white text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+            style={{ fontFamily: 'inherit' }}
+          >
+            <Apple size={18} />
+            Continue with Apple (Coming Soon)
+          </button>
         </div>
 
         {/* Footer */}
@@ -169,6 +199,16 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             By signing in, you agree to connect your OpenClaw instance to Mission Control 
             for autonomous task processing and management.
           </p>
+          
+          {/* Development Note */}
+          {(!import.meta.env.VITE_GOOGLE_CLIENT_ID && !import.meta.env.VITE_GITHUB_CLIENT_ID) && (
+            <div className="mt-4 p-3 bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-lg">
+              <p className="text-[#F59E0B] text-xs">
+                <strong>Development Setup:</strong> OAuth not configured. 
+                See <a href="https://github.com/EmanMiller/MissionControl/blob/main/OAUTH_SETUP.md" className="underline">OAUTH_SETUP.md</a> for quick setup instructions.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Loading Overlay */}
