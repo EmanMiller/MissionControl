@@ -566,13 +566,20 @@ function Sidebar({ activeItem, onItemClick, onSignOut }) {
       </nav>
       
       {/* User Section */}
-      <div className="p-3 border-t border-[#2A2A2A]">
+      <div className="p-3 border-t border-[#2A2A2A] space-y-1">
         <button
           onClick={() => onItemClick('settings')}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-[#1F1F1F] transition-colors"
         >
           <Settings size={16} />
           Settings
+        </button>
+        <button
+          onClick={onSignOut}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#9CA3AF] hover:text-[#EF4444] hover:bg-[#EF4444]/10 transition-colors"
+        >
+          <User size={16} />
+          Sign Out
         </button>
       </div>
     </div>
@@ -1489,9 +1496,9 @@ export default function KanbanDashboard({ user, onSignOut }) {
             </div>
             
             {/* Kanban Board */}
-            <div className="flex-1 p-3 sm:p-6 overflow-hidden">
+            <div className="flex-1 p-3 sm:p-6 overflow-x-auto">
               <DragDropContext onDragEnd={handleDragEnd}>
-                <div className="flex gap-3 sm:gap-6 h-full overflow-x-auto kanban-scroll pb-4 pr-4">
+                <div className="flex gap-3 sm:gap-6 h-full overflow-x-auto kanban-scroll pb-4 pr-4 min-w-max">
                   {KANBAN_COLUMNS.map(column => (
                     <KanbanColumn
                       key={column.id}
