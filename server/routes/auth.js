@@ -276,7 +276,8 @@ router.post('/verify', (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'mission-control-development-secret-key');
+    const jwtSecret = process.env.JWT_SECRET || 'mission-control-development-secret-key';
+    const decoded = jwt.verify(token, jwtSecret);
     
     db.get('SELECT id, email, name, avatar_url, openclaw_endpoint FROM users WHERE id = ?', 
       [decoded.userId], (err, user) => {

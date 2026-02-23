@@ -1,11 +1,16 @@
 import jwt from 'jsonwebtoken';
 import db from '../database.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'mission-control-development-secret-key';
+// Get JWT_SECRET dynamically to ensure it's available after env loading
+function getJWTSecret() {
+  return process.env.JWT_SECRET || 'mission-control-development-secret-key';
+}
+
 const JWT_EXPIRES_IN = '7d';
 
 export function generateToken(userId) {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  const jwtSecret = getJWTSecret();
+  return jwt.sign({ userId }, jwtSecret, { expiresIn: JWT_EXPIRES_IN });
 }
 
 export function authenticateToken(req, res, next) {
@@ -16,7 +21,7 @@ export function authenticateToken(req, res, next) {
     return res.status(401).json({ error: 'Access token required' });
   }
 
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, getJWTSecret(), (err, decoded) => {
     if (err) {
       return res.status(403).json({ error: 'Invalid or expired token' });
     }
@@ -42,7 +47,7 @@ export function optionalAuth(req, res, next) {
     return next();
   }
 
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, getJWTSecret(), (err, decoded) => {
     if (!err) {
       db.get('SELECT id, email, name, avatar_url, openclaw_endpoint FROM users WHERE id = ?', 
         [decoded.userId], (err, user) => {
