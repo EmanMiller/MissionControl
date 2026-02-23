@@ -111,7 +111,17 @@ class ApiClient {
     return response;
   }
 
-  // Removed demo login - production OAuth only
+  async loginWithDemo() {
+    const response = await this.request('/auth/demo', {
+      method: 'POST'
+    });
+    
+    if (response.success && response.token) {
+      this.setToken(response.token);
+    }
+    
+    return response;
+  }
 
   async logout() {
     await this.request('/auth/logout', { method: 'POST' });
