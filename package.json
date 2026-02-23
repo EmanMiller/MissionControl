@@ -1,8 +1,24 @@
 {
   "name": "missioncontrol",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Production-ready AI task management platform that connects to OpenClaw instances for automated task processing",
+  "private": false,
   "type": "module",
+  "author": "Emmanuel Miller",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EmanMiller/MissionControl.git"
+  },
+  "keywords": [
+    "ai",
+    "automation", 
+    "task-management",
+    "openclaw",
+    "kanban",
+    "react",
+    "oauth"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

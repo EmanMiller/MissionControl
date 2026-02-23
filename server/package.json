@@ -1,7 +1,23 @@
 {
   "name": "mission-control-server",
   "version": "1.0.0",
+  "description": "Backend API server for Mission Control - AI task management platform with OpenClaw integration",
   "type": "module",
+  "author": "Emmanuel Miller",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EmanMiller/MissionControl.git"
+  },
+  "keywords": [
+    "api",
+    "backend",
+    "express",
+    "oauth",
+    "jwt",
+    "sqlite",
+    "task-management"
+  ],
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js"
