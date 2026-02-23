@@ -14,9 +14,9 @@ const VoxelOffice3D = ({ user, agents }) => {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0F0F0F); // Dark background matching theme
     
-    // Isometric camera setup
+    // Isometric camera setup - pulled back to show entire room
     const aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
-    const frustumSize = 10;
+    const frustumSize = 16; // Increased from 10 to show more of the room
     const camera = new THREE.OrthographicCamera(
       frustumSize * aspect / -2, // left
       frustumSize * aspect / 2,  // right
@@ -26,8 +26,8 @@ const VoxelOffice3D = ({ user, agents }) => {
       1000                       // far
     );
     
-    // Position camera for isometric view
-    camera.position.set(10, 8, 10);
+    // Position camera for isometric view - pulled back further
+    camera.position.set(15, 12, 15);
     camera.lookAt(0, 0, 0);
 
     // Renderer setup
@@ -37,16 +37,26 @@ const VoxelOffice3D = ({ user, agents }) => {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mountRef.current.appendChild(renderer.domElement);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+    // Lighting - much brighter with warm overhead light
+    const ambientLight = new THREE.AmbientLight(0x404040, 1.2); // Increased from 0.6 to 1.2
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(10, 10, 5);
+    // Main directional light
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight.position.set(15, 15, 8);
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.camera.left = -20;
+    directionalLight.shadow.camera.right = 20;
+    directionalLight.shadow.camera.top = 20;
+    directionalLight.shadow.camera.bottom = -20;
     scene.add(directionalLight);
+
+    // Warm overhead light above center of room
+    const overheadLight = new THREE.PointLight(0xffaa44, 0.8, 30);
+    overheadLight.position.set(0, 8, 0);
+    scene.add(overheadLight);
 
     // Create voxel office environment
     createOfficeEnvironment(scene);
@@ -73,9 +83,12 @@ const VoxelOffice3D = ({ user, agents }) => {
       const width = mountRef.current.clientWidth;
       const height = mountRef.current.clientHeight;
       const aspect = width / height;
+      const currentFrustumSize = 16; // Match the frustumSize used above
       
-      camera.left = frustumSize * aspect / -2;
-      camera.right = frustumSize * aspect / 2;
+      camera.left = currentFrustumSize * aspect / -2;
+      camera.right = currentFrustumSize * aspect / 2;
+      camera.top = currentFrustumSize / 2;
+      camera.bottom = currentFrustumSize / -2;
       camera.updateProjectionMatrix();
       
       renderer.setSize(width, height);
@@ -96,49 +109,32 @@ const VoxelOffice3D = ({ user, agents }) => {
   return (
     <div 
       ref={mountRef} 
-      className="w-full h-64 border border-[#333333] rounded-lg overflow-hidden"
-      style={{ minHeight: '300px' }}
+      className="w-full border border-[#333333] rounded-lg overflow-hidden"
+      style={{ height: '400px', minHeight: '400px' }}
     />
   );
 };
 
 function createOfficeEnvironment(scene) {
-  // Floor
-  const floorGeometry = new THREE.BoxGeometry(12, 0.2, 12);
+  // Floor - larger and fully visible
+  const floorGeometry = new THREE.BoxGeometry(18, 0.2, 18);
   const floorMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 }); // Brown floor
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   floor.position.set(0, -0.1, 0);
   floor.receiveShadow = true;
   scene.add(floor);
 
-  // Back wall
-  const wallGeometry = new THREE.BoxGeometry(12, 6, 0.2);
+  // Back wall only - no side walls to avoid clipping
+  const wallGeometry = new THREE.BoxGeometry(16, 6, 0.2);
   const wallMaterial = new THREE.MeshLambertMaterial({ color: 0x2A2A2A }); // Dark gray wall
   const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
-  backWall.position.set(0, 3, -6);
+  backWall.position.set(0, 3, -8);
   scene.add(backWall);
 
-  // Side walls
-  const leftWall = new THREE.Mesh(wallGeometry.clone(), wallMaterial);
-  leftWall.rotation.y = Math.PI / 2;
-  leftWall.position.set(-6, 3, 0);
-  scene.add(leftWall);
-
-  const rightWall = new THREE.Mesh(wallGeometry.clone(), wallMaterial);
-  rightWall.rotation.y = Math.PI / 2;
-  rightWall.position.set(6, 3, 0);
-  scene.add(rightWall);
-
   // Windows on back wall
-  createWindow(scene, -2, 4, -5.9);
-  createWindow(scene, 2, 4, -5.9);
-
-  // Central desk
-  createDesk(scene, 0, 0.5, -2, 0x654321);
-  
-  // Side desks
-  createDesk(scene, -3.5, 0.5, 1, 0x654321);
-  createDesk(scene, 3.5, 0.5, 1, 0x654321);
+  createWindow(scene, -3, 4, -7.9);
+  createWindow(scene, 0, 4, -7.9);
+  createWindow(scene, 3, 4, -7.9);
 }
 
 function createWindow(scene, x, y, z) {
@@ -233,77 +229,129 @@ function createPhone(scene, x, y, z) {
 }
 
 function createCharacters(scene, user, agents) {
-  // User character at central desk
-  createVoxelCharacter(scene, 0, 1, -1, 0xF59E0B, user.name); // Orange for user
+  // Desk positions spread across the room
+  const deskPositions = [
+    { x: 0, z: -2 },      // Center front (user)
+    { x: -5, z: -2 },     // Left front (agent 1)
+    { x: 5, z: -2 },      // Right front (agent 2) 
+    { x: -5, z: 3 },      // Left back (agent 3)
+    { x: 5, z: 3 },       // Right back (agent 4)
+    { x: 0, z: 3 }        // Center back (agent 5)
+  ];
+
+  // Create desk and character for user
+  createDesk(scene, deskPositions[0].x, 0.5, deskPositions[0].z, 0x654321);
+  createVoxelCharacter(scene, deskPositions[0].x, 1, deskPositions[0].z + 1, 0xF59E0B, user.name);
   
-  // AI agents at side desks
-  if (agents.length > 0) {
-    createVoxelCharacter(scene, -3.5, 1, 2, agents[0].color, agents[0].name, agents[0].status);
-  }
-  
-  if (agents.length > 1) {
-    createVoxelCharacter(scene, 3.5, 1, 2, agents[1].color, agents[1].name, agents[1].status);
-  }
-  
-  // Additional agents at back positions
-  if (agents.length > 2) {
-    createVoxelCharacter(scene, -2, 1, -3.5, agents[2].color, agents[2].name, agents[2].status);
-  }
+  // Create desk and character for each agent
+  agents.forEach((agent, index) => {
+    const pos = deskPositions[index + 1]; // Skip position 0 (user)
+    if (pos) {
+      createDesk(scene, pos.x, 0.5, pos.z, 0x654321);
+      createVoxelCharacter(scene, pos.x, 1, pos.z + 1, agent.color, agent.name, agent.status);
+    }
+  });
 }
 
 function createVoxelCharacter(scene, x, y, z, color, name, status = 'active') {
   const group = new THREE.Group();
   
-  // Body
-  const bodyGeometry = new THREE.BoxGeometry(0.4, 0.6, 0.3);
+  // Body - made larger
+  const bodyGeometry = new THREE.BoxGeometry(0.8, 1.2, 0.6);
   const bodyMaterial = new THREE.MeshLambertMaterial({ color });
   const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-  body.position.set(0, 0.3, 0);
+  body.position.set(0, 0.6, 0);
   body.castShadow = true;
   group.add(body);
 
-  // Head
-  const headGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+  // Head - made larger
+  const headGeometry = new THREE.BoxGeometry(0.6, 0.6, 0.6);
   const headMaterial = new THREE.MeshLambertMaterial({ 
     color: color === 0xF59E0B ? 0xFDE68A : new THREE.Color(color).multiplyScalar(1.2).getHex() 
   });
   const head = new THREE.Mesh(headGeometry, headMaterial);
-  head.position.set(0, 0.75, 0);
+  head.position.set(0, 1.5, 0);
   head.castShadow = true;
   group.add(head);
 
-  // Arms
-  const armGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+  // Arms - made larger
+  const armGeometry = new THREE.BoxGeometry(0.3, 0.8, 0.3);
   const armMaterial = new THREE.MeshLambertMaterial({ color });
   
   const leftArm = new THREE.Mesh(armGeometry, armMaterial);
-  leftArm.position.set(-0.3, 0.3, 0);
+  leftArm.position.set(-0.6, 0.6, 0);
   leftArm.castShadow = true;
   group.add(leftArm);
   
   const rightArm = new THREE.Mesh(armGeometry, armMaterial);
-  rightArm.position.set(0.3, 0.3, 0);
+  rightArm.position.set(0.6, 0.6, 0);
   rightArm.castShadow = true;
   group.add(rightArm);
 
-  // Status indicator (small colored dot on head)
+  // Status indicator (larger colored dot on head)
   if (status) {
-    const statusGeometry = new THREE.SphereGeometry(0.04, 8, 8);
+    const statusGeometry = new THREE.SphereGeometry(0.08, 8, 8);
     const statusColor = status === 'active' ? 0x10B981 : 0x6B7280; // Green for active, gray for idle
     const statusMaterial = new THREE.MeshLambertMaterial({ color: statusColor });
     const statusDot = new THREE.Mesh(statusGeometry, statusMaterial);
-    statusDot.position.set(0.15, 0.9, 0.15);
+    statusDot.position.set(0.3, 1.8, 0.3);
     group.add(statusDot);
   }
+
+  // Floating name label using canvas texture
+  createFloatingNameLabel(group, name);
 
   // Position the character group
   group.position.set(x, y, z);
   scene.add(group);
 
-  // Add name label (3D text would be complex, so we'll handle this in the UI layer)
   group.userData = { name, status, position: { x, y, z } };
   
   return group;
+}
+
+function createFloatingNameLabel(characterGroup, name) {
+  // Create canvas for text
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  
+  // Set canvas size
+  canvas.width = 256;
+  canvas.height = 64;
+  
+  // Configure text style
+  context.fillStyle = '#F9FAFB'; // Light text color
+  context.font = 'bold 24px Arial';
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  
+  // Add semi-transparent background
+  context.fillStyle = 'rgba(17, 17, 17, 0.8)';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw text
+  context.fillStyle = '#F9FAFB';
+  context.fillText(name, canvas.width / 2, canvas.height / 2);
+  
+  // Create texture from canvas
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  
+  // Create sprite material
+  const spriteMaterial = new THREE.SpriteMaterial({ 
+    map: texture,
+    transparent: true,
+    alphaTest: 0.1
+  });
+  
+  // Create sprite
+  const sprite = new THREE.Sprite(spriteMaterial);
+  sprite.scale.set(2, 0.5, 1); // Make it reasonably sized
+  sprite.position.set(0, 2.5, 0); // Float above character head
+  
+  characterGroup.add(sprite);
+  
+  return sprite;
 }
 
 export default VoxelOffice3D;
