@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import apiClient from '../services/api.js';
 import VoxelOffice3D from './VoxelOffice3D.jsx';
+import socketService from '../services/socket.js';
 
 /* ─── Sidebar Navigation ────────────────────────────────────────────────── */
 
@@ -94,9 +95,40 @@ function ToastContainer({ notifications, onClose }) {
 
 /* ─── Components ─────────────────────────────────────────────────────────── */
 
-function AgentsView({ agents, loadAgents, user }) {
+function AgentsView({ agents, setAgents, loadAgents, user }) {
   const [showAddAgent, setShowAddAgent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Real-time agent updates
+  useEffect(() => {
+    const cleanup = socketService.on('agent-updated', (data) => {
+      console.log('🔄 Agent update received:', data);
+      
+      switch (data.type) {
+        case 'created':
+          setAgents(prev => [data.agent, ...prev]);
+          break;
+          
+        case 'status-updated':
+          setAgents(prev => prev.map(agent => 
+            agent.id === data.agentId 
+              ? { ...agent, status: data.status, current_task_id: data.currentTaskId }
+              : agent
+          ));
+          break;
+          
+        case 'deleted':
+          setAgents(prev => prev.filter(agent => agent.id !== data.agentId));
+          break;
+          
+        default:
+          // Full reload for other updates
+          loadAgents();
+      }
+    });
+
+    return cleanup;
+  }, [setAgents, loadAgents]);
 
   async function createAgent(agentData) {
     try {
@@ -1663,7 +1695,15 @@ export default function KanbanDashboard({ user, onSignOut }) {
   useEffect(() => {
     loadTasks();
     loadAgents();
-  }, []);
+    
+    // Connect to WebSocket for real-time updates
+    socketService.connect(user.id);
+    
+    // Cleanup on unmount
+    return () => {
+      socketService.disconnect();
+    };
+  }, [user.id]);
 
   // Poll task list while any task is in progress (so webhook completion updates the board)
   const hasInProgress = tasks.some(t => t.status === 'in_progress');
@@ -1904,6 +1944,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
       ) : activeNav === 'agents' ? (
         <AgentsView 
           agents={agents}
+          setAgents={setAgents}
           loadAgents={loadAgents}
           user={user}
         />

@@ -1,6 +1,7 @@
 import express from 'express';
 import db from '../database.js';
 import { v4 as uuidv4 } from 'uuid';
+import { broadcastAgentUpdate } from '../server.js';
 
 const router = express.Router();
 
@@ -90,13 +91,19 @@ router.post('/', async (req, res) => {
             try { parsedStats = JSON.parse(agent.performance_stats); } catch (e) { /* ignore */ }
           }
           
-          res.status(201).json({ 
-            agent: {
-              ...agent,
-              capabilities: parsedCapabilities,
-              performance_stats: parsedStats
-            }
+          const agentData = {
+            ...agent,
+            capabilities: parsedCapabilities,
+            performance_stats: parsedStats
+          };
+          
+          // Broadcast real-time update
+          broadcastAgentUpdate(userId, {
+            type: 'created',
+            agent: agentData
           });
+          
+          res.status(201).json({ agent: agentData });
         });
       });
   } catch (error) {
@@ -131,6 +138,14 @@ router.put('/:agentId/status', async (req, res) => {
       if (this.changes === 0) {
         return res.status(404).json({ error: 'Agent not found' });
       }
+      
+      // Broadcast real-time update
+      broadcastAgentUpdate(userId, {
+        type: 'status-updated',
+        agentId,
+        status,
+        currentTaskId
+      });
       
       res.json({ message: 'Agent status updated successfully' });
     });
@@ -180,6 +195,12 @@ router.delete('/:agentId', async (req, res) => {
     if (this.changes === 0) {
       return res.status(404).json({ error: 'Agent not found' });
     }
+    
+    // Broadcast real-time update
+    broadcastAgentUpdate(userId, {
+      type: 'deleted',
+      agentId
+    });
     
     res.json({ message: 'Agent deleted successfully' });
   });

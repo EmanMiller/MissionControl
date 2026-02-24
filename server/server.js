@@ -12,6 +12,8 @@ dotenv.config({ path: join(__dirname, '.env.development') });
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 // Import routes
 import authRoutes from './routes/auth.js';
 import taskRoutes from './routes/tasks.js';
@@ -27,7 +29,20 @@ import db from './database.js';
 import './services/polling.js'; // Start polling service
 
 const app = express();
+const server = createServer(app);
 const PORT = process.env.PORT || 3001;
+
+// Initialize Socket.IO with CORS
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
+// Export io instance for use in routes
+export { io };
 
 // Security middleware (crossOriginOpenerPolicy: false so Google Sign-In popup can postMessage)
 app.use(helmet({
@@ -102,7 +117,32 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
 
-app.listen(PORT, () => {
+// WebSocket connection handling
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+  
+  // Join user-specific room for agent updates
+  socket.on('join-user-room', (userId) => {
+    socket.join(`user-${userId}`);
+    console.log(`Socket ${socket.id} joined user room: user-${userId}`);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+});
+
+// Broadcast functions for real-time updates
+export function broadcastAgentUpdate(userId, agentData) {
+  io.to(`user-${userId}`).emit('agent-updated', agentData);
+}
+
+export function broadcastTaskUpdate(userId, taskData) {
+  io.to(`user-${userId}`).emit('task-updated', taskData);
+}
+
+server.listen(PORT, () => {
   console.log(`🚀 Mission Control Server running on port ${PORT}`);
   console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
+  console.log(`🔌 WebSocket server enabled`);
 });
