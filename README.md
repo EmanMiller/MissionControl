@@ -1,11 +1,11 @@
-# Mission Control v1.0 🚀
+# Mission Control v2.0 🚀
 
-> **Production-Ready AI Task Management Platform**  
-> An autonomous network of AI agents that operates around the clock, executing tasks and generating value continuously at a highly cost-efficient rate.
+> **Next-Generation AI Agent Fleet Management Platform**  
+> An advanced dashboard for orchestrating, monitoring, and managing your AI agent workforce with real-time analytics, 3D visualization, and seamless OpenClaw integration.
 
-**Mission Control** is a production-ready web application that connects to your OpenClaw instance, allowing you to create tasks that get automatically processed by AI agents. Simply add a task, watch it move through the pipeline (New → In Progress → Completed), and receive the completed output.
+**Mission Control v2.0** transforms your AI workflow with comprehensive agent management, beautiful 3D team visualization, performance analytics, and advanced task orchestration. Built for teams who need professional-grade AI automation at scale.
 
-**🎯 Now Open Source & Ready for Production Deployment**
+**🎯 Now Enhanced with Full Agent Fleet Management**
 
 ## ⚡ Quick Start (2 Minutes)
 
@@ -17,301 +17,330 @@ cd server && npm install && cd ..
 npm run dev
 ```
 
-**That's it!** Mission Control opens with **local authentication** - no OAuth setup required for development.
+**That's it!** Mission Control v2.0 opens with **local authentication** and **auto-discovers your OpenClaw agents**.
 
-## 🎉 What's New in v1.0 (Production Release)
+## 🎉 What's New in v2.0 (Major Release)
 
-- ✅ **Zero-Friction Local Development** - `npm run dev` just works, no OAuth needed
-- ✅ **Simplified Kanban Board** - Clean 3-column workflow (New → In Progress → Completed)
-- ✅ **One-Command Mobile Setup** - `npm run dev:mobile` creates public tunnels for iPhone testing  
-- ✅ **Enhanced Task Flow** - Automatic progression with real-time notifications
-- ✅ **Console Error Free** - Zero browser console errors for professional UX
-- ✅ **URL Validation** - Robust OpenClaw endpoint validation with helpful error messages
-- ✅ **Mobile Optimized** - Perfect responsive design across all device types
-- ✅ **Production Hardened** - Security enhancements, error handling, and performance optimizations
+### 🤖 **Complete Agent Fleet Management**
+- ✅ **3D Team Visualization** - Beautiful voxel office showing your entire AI team
+- ✅ **Agent CRUD Operations** - Create, edit, delete, and manage AI agents
+- ✅ **Real-time Status Tracking** - Live agent status updates (idle/working/error/offline)
+- ✅ **OpenClaw Auto-Sync** - Automatically discovers and syncs your existing agents
+- ✅ **Task Assignment System** - Assign specific tasks to specific agents
+- ✅ **Performance Analytics** - Track agent efficiency, completion rates, and metrics
 
-## ✨ Features
+### 📊 **Advanced Analytics Dashboard**
+- ✅ **Fleet Performance Metrics** - Overall agent utilization and success rates
+- ✅ **Task Completion Analytics** - Historical trends and completion insights
+- ✅ **Agent Leaderboards** - Top performing agents with detailed stats
+- ✅ **Real-time Charts** - Visual progress tracking and activity monitoring
 
-- **🔐 Dual Authentication** - Local mode for development, OAuth for production
-- **🤖 OpenClaw Integration** - Direct connection to your OpenClaw instance with enhanced validation
-- **📋 Streamlined Task Management** - Clean 3-column Kanban: New → In Progress → Completed
-- **📊 Real-time Dashboard** - Monitor system status and task progress with toast notifications
-- **🎯 Dynamic Team Visualization** - 3D voxel office showing you + your AI agents
-- **📱 Mobile Responsive** - Works perfectly on desktop, tablet, and mobile devices
-- **🔄 Automated Task Flow** - Tasks automatically progress through pipeline with AI processing
-- **⚡ Enhanced UX** - Time estimates, visual feedback, and production-ready error handling
-- **🛡️ Security Hardened** - JWT authentication, input validation, and secure OAuth flows
+### ⚡ **Real-time Everything**
+- ✅ **WebSocket Updates** - Instant status changes across all users
+- ✅ **Live Agent Status** - Real-time agent working/idle state changes
+- ✅ **Task Progress Updates** - Automatic task status synchronization
+- ✅ **Multi-user Support** - Each user gets their own real-time updates
 
-## 📱 Mobile Development Setup
+### 🎨 **Enhanced User Experience**
+- ✅ **Professional UI/UX** - Polished interface with smooth animations
+- ✅ **Mobile Responsive** - Works perfectly on all devices
+- ✅ **Error Boundaries** - Graceful error handling and recovery
+- ✅ **Loading States** - Professional loading indicators throughout
 
-**For testing on your iPhone/mobile device:**
+## ✨ Features Overview
 
-Since Google OAuth requires a public domain (not localhost or IP addresses), we provide automatic tunneling:
+### 🏢 **3D Team Office**
+- **Voxel-style 3D Office** - Immersive team visualization
+- **Agent Avatars** - Color-coded avatars for each team member and AI agent
+- **Real-time Positioning** - Agents appear/disappear based on status
+- **Interactive Labels** - Click to view agent details and performance
 
-```bash
-# One-command mobile setup with automatic localtunnel
-npm run dev:mobile
-```
+### 🤖 **Agent Management**
+- **Agent Types** - Coding, Research, Analysis, Creative, System agents
+- **Capability Tracking** - Define and track what each agent can do
+- **Performance Monitoring** - Success rates, response times, task counts
+- **Status Management** - Manual and automatic agent status updates
 
-This will:
-- ✅ Start backend and frontend servers
-- ✅ Create public tunnels for both services
-- ✅ Update environment configuration automatically
-- ✅ Display the mobile-ready URLs
+### 📋 **Advanced Task Management**
+- **Agent Assignment** - Assign tasks to specific agents
+- **Visual Indicators** - See which agent is working on each task
+- **Automatic Progression** - Tasks move through pipeline automatically
+- **Assignment History** - Track which agents worked on which tasks
 
-**Then configure Google Cloud Console with the displayed URLs:**
-- Authorized JavaScript origins: `https://xxxx.loca.lt`
-- Authorized redirect URIs: `https://xxxx.loca.lt/auth/google/callback`
+### 📊 **Analytics & Insights**
+- **Dashboard Metrics** - Agent count, completion rates, efficiency stats
+- **Performance Trends** - Historical charts and activity graphs
+- **Agent Comparison** - Side-by-side agent performance analysis
+- **Export Capabilities** - Download reports and analytics data
 
-Open the mobile URL on your iPhone to test Mission Control on the go!
+### 🔄 **OpenClaw Integration**
+- **Auto-Discovery** - Finds existing OpenClaw agents automatically
+- **Multi-Endpoint Support** - Tries multiple API endpoints for compatibility
+- **Sync Management** - Manual and automatic agent synchronization
+- **Status Bridging** - Syncs agent status between systems
 
-## 🚀 Quick Start
+## 🚀 Navigation Overview
 
-### 1. Clone and Install
+Mission Control v2.0 provides comprehensive views for different aspects of your AI operation:
 
-```bash
-git clone https://github.com/EmanMiller/MissionControl.git
-cd MissionControl
+- **📋 Tasks** - Enhanced Kanban board with agent assignment
+- **👥 Team** - 3D office visualization of your AI workforce
+- **⚙️ Manage Agents** - Full CRUD operations for agent management
+- **📈 Analytics** - Performance metrics and insights dashboard
+- **📅 Calendar** - Schedule and timeline management
+- **📁 Projects** - Project organization and tracking
+- **✅ Approvals** - Workflow approvals and sign-offs
 
-# Install frontend dependencies
-npm install
-
-# Install backend dependencies  
-cd server
-npm install
-cd ..
-```
-
-### 2. Start Development
-
-```bash
-# Local development (no OAuth required)
-npm run dev
-```
-
-Mission Control will open at `http://localhost:5173` with local authentication enabled.
-
-### 3. Configure OpenClaw
-
-1. Sign in using "Local Mode" button
-2. Go to Settings (gear icon)
-3. Add your OpenClaw endpoint (e.g., `http://localhost:18789`)
-4. Test the connection
-5. Start creating tasks!
-
-## 🔐 Authentication Modes
+## 🔐 Authentication & Security
 
 ### Local Development (Default)
-- **Zero setup** - works immediately
-- **Local user account** - data persists in SQLite
-- **All features enabled** - full functionality without OAuth
+- **Zero setup** - works immediately with `npm run dev`
+- **Local SQLite database** - all data persists locally
+- **All features enabled** - full v2.0 functionality without OAuth
+- **Multi-user simulation** - test real-time features locally
 
 ### Production OAuth
-For production deployment, configure OAuth providers:
+For production deployment with real authentication:
 
 **Google OAuth:**
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create OAuth 2.0 Client ID
-3. Add your domain to authorized origins
-4. Set `VITE_AUTH_MODE=oauth` in `.env.local`
+```bash
+# Frontend (.env.local)
+VITE_AUTH_MODE=oauth
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+
+# Backend (server/.env)
+AUTH_MODE=oauth
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
 
 **GitHub OAuth:**
-1. Go to [GitHub Settings](https://github.com/settings/developers)
-2. Create new OAuth App
-3. Set callback URL to your domain
-4. Add credentials to `server/.env`
-
-**Apple Sign In:**
-1. Configure at [Apple Developer Console](https://developer.apple.com)
-2. Add Service ID and credentials
-
-## 🔧 Environment Configuration
-
-### Frontend (.env.local)
 ```bash
-# Authentication mode
-VITE_AUTH_MODE=local          # 'local' or 'oauth'
-VITE_API_URL=http://localhost:3001/api
-
-# OAuth credentials (for production)
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-VITE_GITHUB_CLIENT_ID=your_github_client_id  
-VITE_APPLE_CLIENT_ID=your_apple_client_id
-```
-
-### Backend (server/.env)
-```bash
-# Authentication
-AUTH_MODE=local               # 'local' or 'oauth'
-ALLOW_DEMO_AUTH=1            # Enable local development
-
-# JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key
-
-# OAuth secrets (for production)
-GITHUB_CLIENT_SECRET=your_github_secret
-GOOGLE_CLIENT_ID=your_google_client_id
-```
-
-## 🌐 Production Deployment
-
-### Railway + Vercel (Recommended)
-
-**Backend (Railway):**
-1. Connect your GitHub repository
-2. Set environment variables for OAuth
-3. Deploy automatically on push
-
-**Frontend (Vercel):**
-1. Connect your GitHub repository  
-2. Set build command: `npm run build`
-3. Set environment variables
-4. Deploy automatically on push
-
-### Environment Variables (Production)
-```bash
-# Frontend
-VITE_AUTH_MODE=oauth
-VITE_API_URL=https://your-api-domain.com/api
-VITE_GOOGLE_CLIENT_ID=your_production_google_id
-
-# Backend  
-AUTH_MODE=oauth
-NODE_ENV=production
-DATABASE_URL=postgresql://user:pass@host:port/db
-GITHUB_CLIENT_SECRET=your_production_github_secret
+VITE_GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
 ```
 
 ## 🤖 OpenClaw Integration
 
-### Connecting Your OpenClaw Instance
+### Automatic Agent Discovery
 
-1. **Sign in** to Mission Control  
-2. **Go to Settings** (gear icon in sidebar)
-3. **Configure OpenClaw:**
-   - **Endpoint:** Your OpenClaw URL (e.g., `http://localhost:18789`)
-   - **Token:** Optional authentication token
-4. **Test Connection** - Verify Mission Control can reach OpenClaw
-5. **Save Configuration**
+Mission Control v2.0 automatically discovers your OpenClaw agents:
 
-### How It Works
+1. **Configure OpenClaw Connection** - Add your endpoint in Settings
+2. **Auto-Sync on First Visit** - Agents appear automatically in Team view
+3. **Manual Sync Available** - "Sync OpenClaw" button for on-demand updates
+4. **Real-time Status Updates** - Agent status syncs between systems
 
-1. **Create Task** - Add a new task with title and description
-2. **Start Processing** - Task automatically moves to "In Progress"
-3. **OpenClaw Processing** - OpenClaw receives and processes the task
-4. **Status Updates** - Mission Control polls for completion
-5. **View Results** - Completed tasks show results and deliverables
+### Supported OpenClaw Endpoints
 
-### Webhook Support (Optional)
+Mission Control tries multiple endpoints for maximum compatibility:
+- `/api/agents_list` - Primary agent listing endpoint
+- `/api/sessions_list` - Active session discovery
+- `/api/subagents` - Sub-agent management
+- `/api/agents` - Standard agents API
 
-For faster updates, configure OpenClaw to send webhooks to:
+### Agent Types and Capabilities
+
+OpenClaw agents are automatically categorized:
+- **Coding Agents** - Purple avatars, development tasks
+- **Research Agents** - Green avatars, information gathering
+- **General Agents** - Cyan avatars, multi-purpose tasks
+- **Analysis Agents** - Orange avatars, data processing
+- **Creative Agents** - Pink avatars, content generation
+
+## 📊 Real-time Features
+
+### WebSocket Architecture
+
+Mission Control v2.0 includes a full WebSocket server for real-time updates:
+
+```javascript
+// Backend WebSocket Events
+broadcastAgentUpdate(userId, {
+  type: 'created|status-updated|deleted',
+  agent: agentData
+});
+
+// Frontend Real-time Listeners
+socketService.on('agent-updated', (data) => {
+  // Automatic UI updates
+});
 ```
-POST https://your-api-domain.com/api/openclaw/webhook
+
+### Multi-User Support
+
+Each user gets their own real-time room:
+- **User-specific updates** - Only see your agents and tasks
+- **Concurrent collaboration** - Multiple users can work simultaneously
+- **Cross-device sync** - Changes appear on all your devices instantly
+
+## 🏗️ Enhanced Architecture
+
+### Frontend (React + Vite + WebSockets)
+- **React 18** with modern hooks and concurrent features
+- **Socket.io Client** for real-time WebSocket communication
+- **Tailwind CSS** with custom animations and transitions
+- **Three.js** for 3D team office visualization
+- **Chart.js/Recharts** for analytics dashboards
+- **Framer Motion** for smooth animations
+
+### Backend (Node.js + Express + Socket.io)
+- **Express.js** with ES modules and modern async/await
+- **Socket.io Server** for real-time WebSocket communication
+- **SQLite/PostgreSQL** with enhanced schema for agents
+- **JWT Authentication** with user-specific room management
+- **OpenClaw Integration** with multi-endpoint discovery
+
+### Enhanced Database Schema
+```sql
+-- Users table (unchanged)
+users: id, email, name, provider, openclaw_endpoint, openclaw_token
+
+-- Enhanced tasks table
+tasks: id, user_id, assigned_agent_id, status, processing_metrics
+
+-- New agents table
+agents: id, user_id, openclaw_id, name, type, status, capabilities, performance_stats
+
+-- Analytics and session tracking
+sessions: user_id, agent_updates, task_assignments
 ```
 
-## 🏗️ Architecture
+## 📋 Enhanced API Endpoints
 
-### Frontend (React + Vite)
-- **Framework:** React 18 with Vite
-- **Styling:** Tailwind CSS with dark theme
-- **Authentication:** Dual mode (local + OAuth)
-- **Icons:** Lucide React
-- **3D Graphics:** Three.js for team visualization
+### Agent Management
+- `GET /api/agents` - Get user's AI agents
+- `POST /api/agents` - Create new agent
+- `PUT /api/agents/:id/status` - Update agent status
+- `DELETE /api/agents/:id` - Delete agent
+- `POST /api/openclaw/sync-agents` - Sync from OpenClaw
 
-### Backend (Node.js + Express)
-- **Framework:** Express.js with ES modules
-- **Database:** SQLite (development) / PostgreSQL (production)
-- **Authentication:** JWT tokens with dual auth support
-- **OpenClaw Integration:** HTTP API with polling and webhooks
-- **Security:** Helmet, CORS, rate limiting
+### Analytics
+- `GET /api/analytics/dashboard` - Overall dashboard metrics
+- `GET /api/analytics/agents/:id` - Agent-specific analytics
+- `POST /api/analytics/agents/:id/update-stats` - Update performance stats
 
-### Database Schema
-- **users** - User profiles and OpenClaw configuration
-- **tasks** - Task management with OpenClaw session tracking  
-- **sessions** - JWT session management
-- **oauth_states** - OAuth security state validation
-
-## 📋 API Endpoints
-
-### Authentication (Production OAuth Only)
-- `POST /api/auth/google` - Google OAuth login
-- `POST /api/auth/github/callback` - GitHub OAuth callback  
-- `POST /api/auth/apple` - Apple Sign In
-- `POST /api/auth/verify` - Verify JWT token
-- `POST /api/auth/logout` - Sign out
-- `POST /api/auth/demo` - Local development login
-
-### Tasks
-- `GET /api/tasks` - Get user's tasks
-- `POST /api/tasks` - Create new task
-- `PUT /api/tasks/:id/status` - Update task status
-- `GET /api/tasks/stats/summary` - Task statistics
-
-### OpenClaw
-- `GET /api/openclaw/config` - Get OpenClaw configuration
-- `POST /api/openclaw/config` - Save OpenClaw configuration  
-- `POST /api/openclaw/test` - Test OpenClaw connection
-- `POST /api/openclaw/webhook` - Webhook for task completion
-
-### Users
-- `GET /api/users/profile` - Get user profile
-- `PUT /api/users/profile` - Update user profile
-- `GET /api/users/dashboard` - Dashboard statistics
+### Real-time WebSocket Events
+- `agent-updated` - Agent status/data changes
+- `task-updated` - Task assignment/status changes
+- `join-user-room` - Subscribe to user-specific updates
 
 ## 🧪 Testing
 
-Run the comprehensive test suite:
+Run the enhanced test suite:
 
 ```bash
 npm run test-system
 ```
 
-Tests validate:
-- ✅ Backend health and API endpoints
-- ✅ Authentication middleware protection
-- ✅ Database connectivity and schema
-- ✅ OpenClaw integration endpoints
-- ✅ Frontend accessibility and rendering
-- ✅ Error handling and security
+New tests validate:
+- ✅ Agent CRUD operations
+- ✅ WebSocket real-time functionality
+- ✅ OpenClaw multi-endpoint discovery
+- ✅ Analytics dashboard accuracy
+- ✅ Task-agent assignment flows
+- ✅ 3D visualization rendering
 
-## 🔍 Troubleshooting
+## 📱 Mobile Excellence
 
-### Common Issues
+Mission Control v2.0 is fully mobile-optimized:
 
-**"Local Mode" button not appearing:**
-- Check that `ALLOW_DEMO_AUTH=1` in `server/.env`
-- Restart the backend server
+```bash
+# Mobile development with tunnels
+npm run dev:mobile
+```
 
-**OpenClaw Connection Failed:**
-- Verify OpenClaw is running and accessible
-- Check endpoint URL format (include http:// or https://)
-- Test authentication token if using secured OpenClaw
+**Mobile Features:**
+- ✅ **Touch-optimized UI** - Perfect touch targets and gestures
+- ✅ **Responsive 3D Office** - 3D visualization works on mobile
+- ✅ **Swipe Gestures** - Intuitive navigation and interactions
+- ✅ **Mobile Agent Management** - Full CRUD on small screens
+- ✅ **Real-time Mobile Updates** - WebSocket updates work perfectly
 
-**Database Errors:**
-- Delete `server/mission-control.db` to reset database
-- Check file permissions in server directory
-- Verify SQLite3 is properly installed
+## 🔍 Advanced Troubleshooting
 
-**Tasks Stuck "In Progress":**
-- Check OpenClaw logs for processing errors
-- Verify webhook URL configuration
-- Manual polling occurs every 2 minutes as fallback
+### Agent Sync Issues
+```bash
+# Check OpenClaw connection
+curl http://localhost:18789/api/agents_list
 
-**Mobile Testing Issues:**
-- Use `npm run dev:mobile` for tunnel setup
-- Update Google Cloud Console with tunnel URLs
-- Tunnel URLs expire after ~30 minutes
+# Force manual sync
+POST http://localhost:3001/api/openclaw/sync-agents
+```
+
+### WebSocket Connection Issues
+```bash
+# Check WebSocket server
+curl http://localhost:3001/socket.io/
+
+# Debug real-time updates
+console.log(socketService.connected);
+```
+
+### 3D Visualization Issues
+```bash
+# Clear Three.js cache
+localStorage.clear();
+
+# Check WebGL support
+navigator.userAgent; // Check for WebGL compatibility
+```
+
+## 🚀 Production Deployment
+
+### Environment Configuration
+
+**Frontend (.env.local):**
+```bash
+VITE_AUTH_MODE=oauth
+VITE_API_URL=https://your-api.railway.app/api
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+```
+
+**Backend (server/.env):**
+```bash
+NODE_ENV=production
+AUTH_MODE=oauth
+DATABASE_URL=postgresql://user:pass@host:port/db
+JWT_SECRET=your_super_secure_jwt_secret_for_production
+PUBLIC_URL=https://your-api.railway.app
+```
+
+### Deployment Steps
+
+1. **Backend on Railway:**
+   - Connect GitHub repository
+   - Set environment variables
+   - Deploy automatically on push
+
+2. **Frontend on Vercel:**
+   - Connect GitHub repository
+   - Build command: `npm run build`
+   - Output directory: `dist`
+   - Deploy automatically on push
+
+3. **WebSocket Configuration:**
+   - Ensure WebSocket support on hosting platform
+   - Configure CORS for real-time connections
+   - Set proper PUBLIC_URL for webhooks
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Test with `npm run dev` (local mode)
-4. Commit changes (`git commit -m 'Add amazing feature'`)
-5. Push to branch (`git push origin feature/amazing-feature`) 
-6. Open Pull Request
+Mission Control v2.0 welcomes contributions:
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+1. **Fork the repository**
+2. **Create feature branch** (`git checkout -b feature/amazing-v2-feature`)
+3. **Test thoroughly** with `npm run dev` and `npm run test-system`
+4. **Commit with descriptive messages** (`git commit -m '✨ Add agent performance analytics'`)
+5. **Push to branch** (`git push origin feature/amazing-v2-feature`)
+6. **Open Pull Request** with detailed description
+
+### Development Guidelines
+
+- **Feature Branches** - Use descriptive branch names
+- **Commit Messages** - Use emoji prefixes and clear descriptions
+- **Testing** - All new features must include tests
+- **Documentation** - Update README for user-facing changes
+- **Real-time Features** - Test WebSocket functionality thoroughly
 
 ## 📄 License
 
@@ -323,7 +352,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **OpenClaw:** https://openclaw.ai
 - **Issues:** https://github.com/EmanMiller/MissionControl/issues
 - **Discussions:** https://github.com/EmanMiller/MissionControl/discussions
+- **v2.0 Release Notes:** https://github.com/EmanMiller/MissionControl/releases/tag/v2.0.0
 
 ---
 
-**🚀 Ready to automate your workflow with AI agents? Start with `npm run dev` and create your first task!**
+**🚀 Ready to manage your AI agent fleet with style? Start with `npm run dev` and explore the beautiful 3D team office!**
+
+## 🎊 What's Next?
+
+Mission Control v2.0 is just the beginning. Future versions will include:
+- **Agent Marketplace** - Discover and install new agent types
+- **Advanced Workflows** - Multi-agent task pipelines
+- **Team Collaboration** - Shared agent pools and task boards
+- **AI Training Integration** - Fine-tune agents based on performance
+- **Enterprise Features** - SSO, advanced security, audit logs
+
+**Join the community and help shape the future of AI agent management!**
