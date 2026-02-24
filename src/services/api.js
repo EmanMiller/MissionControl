@@ -259,6 +259,22 @@ class ApiClient {
       method: 'DELETE'
     });
   }
+
+  // Analytics
+  async getDashboardAnalytics() {
+    return await this.request('/analytics/dashboard');
+  }
+
+  async getAgentAnalytics(agentId) {
+    return await this.request(`/analytics/agents/${agentId}`);
+  }
+
+  async updateAgentPerformanceStats(agentId, metrics) {
+    return await this.request(`/analytics/agents/${agentId}/update-stats`, {
+      method: 'POST',
+      body: { metrics }
+    });
+  }
 }
 
 export default new ApiClient();

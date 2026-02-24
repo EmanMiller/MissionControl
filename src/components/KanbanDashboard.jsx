@@ -11,12 +11,14 @@ import {
 import apiClient from '../services/api.js';
 import VoxelOffice3D from './VoxelOffice3D.jsx';
 import socketService from '../services/socket.js';
+import AnalyticsDashboard from './AnalyticsDashboard.jsx';
 
 /* ─── Sidebar Navigation ────────────────────────────────────────────────── */
 
 const NAVIGATION_ITEMS = [
   { id: 'tasks', label: 'Tasks', icon: CheckSquare, active: true },
   { id: 'agents', label: 'Agents', icon: Users },
+  { id: 'analytics', label: 'Analytics', icon: Activity },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
   { id: 'projects', label: 'Projects', icon: FolderOpen },
   { id: 'approvals', label: 'Approvals', icon: CheckSquare }
@@ -1948,6 +1950,8 @@ export default function KanbanDashboard({ user, onSignOut }) {
           loadAgents={loadAgents}
           user={user}
         />
+      ) : activeNav === 'analytics' ? (
+        <AnalyticsDashboard user={user} />
       ) : (
         /* Fallback for any unmapped navigation items */
         <div className="flex-1 flex items-center justify-center">
