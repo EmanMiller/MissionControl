@@ -12,6 +12,7 @@ import apiClient from '../services/api.js';
 import VoxelOffice3D from './VoxelOffice3D.jsx';
 import socketService from '../services/socket.js';
 import AnalyticsDashboard from './AnalyticsDashboard.jsx';
+import AgentAssignmentModal from './AgentAssignmentModal.jsx';
 
 /* ─── Sidebar Navigation ────────────────────────────────────────────────── */
 
@@ -1018,7 +1019,7 @@ function StatsBar({ tasks }) {
   );
 }
 
-function TaskCard({ task, index }) {
+function TaskCard({ task, index, onAssignAgent, agents = [] }) {
   const getStatusColor = (status) => {
     const colors = {
       'backlog': '#6B7280',
@@ -1134,13 +1135,51 @@ function TaskCard({ task, index }) {
               {formatTimeAgo(task.created_at)}
             </span>
           </div>
+
+          {/* Agent Assignment Section */}
+          {task.status !== 'built' && (
+            <div className="mt-3 pt-3 border-t border-[#2A2A2A]">
+              {task.assigned_agent_id ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 bg-[#06B6D4] rounded-full flex items-center justify-center">
+                      <User size={10} className="text-white" />
+                    </div>
+                    <span className="text-[#F9FAFB] text-xs">
+                      {agents.find(a => a.id === task.assigned_agent_id)?.name || 'Agent'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAssignAgent && onAssignAgent(task);
+                    }}
+                    className="text-[#9CA3AF] hover:text-[#F9FAFB] text-xs transition-colors"
+                  >
+                    Change
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAssignAgent && onAssignAgent(task);
+                  }}
+                  className="w-full text-[#06B6D4] hover:text-[#0891B2] text-xs font-medium transition-colors flex items-center justify-center gap-1 py-1"
+                >
+                  <User size={12} />
+                  Assign Agent
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </Draggable>
   );
 }
 
-function KanbanColumn({ column, tasks, onAddTask }) {
+function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
   const taskCount = tasks.length;
   
   return (
@@ -1184,7 +1223,13 @@ function KanbanColumn({ column, tasks, onAddTask }) {
               </div>
             ) : (
               tasks.map((task, index) => (
-                <TaskCard key={task.id} task={task} index={index} />
+                <TaskCard 
+                  key={task.id} 
+                  task={task} 
+                  index={index}
+                  onAssignAgent={onAssignAgent}
+                  agents={agents}
+                />
               ))
             )}
             {provided.placeholder}
@@ -1693,6 +1738,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
   const [selectedTag, setSelectedTag] = useState('');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [assignmentTask, setAssignmentTask] = useState(null);
 
   useEffect(() => {
     loadTasks();
@@ -1803,6 +1849,34 @@ export default function KanbanDashboard({ user, onSignOut }) {
     };
 
     createTask(taskData);
+  }
+
+  async function assignTaskToAgent(taskId, agentId) {
+    try {
+      // Update task with agent assignment
+      await apiClient.updateTaskStatus(taskId, 'in_progress'); // Auto-move to in progress
+      
+      // Update agent status to working
+      if (agentId) {
+        await apiClient.updateAgentStatus(agentId, 'working', taskId);
+      }
+      
+      // Reload both tasks and agents
+      await Promise.all([loadTasks(), loadAgents()]);
+      
+      addNotification({
+        type: 'success',
+        title: 'Agent assigned successfully',
+        message: agentId ? 'Task moved to in progress' : 'Agent unassigned from task'
+      });
+    } catch (error) {
+      console.error('Assignment error:', error);
+      addNotification({
+        type: 'error',
+        title: 'Assignment failed',
+        message: error.message || 'Failed to assign agent to task'
+      });
+    }
   }
 
   // Get all unique tags from tasks
@@ -1921,6 +1995,8 @@ export default function KanbanDashboard({ user, onSignOut }) {
                       column={column}
                       tasks={filteredTasks.filter(task => task.status === column.id)}
                       onAddTask={handleAddTask}
+                      onAssignAgent={setAssignmentTask}
+                      agents={agents}
                     />
                   ))}
                   {/* Scroll indicator for mobile */}
@@ -1987,6 +2063,15 @@ export default function KanbanDashboard({ user, onSignOut }) {
           availableTags={allTags}
         />
       </CustomModal>
+
+      {/* Agent Assignment Modal */}
+      <AgentAssignmentModal
+        isOpen={!!assignmentTask}
+        onClose={() => setAssignmentTask(null)}
+        task={assignmentTask}
+        agents={agents}
+        onAssign={assignTaskToAgent}
+      />
 
       {/* Toast Notifications */}
       <ToastContainer 
