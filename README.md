@@ -7,7 +7,7 @@
 
 <img width="1917" height="927" alt="image" src="https://github.com/user-attachments/assets/164f3fed-869b-4be8-b409-9c79427a12d9" />
 
-**🎯 Now Enhanced with Full Agent Fleet Management**
+**🎯 Now Enhanced with Full Agent Fleet Management + System Information Tracking**
 
 ## ⚡ Quick Start (2 Minutes)
 
@@ -35,6 +35,7 @@ npm run dev
 - ✅ **Fleet Performance Metrics** - Overall agent utilization and success rates
 - ✅ **Task Completion Analytics** - Historical trends and completion insights
 - ✅ **Agent Leaderboards** - Top performing agents with detailed stats
+- ✅ **System Information Panel** - Current/default AI model tracking and OpenClaw status
 - ✅ **Real-time Charts** - Visual progress tracking and activity monitoring
 
 ### ⚡ **Real-time Everything**
@@ -71,6 +72,7 @@ npm run dev
 
 ### 📊 **Analytics & Insights**
 - **Dashboard Metrics** - Agent count, completion rates, efficiency stats
+- **System Information** - Real-time display of current OpenClaw model, default model, and connection status
 - **Performance Trends** - Historical charts and activity graphs
 - **Agent Comparison** - Side-by-side agent performance analysis
 - **Export Capabilities** - Download reports and analytics data
@@ -148,6 +150,20 @@ OpenClaw agents are automatically categorized:
 - **General Agents** - Cyan avatars, multi-purpose tasks
 - **Analysis Agents** - Orange avatars, data processing
 - **Creative Agents** - Pink avatars, content generation
+
+### System Information Dashboard
+
+Mission Control's analytics tab now includes comprehensive system monitoring:
+
+- **Current Model Display** - Shows the active OpenClaw reasoning model (e.g., `anthropic/claude-sonnet-4-20250514`)
+- **Default Model Tracking** - Displays your configured default AI model
+- **Connection Status** - Real-time OpenClaw agent connection status with visual indicators
+- **System Health** - At-a-glance view of your AI infrastructure status
+
+Perfect for:
+- **Model Performance Tracking** - Compare results across different AI models
+- **Debugging Sessions** - Quickly identify which model handled specific tasks
+- **System Monitoring** - Ensure your OpenClaw connection is stable and responsive
 
 ## 📊 Real-time Features
 
