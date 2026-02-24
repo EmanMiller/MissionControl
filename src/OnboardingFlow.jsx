@@ -123,7 +123,7 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             </div>
           )}
 
-          {/* Demo Mode for Local Development */}
+          {/* Local Mode - Simple Setup */}
           <button
             onClick={async () => {
               setIsAuthenticating(true);
@@ -137,76 +137,20 @@ export default function OnboardingFlow({ onAuthSuccess }) {
                 }
               } catch (error) {
                 console.error('Local auth error:', error);
-                setError(error.message || 'Local login failed - is backend running?');
+                setError(error.message || 'Backend connection failed - is the server running?');
               } finally {
                 setIsAuthenticating(false);
               }
             }}
             disabled={isAuthenticating}
-            className="w-full bg-gradient-to-r from-[#06B6D4]/20 to-[#8B5CF6]/20 hover:from-[#06B6D4]/30 hover:to-[#8B5CF6]/30 border border-[#2A2A2A] text-[#9CA3AF] text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
-          >
-            <Zap size={18} />
-            Continue in Local Mode (No OAuth)
-          </button>
-
-          <div className="flex items-center gap-4 py-2">
-            <div className="flex-1 h-px bg-[#2A2A2A]"></div>
-            <span className="text-[#6B7280] text-xs">or sign in with</span>
-            <div className="flex-1 h-px bg-[#2A2A2A]"></div>
-          </div>
-
-          {/* Google OAuth */}
-          {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
-            <div className="w-full">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={(error) => {
-                  console.error('Google Sign In error:', error);
-                  setError('Google Sign In failed. Please contact support if this issue persists.');
-                }}
-                theme="filled_black"
-                shape="pill"
-                size="large"
-                text="continue_with"
-                disabled={isAuthenticating}
-                useOneTap={false}
-                auto_select={false}
-                cancel_on_tap_outside={false}
-              />
-            </div>
-          ) : (
-            <div className="bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-lg p-4">
-              <h3 className="text-[#EF4444] text-sm font-semibold mb-2">OAuth Configuration Required</h3>
-              <p className="text-[#9CA3AF] text-xs">
-                Google authentication is not configured. Please contact your administrator to set up OAuth credentials.
-              </p>
-            </div>
-          )}
-
-          {/* GitHub OAuth */}
-          <button
-            onClick={handleGitHubLogin}
-            disabled={isAuthenticating}
-            className="w-full bg-[#24292F] hover:bg-[#32383F] border-none text-white text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
-            style={{ fontFamily: 'inherit' }}
+            className="w-full bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] hover:from-[#0891B2] hover:to-[#7C3AED] text-white text-lg font-semibold rounded-lg p-4 flex items-center justify-center gap-3 cursor-pointer transition-all disabled:opacity-50 shadow-lg"
           >
             {isAuthenticating ? (
-              <Loader2 size={18} className="animate-spin" />
+              <Loader2 size={20} className="animate-spin" />
             ) : (
-              <Github size={18} />
+              <Zap size={20} />
             )}
-            Continue with GitHub
-          </button>
-
-          {/* Apple Sign In */}
-          <button
-            onClick={handleAppleLogin}
-            disabled={isAuthenticating}
-            className="w-full bg-[#000000] hover:bg-[#1D1D1F] border border-[#2A2A2A] text-white text-sm sm:text-base font-medium rounded-lg p-3 sm:p-4 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
-            style={{ fontFamily: 'inherit' }}
-          >
-            <Apple size={18} />
-            Continue with Apple
+            Continue in Local Mode
           </button>
         </div>
 
