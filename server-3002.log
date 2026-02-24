@@ -1,7 +1,0 @@
-🔄 OpenClaw session polling scheduled (every 2 minutes)
-🚀 Mission Control Server running on port 3002
-🔗 Frontend URL: http://localhost:5173
-Connected to SQLite database
-Migration add_tags_to_tasks already applied
-Migration add_estimated_hours_to_tasks completed successfully
-Database initialized successfully
