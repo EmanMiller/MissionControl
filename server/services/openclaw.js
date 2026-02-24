@@ -32,6 +32,78 @@ function sanitizeForPrompt(str) {
   return s.slice(0, 10000);
 }
 
+export async function fetchOpenClawAgents(endpoint, token) {
+  const base = baseUrl(endpoint);
+  try {
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    // Try multiple endpoints to find agents
+    const agentEndpoints = [
+      `${base}/api/agents_list`,
+      `${base}/api/sessions_list`,
+      `${base}/api/subagents`,
+      `${base}/api/agents`
+    ];
+
+    for (const agentEndpoint of agentEndpoints) {
+      try {
+        const response = await axios.get(agentEndpoint, {
+          headers,
+          timeout: 10000
+        });
+
+        let agentsList = [];
+        
+        // Handle different response formats
+        if (response.data) {
+          if (response.data.agents) {
+            agentsList = response.data.agents;
+          } else if (response.data.sessions) {
+            // Convert sessions to agents
+            agentsList = response.data.sessions.map(session => ({
+              id: session.sessionKey || session.id,
+              name: session.label || `Session ${session.sessionKey}`,
+              type: session.agentId || 'general',
+              status: session.active ? 'idle' : 'offline'
+            }));
+          } else if (Array.isArray(response.data)) {
+            agentsList = response.data;
+          }
+        }
+
+        if (agentsList.length > 0) {
+          return agentsList.map(agent => ({
+            id: agent.id || agent.sessionKey || agent.agentId || Math.random().toString(36),
+            name: agent.name || agent.label || `Agent ${agent.id}`,
+            type: agent.type || agent.agentId || 'general',
+            status: agent.status || (agent.active ? 'idle' : 'offline'),
+            capabilities: agent.capabilities || [],
+            performance_stats: agent.performance || {}
+          }));
+        }
+      } catch (endpointError) {
+        // Continue to next endpoint
+        continue;
+      }
+    }
+    
+    // If no endpoints worked, return empty array
+    return [];
+    
+  } catch (error) {
+    console.error('Failed to fetch OpenClaw agents:', error.message);
+    if (error.response?.status === 401) {
+      throw new Error('Authentication failed - check your OpenClaw token');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to OpenClaw - check endpoint URL');
+    }
+    throw new Error(`OpenClaw connection failed: ${error.message}`);
+  }
+}
+
 export async function testOpenClawConnection(endpoint, token) {
   const base = baseUrl(endpoint);
   try {
@@ -495,5 +567,103 @@ export async function pollOpenClawSessions() {
         
         resolve(tasks.length);
       });
+  });
+}
+
+export async function syncOpenClawAgents(userId) {
+  return new Promise((resolve, reject) => {
+    // Get user's OpenClaw config
+    db.get('SELECT openclaw_endpoint, openclaw_token FROM users WHERE id = ?', [userId], async (err, user) => {
+      if (err) {
+        return reject(new Error('Failed to fetch user OpenClaw config'));
+      }
+
+      if (!user?.openclaw_endpoint) {
+        return resolve({ synced: 0, message: 'No OpenClaw endpoint configured' });
+      }
+
+      try {
+        const openclawAgents = await fetchOpenClawAgents(user.openclaw_endpoint, user.openclaw_token);
+        let syncedCount = 0;
+
+        // Process each OpenClaw agent
+        for (const agent of openclawAgents) {
+          // Check if agent already exists in our database
+          const existingAgent = await new Promise((resolveAgent, rejectAgent) => {
+            db.get(
+              'SELECT * FROM agents WHERE user_id = ? AND openclaw_id = ?',
+              [userId, agent.id],
+              (err, row) => {
+                if (err) rejectAgent(err);
+                else resolveAgent(row);
+              }
+            );
+          });
+
+          if (existingAgent) {
+            // Update existing agent
+            await new Promise((resolveUpdate, rejectUpdate) => {
+              db.run(
+                `UPDATE agents SET 
+                  name = ?, 
+                  type = ?, 
+                  status = ?, 
+                  capabilities = ?, 
+                  performance_stats = ?,
+                  updated_at = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND openclaw_id = ?`,
+                [
+                  agent.name,
+                  agent.type,
+                  agent.status,
+                  JSON.stringify(agent.capabilities),
+                  JSON.stringify(agent.performance_stats),
+                  userId,
+                  agent.id
+                ],
+                function(err) {
+                  if (err) rejectUpdate(err);
+                  else resolveUpdate();
+                }
+              );
+            });
+          } else {
+            // Create new agent
+            const agentId = uuidv4();
+            await new Promise((resolveInsert, rejectInsert) => {
+              db.run(
+                `INSERT INTO agents 
+                  (id, user_id, openclaw_id, name, type, status, capabilities, performance_stats, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+                [
+                  agentId,
+                  userId,
+                  agent.id,
+                  agent.name,
+                  agent.type,
+                  agent.status,
+                  JSON.stringify(agent.capabilities),
+                  JSON.stringify(agent.performance_stats)
+                ],
+                function(err) {
+                  if (err) rejectInsert(err);
+                  else resolveInsert();
+                }
+              );
+            });
+          }
+          syncedCount++;
+        }
+
+        resolve({
+          synced: syncedCount,
+          total: openclawAgents.length,
+          message: `Successfully synced ${syncedCount} agents from OpenClaw`
+        });
+
+      } catch (error) {
+        reject(error);
+      }
+    });
   });
 }

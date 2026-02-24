@@ -158,14 +158,25 @@ function runMigrations() {
       {
         name: 'add_estimated_hours_to_tasks',
         sql: 'ALTER TABLE tasks ADD COLUMN estimated_hours REAL'
+      },
+      // Migration: Add openclaw_id column to agents table
+      {
+        name: 'add_openclaw_id_to_agents',
+        sql: 'ALTER TABLE agents ADD COLUMN openclaw_id TEXT'
       }
     ];
 
     let completed = 0;
     
     migrations.forEach((migration) => {
+      // Determine table name from migration SQL
+      let tableName = 'tasks'; // default
+      if (migration.sql.includes('agents')) {
+        tableName = 'agents';
+      }
+      
       // Check if column already exists
-      db.all("PRAGMA table_info(tasks)", (err, columns) => {
+      db.all(`PRAGMA table_info(${tableName})`, (err, columns) => {
         if (err) {
           console.error(`Migration ${migration.name} failed:`, err);
           completed++;
