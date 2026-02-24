@@ -1,0 +1,157 @@
+2026-02-23 22:17:16 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:17:16 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:17:16 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:17:16 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:17:16 -06:00: Connected to SQLite database
+2026-02-23 22:17:16 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:17:16 -06:00: Migration add_estimated_hours_to_tasks completed successfully
+2026-02-23 22:17:16 -06:00: Migration add_openclaw_id_to_agents completed successfully
+2026-02-23 22:17:16 -06:00: Database initialized successfully
+2026-02-23 22:17:20 -06:00: Client connected: 4vypDWhJElrRz1KMAAAB
+2026-02-23 22:17:20 -06:00: Socket 4vypDWhJElrRz1KMAAAB joined user room: user-1
+2026-02-23 22:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:20:36 -06:00: Client disconnected: 4vypDWhJElrRz1KMAAAB
+2026-02-23 22:20:48 -06:00: Client connected: AQk0H8m0uim7JSGaAAAD
+2026-02-23 22:20:48 -06:00: Socket AQk0H8m0uim7JSGaAAAD joined user room: user-1
+2026-02-23 22:21:00 -06:00: Client disconnected: AQk0H8m0uim7JSGaAAAD
+2026-02-23 22:21:00 -06:00: Client connected: sE19w9n6y5CPoJ6BAAAF
+2026-02-23 22:21:00 -06:00: Socket sE19w9n6y5CPoJ6BAAAF joined user room: user-1
+2026-02-23 22:21:01 -06:00: Client disconnected: sE19w9n6y5CPoJ6BAAAF
+2026-02-23 22:21:01 -06:00: Client connected: 6Yk14isin4Jmpk_wAAAH
+2026-02-23 22:21:01 -06:00: Socket 6Yk14isin4Jmpk_wAAAH joined user room: user-1
+2026-02-23 22:21:06 -06:00: Client disconnected: 6Yk14isin4Jmpk_wAAAH
+2026-02-23 22:21:06 -06:00: Client connected: YlIPuMK8lsabO2mOAAAJ
+2026-02-23 22:21:06 -06:00: Socket YlIPuMK8lsabO2mOAAAJ joined user room: user-1
+2026-02-23 22:21:11 -06:00: Client disconnected: YlIPuMK8lsabO2mOAAAJ
+2026-02-23 22:21:12 -06:00: Client connected: kSSYSrY1gQ3PszHfAAAL
+2026-02-23 22:21:12 -06:00: Socket kSSYSrY1gQ3PszHfAAAL joined user room: user-1
+2026-02-23 22:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:22:34 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:22:34 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:22:34 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:22:34 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:22:34 -06:00: Connected to SQLite database
+2026-02-23 22:22:34 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:22:34 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-23 22:22:34 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-23 22:22:34 -06:00: Database initialized successfully
+2026-02-23 22:22:35 -06:00: Client connected: CW0iyUf4K12EHmOuAAAB
+2026-02-23 22:22:35 -06:00: Socket CW0iyUf4K12EHmOuAAAB joined user room: user-1
+2026-02-23 22:23:52 -06:00: Client disconnected: CW0iyUf4K12EHmOuAAAB
+2026-02-23 22:23:52 -06:00: Client connected: Sy_Rw3g2fgA8uh6lAAAD
+2026-02-23 22:23:52 -06:00: Socket Sy_Rw3g2fgA8uh6lAAAD joined user room: user-1
+2026-02-23 22:23:53 -06:00: Client disconnected: Sy_Rw3g2fgA8uh6lAAAD
+2026-02-23 22:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:24:09 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:24:09 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:24:09 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:24:09 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:24:09 -06:00: Connected to SQLite database
+2026-02-23 22:24:09 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:24:09 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-23 22:24:09 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-23 22:24:09 -06:00: Database initialized successfully
+2026-02-23 22:24:30 -06:00: Client connected: JIoadAPVwMeDPOHTAAAB
+2026-02-23 22:24:30 -06:00: Socket JIoadAPVwMeDPOHTAAAB joined user room: user-1
+2026-02-23 22:25:30 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:25:30 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:25:30 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:25:30 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:25:30 -06:00: Connected to SQLite database
+2026-02-23 22:25:30 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:25:30 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-23 22:25:30 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-23 22:25:30 -06:00: Database initialized successfully
+2026-02-23 22:25:30 -06:00: Client connected: ANC_4C5Yv-PYJns_AAAB
+2026-02-23 22:25:30 -06:00: Socket ANC_4C5Yv-PYJns_AAAB joined user room: user-1
+2026-02-23 22:25:33 -06:00: Client disconnected: ANC_4C5Yv-PYJns_AAAB
+2026-02-23 22:25:33 -06:00: Client connected: G1T3cDbJ_Y153gKTAAAD
+2026-02-23 22:25:33 -06:00: Socket G1T3cDbJ_Y153gKTAAAD joined user room: user-1
+2026-02-23 22:25:36 -06:00: Client disconnected: G1T3cDbJ_Y153gKTAAAD
+2026-02-23 22:25:36 -06:00: Client connected: Gowi3OGV23Cw9KaNAAAF
+2026-02-23 22:25:36 -06:00: Socket Gowi3OGV23Cw9KaNAAAF joined user room: user-1
+2026-02-23 22:25:40 -06:00: Client disconnected: Gowi3OGV23Cw9KaNAAAF
+2026-02-23 22:25:40 -06:00: Client connected: EyfVCnK5-AeouWlRAAAH
+2026-02-23 22:25:40 -06:00: Socket EyfVCnK5-AeouWlRAAAH joined user room: user-1
+2026-02-23 22:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:26:00 -06:00: Client disconnected: EyfVCnK5-AeouWlRAAAH
+2026-02-23 22:26:00 -06:00: Client connected: fZ7U_ehNj4_4USnzAAAJ
+2026-02-23 22:26:00 -06:00: Socket fZ7U_ehNj4_4USnzAAAJ joined user room: user-1
+2026-02-23 22:26:04 -06:00: Client disconnected: fZ7U_ehNj4_4USnzAAAJ
+2026-02-23 22:26:04 -06:00: Client connected: asIiX4TuTzyugj-LAAAL
+2026-02-23 22:26:04 -06:00: Socket asIiX4TuTzyugj-LAAAL joined user room: user-1
+2026-02-23 22:26:06 -06:00: Client disconnected: asIiX4TuTzyugj-LAAAL
+2026-02-23 22:26:06 -06:00: Client connected: LgbKDBsKjcNRGRMiAAAN
+2026-02-23 22:26:06 -06:00: Socket LgbKDBsKjcNRGRMiAAAN joined user room: user-1
+2026-02-23 22:26:10 -06:00: Client disconnected: LgbKDBsKjcNRGRMiAAAN
+2026-02-23 22:26:22 -06:00: Client connected: X0567OXUvu0iTiemAAAP
+2026-02-23 22:26:22 -06:00: Socket X0567OXUvu0iTiemAAAP joined user room: user-1
+2026-02-23 22:26:25 -06:00: Client disconnected: X0567OXUvu0iTiemAAAP
+2026-02-23 22:26:25 -06:00: Client connected: anwPuqxgvH8JV7xGAAAR
+2026-02-23 22:26:25 -06:00: Socket anwPuqxgvH8JV7xGAAAR joined user room: user-1
+2026-02-23 22:26:30 -06:00: Client disconnected: anwPuqxgvH8JV7xGAAAR
+2026-02-23 22:26:30 -06:00: Client connected: __ONgIVY7Ce0RDo3AAAT
+2026-02-23 22:26:30 -06:00: Socket __ONgIVY7Ce0RDo3AAAT joined user room: user-1
+2026-02-23 22:27:03 -06:00: Client disconnected: __ONgIVY7Ce0RDo3AAAT
+2026-02-23 22:27:04 -06:00: Client connected: -gUnuXcZN7nwG75CAAAV
+2026-02-23 22:27:04 -06:00: Socket -gUnuXcZN7nwG75CAAAV joined user room: user-1
+2026-02-23 22:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:28:07 -06:00: Client disconnected: -gUnuXcZN7nwG75CAAAV
+2026-02-23 22:28:07 -06:00: Client connected: 2TG6Pu6kCnJf0Rf1AAAX
+2026-02-23 22:28:07 -06:00: Socket 2TG6Pu6kCnJf0Rf1AAAX joined user room: user-1
+2026-02-23 22:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:30:50 -06:00: Client disconnected: 2TG6Pu6kCnJf0Rf1AAAX
+2026-02-23 22:30:50 -06:00: Client connected: tloywgyi-kvH98D4AAAZ
+2026-02-23 22:30:50 -06:00: Socket tloywgyi-kvH98D4AAAZ joined user room: user-1
+2026-02-23 22:31:10 -06:00: Client disconnected: tloywgyi-kvH98D4AAAZ
+2026-02-23 22:31:10 -06:00: Client connected: ikzBjMm5INfiGDZYAAAb
+2026-02-23 22:31:10 -06:00: Socket ikzBjMm5INfiGDZYAAAb joined user room: user-1
+2026-02-23 22:31:18 -06:00: Client disconnected: ikzBjMm5INfiGDZYAAAb
+2026-02-23 22:31:18 -06:00: Client connected: vqntbEptpGdZoa2DAAAd
+2026-02-23 22:31:18 -06:00: Socket vqntbEptpGdZoa2DAAAd joined user room: user-1
+2026-02-23 22:31:27 -06:00: Client disconnected: vqntbEptpGdZoa2DAAAd
+2026-02-23 22:31:28 -06:00: Client connected: 1Duq5aOmwEygL0reAAAf
+2026-02-23 22:31:28 -06:00: Socket 1Duq5aOmwEygL0reAAAf joined user room: user-1
+2026-02-23 22:31:41 -06:00: Client connected: qEAS-nsDt9lI-uIiAAAh
+2026-02-23 22:31:41 -06:00: Socket qEAS-nsDt9lI-uIiAAAh joined user room: user-1
+2026-02-23 22:31:43 -06:00: Client disconnected: qEAS-nsDt9lI-uIiAAAh
+2026-02-23 22:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:32:01 -06:00: Client connected: GNVu4lH6AOa8UE85AAAj
+2026-02-23 22:32:01 -06:00: Socket GNVu4lH6AOa8UE85AAAj joined user room: user-1
+2026-02-23 22:32:15 -06:00: Client disconnected: GNVu4lH6AOa8UE85AAAj
+2026-02-23 22:32:29 -06:00: Client disconnected: 1Duq5aOmwEygL0reAAAf
+2026-02-23 22:32:42 -06:00: Client connected: K4LzNBqjetLy5D7IAAAl
+2026-02-23 22:32:42 -06:00: Socket K4LzNBqjetLy5D7IAAAl joined user room: user-1
+2026-02-23 22:33:28 -06:00: Client disconnected: K4LzNBqjetLy5D7IAAAl
+2026-02-23 22:33:28 -06:00: Client connected: sUKUjf4t0xfkfnePAAAn
+2026-02-23 22:33:28 -06:00: Socket sUKUjf4t0xfkfnePAAAn joined user room: user-1
+2026-02-23 22:33:42 -06:00: Client disconnected: sUKUjf4t0xfkfnePAAAn
+2026-02-23 22:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:40:00 -06:00: OpenClaw polling complete: 0 sessions checked

@@ -27,6 +27,7 @@ const NAVIGATION_ITEMS = [
 ];
 
 const KANBAN_COLUMNS = [
+  { id: 'backlog', title: 'Backlog', color: '#6B7280' },
   { id: 'new', title: 'New', color: '#06B6D4' },
   { id: 'in_progress', title: 'In Progress', color: '#F59E0B' },
   { id: 'built', title: 'Completed', color: '#10B981' }
@@ -1868,6 +1869,9 @@ export default function KanbanDashboard({ user, onSignOut }) {
     loadTasks();
     loadAgents();
     
+    // Seed backlog if empty
+    seedBacklogIfNeeded();
+    
     // Connect to WebSocket for real-time updates
     socketService.connect(user.id);
     
@@ -1933,6 +1937,101 @@ export default function KanbanDashboard({ user, onSignOut }) {
       }
     } catch (error) {
       console.error('Failed to load agents:', error);
+    }
+  }
+
+  async function seedBacklogIfNeeded() {
+    try {
+      const response = await apiClient.getTasks();
+      const backlogTasks = response.tasks?.filter(task => task.status === 'backlog') || [];
+      
+      // Only seed if no backlog tasks exist
+      if (backlogTasks.length === 0) {
+        const backlogItems = [
+          {
+            title: 'Agent Marketplace Integration',
+            description: 'Build a marketplace where users can discover, install, and share custom AI agents. Includes agent template system, community sharing, ratings, and one-click installation.',
+            status: 'backlog',
+            priority: 'high',
+            tags: ['marketplace', 'agents', 'community']
+          },
+          {
+            title: 'Advanced Workflow Automation',
+            description: 'Multi-agent task pipelines with conditional logic, visual workflow builder, agent handoff system, and parallel task execution.',
+            status: 'backlog',
+            priority: 'high', 
+            tags: ['workflows', 'automation', 'pipelines']
+          },
+          {
+            title: 'Team Collaboration Features',
+            description: 'Multi-user workspace with shared agent pools, real-time collaborative task editing, team activity feeds, and role-based access control.',
+            status: 'backlog',
+            priority: 'high',
+            tags: ['collaboration', 'teams', 'sharing']
+          },
+          {
+            title: 'Enhanced Analytics Dashboard',
+            description: 'Advanced metrics with predictive task completion, agent optimization suggestions, cost analysis, custom widgets, and export capabilities.',
+            status: 'backlog',
+            priority: 'high',
+            tags: ['analytics', 'insights', 'reporting']
+          },
+          {
+            title: 'Mobile App Companion',
+            description: 'React Native app for iOS/Android with push notifications, voice task creation, mobile-optimized 3D visualization, and offline queuing.',
+            status: 'backlog',
+            priority: 'medium',
+            tags: ['mobile', 'ios', 'android']
+          },
+          {
+            title: 'Enterprise Security & SSO',
+            description: 'SAML/LDAP/Active Directory integration, role-based permissions, audit logs, API key management, and compliance reporting.',
+            status: 'backlog',
+            priority: 'medium',
+            tags: ['security', 'enterprise', 'sso']
+          },
+          {
+            title: 'AI Agent Training Integration',
+            description: 'Fine-tune agents based on performance feedback, custom model training pipeline, A/B testing, and learning curve visualization.',
+            status: 'backlog',
+            priority: 'medium',
+            tags: ['ai', 'training', 'optimization']
+          },
+          {
+            title: 'Voice Interface',
+            description: 'Speech-to-text task creation, voice status updates, hands-free agent interaction, multi-language support, and custom wake words.',
+            status: 'backlog',
+            priority: 'low',
+            tags: ['voice', 'speech', 'accessibility']
+          },
+          {
+            title: 'Integration Ecosystem',
+            description: 'Slack/Discord bots, GitHub Actions triggers, Zapier connector, calendar integration, and email task creation.',
+            status: 'backlog',
+            priority: 'low',
+            tags: ['integrations', 'slack', 'github']
+          },
+          {
+            title: '3D Office Customization',
+            description: 'Custom office layouts, avatar customization, environmental animations, seasonal themes, and user-generated 3D assets.',
+            status: 'backlog',
+            priority: 'low',
+            tags: ['3d', 'customization', 'themes']
+          }
+        ];
+
+        // Create backlog tasks
+        for (const item of backlogItems) {
+          await apiClient.createTask(item);
+        }
+
+        // Reload tasks to show the new backlog
+        await loadTasks();
+        
+        console.log('✅ Backlog seeded with development tasks');
+      }
+    } catch (error) {
+      console.error('Failed to seed backlog:', error);
     }
   }
 
