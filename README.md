@@ -78,6 +78,70 @@ npm run dev
 - **Frontend:** http://localhost:5173
 - **Backend API:** http://localhost:3001
 
+## 📱 PWA: Install on iPhone (Add to Home Screen)
+
+Mission Control is a **Progressive Web App**. You can install it on your iPhone for a native-feeling, fullscreen experience:
+
+1. Open Mission Control in **Safari** (must be Safari on iOS).
+2. Tap the **Share** button, then **Add to Home Screen**.
+3. Name it "Mission Control" and tap **Add**.
+
+The app will open **fullscreen** (no browser chrome), use the app icon on your home screen, and work offline for the UI shell; if the backend is unreachable, you’ll see a connection message.
+
+- **Icons & theme:** The app uses `theme-color` and `apple-mobile-web-app-capable` for a native look.
+- **Offline:** The UI loads from cache when offline; API requests show "Can't reach the server" when the backend isn’t available.
+
+## 🌐 Access from Anywhere with Tailscale
+
+Use **Tailscale** so you can open Mission Control from anywhere (not just local Wi‑Fi). Your Tailscale node must be running on the same machine (or a machine that can reach your dev ports).
+
+### Expose the app with Tailscale Serve
+
+From the machine where the frontend and backend run:
+
+```bash
+# Expose frontend (Vite dev server on 5173)
+tailscale serve --bg https / http://127.0.0.1:5173
+
+# Expose backend API (e.g. on 3001 or 3002)
+tailscale serve --bg https / http://127.0.0.1:3001
+```
+
+Tailscale will give you a URL like `https://your-machine.your-tailnet.ts.net`. By default, both commands use the same path (`/`), so you need to serve **frontend and backend on different ports** and either:
+
+- Use **two Tailscale nodes** (one for frontend, one for backend), or  
+- Use **Tailscale Funnel** / **serve** with path-based routing, or  
+- Run frontend and backend on the same port (e.g. serve the built frontend from the backend).
+
+**Recommended: serve built frontend from the backend**
+
+1. Build the frontend and set the API base URL to your Tailscale backend URL:
+   ```bash
+   VITE_API_URL=https://your-machine.your-tailnet.ts.net/api npm run build
+   ```
+2. Serve the backend (which can also host the built frontend static files) on one port, e.g. 3001.
+3. Expose that port with Tailscale:
+   ```bash
+   tailscale serve --bg https / http://127.0.0.1:3001
+   ```
+4. Add static file serving for the SPA in your backend (e.g. `express.static('dist')` for the built Vite app) so one URL serves both API and app.
+
+**If you keep frontend and backend on separate ports (e.g. 5173 and 3001):**
+
+- Run two serve commands on the same machine with different paths (e.g. `tailscale serve --bg https / http://127.0.0.1:5173` and `tailscale serve --bg https /api http://127.0.0.1:3001` only works if you use path-based routing; Tailscale serve typically maps one path to one target). So the simpler approach is: **one Tailscale URL for the backend**, and either host the built frontend from the backend or use a second machine/node for the frontend.
+
+**CORS and API URL when using Tailscale**
+
+- Set the backend env **`FRONTEND_URL`** to the exact URL users use to open the app (e.g. `https://your-machine.your-tailnet.ts.net` if the frontend is served from the backend, or your frontend Tailscale URL). The server allows `*.ts.net` and `*.tailscale.net` origins in non-production, and uses `FRONTEND_URL` (comma-separated if needed) in production.
+- Set the frontend **`VITE_API_URL`** to your backend URL when building, e.g. `VITE_API_URL=https://your-machine.your-tailnet.ts.net/api npm run build`, so API requests go to the Tailscale backend.
+
+**Check Tailscale**
+
+```bash
+tailscale status
+tailscale serve status
+```
+
 ## 🔧 OAuth Setup
 
 ### Google OAuth
@@ -86,8 +150,8 @@ npm run dev
 2. Create a new project or select existing
 3. Enable Google+ API
 4. Create OAuth 2.0 credentials
-5. Add authorized origins: `http://localhost:5173`
-6. Add authorized redirect URIs: `http://localhost:5173/auth/google/callback`
+5. Add authorized origins: `http://localhost:5173` (and your Tailscale URL if you use it, e.g. `https://your-machine.your-tailnet.ts.net`)
+6. Add authorized redirect URIs: `http://localhost:5173/auth/google/callback` (and the same Tailscale base + `/auth/google/callback` if needed)
 7. Copy Client ID to `.env.local` as `VITE_GOOGLE_CLIENT_ID`
 
 ### GitHub OAuth

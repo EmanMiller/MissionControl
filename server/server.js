@@ -43,15 +43,22 @@ app.use(helmet({
   }
 }));
 
-// CORS: in development allow any localhost origin (e.g. 5173, 5174, 5176); in production use FRONTEND_URL
-const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+// CORS: FRONTEND_URL can be a single URL or comma-separated (e.g. for Tailscale + localhost)
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+// Private LAN IPs (10.x, 172.16–31.x, 192.168.x) for same-network access (e.g. iPhone on WiFi)
+const privateOrigin = /^https?:\/\/(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})(:\d+)?$/;
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin) return cb(null, true); // same-origin or non-browser
+    if (!origin) return cb(null, true);
     if (process.env.NODE_ENV !== 'production') {
       if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, true);
+      if (privateOrigin.test(origin)) return cb(null, true);
+      if (/^https?:\/\/[^/]+\.(ts\.net|tailscale\.net)(:\d+)?$/i.test(origin)) return cb(null, true);
     }
-    if (origin === allowedOrigin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
     cb(null, false);
   },
   credentials: true

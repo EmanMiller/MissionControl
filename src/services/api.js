@@ -1,5 +1,13 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+/** True if the error is due to network/offline or backend unreachable (for PWA graceful degradation). */
+export function isNetworkError(error) {
+  if (!error) return false;
+  if (error.name === 'TypeError' && (error.message === 'Failed to fetch' || error.message?.includes('fetch'))) return true;
+  if (error.message === 'Server unreachable') return true;
+  return false;
+}
+
 class ApiClient {
   constructor() {
     this.token = localStorage.getItem('mission_control_token');
@@ -54,6 +62,11 @@ class ApiClient {
       return await response.text();
     } catch (error) {
       console.error(`API request failed: ${config.method || options.method || 'GET'} ${url}`, error);
+      if (error.name === 'TypeError' && (error.message === 'Failed to fetch' || error.message?.includes('fetch'))) {
+        const networkError = new Error('Server unreachable');
+        networkError.cause = error;
+        throw networkError;
+      }
       throw error;
     }
   }

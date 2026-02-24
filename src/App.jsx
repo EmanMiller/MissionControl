@@ -3,31 +3,39 @@ import toast, { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OnboardingFlow from './OnboardingFlow.jsx';
 import KanbanDashboard from './components/KanbanDashboard.jsx';
-import apiClient from './services/api.js';
+import apiClient, { isNetworkError } from './services/api.js';
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [connectionError, setConnectionError] = useState(false);
 
   useEffect(() => {
     initializeAuth();
   }, []);
 
+  useEffect(() => {
+    const handleOnline = () => setConnectionError(false);
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, []);
+
   async function initializeAuth() {
     try {
       setLoading(true);
+      setConnectionError(false);
       const result = await apiClient.verifyToken();
       
       if (result && result.success) {
         setUser(result.user);
       } else {
-        // No valid token, user needs to authenticate
         setUser(null);
       }
-    } catch (error) {
-      console.error('Auth initialization error:', error);
+    } catch (err) {
+      console.error('Auth initialization error:', err);
       setUser(null);
+      if (isNetworkError(err)) setConnectionError(true);
     } finally {
       setLoading(false);
     }
@@ -68,11 +76,15 @@ export default function App() {
   }
 
   if (!user) {
-    // Use a development Google Client ID for testing
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '1234567890-abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com';
     
     return (
       <GoogleOAuthProvider clientId={googleClientId}>
+        {connectionError && (
+          <div className="bg-amber-500/20 border-b border-amber-500/40 text-amber-200 text-center py-2 px-4 text-sm">
+            Can&apos;t reach the server. Check your connection or try again later.
+          </div>
+        )}
         <OnboardingFlow onAuthSuccess={handleAuthSuccess} />
       </GoogleOAuthProvider>
     );
