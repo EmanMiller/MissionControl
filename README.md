@@ -7,6 +7,8 @@
 
 **🎯 Now Open Source & Ready for Production Deployment**
 
+<img width="1915" height="927" alt="image" src="https://github.com/user-attachments/assets/43f95e77-2245-4b52-8fec-b1146ed4ecd9" />
+
 ## 🎉 What's New in v1.0 (Production Release)
 
 - ✅ **Demo Mode Removed** - Production-ready OAuth-only authentication
