@@ -5,6 +5,8 @@
 
 **Mission Control v2.0** transforms your AI workflow with comprehensive agent management, beautiful 3D team visualization, performance analytics, and advanced task orchestration. Built for teams who need professional-grade AI automation at scale.
 
+<img width="1917" height="927" alt="image" src="https://github.com/user-attachments/assets/164f3fed-869b-4be8-b409-9c79427a12d9" />
+
 **🎯 Now Enhanced with Full Agent Fleet Management**
 
 ## ⚡ Quick Start (2 Minutes)
