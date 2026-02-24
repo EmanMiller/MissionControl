@@ -150,21 +150,6 @@ function TeamOfficeView({ user }) {
 
       // TODO: Sync with OpenClaw to get additional spawned agents
       // This would fetch from something like /api/agents/list-sessions
-      // For now, use placeholder that disappears if no OpenClaw
-      if (isConnected) {
-        // Example: Additional agents discovered from OpenClaw
-        // These would come from actual OpenClaw API call in production
-        dynamicAgents.push(
-          {
-            id: 'agent-1',
-            name: 'Codex',
-            role: 'Code Agent',
-            status: 'idle',
-            color: 0x8B5CF6, // Purple
-            type: 'sub'
-          }
-        );
-      }
 
       setAgents(dynamicAgents);
     } catch (error) {
@@ -258,35 +243,7 @@ function CalendarView({ user }) {
     try {
       setLoading(true);
       // TODO: Integrate with OpenClaw agent's schedule
-      // For now, show placeholder events
-      const mockEvents = [
-        {
-          id: 1,
-          title: 'Weekly Task Review',
-          time: '9:00 AM',
-          duration: '30 min',
-          type: 'agent',
-          status: 'upcoming'
-        },
-        {
-          id: 2,
-          title: 'Process Calculator Project',
-          time: '10:30 AM',
-          duration: '2 hours',
-          type: 'task',
-          status: 'in_progress'
-        },
-        {
-          id: 3,
-          title: 'System Health Check',
-          time: '2:00 PM',
-          duration: '15 min',
-          type: 'maintenance',
-          status: 'scheduled'
-        }
-      ];
-      
-      setEvents(mockEvents);
+      setEvents([]);
     } catch (error) {
       console.error('Failed to load calendar events:', error);
     } finally {
@@ -374,29 +331,7 @@ function ProjectsView({ user }) {
     try {
       setLoading(true);
       // TODO: Add projects API endpoint
-      // For now, show placeholder projects
-      const mockProjects = [
-        {
-          id: 1,
-          name: 'Mission Control Dashboard',
-          description: 'Professional kanban interface for task management',
-          status: 'active',
-          progress: 85,
-          tasks: 12,
-          completedTasks: 10
-        },
-        {
-          id: 2,
-          name: 'OpenClaw Integration',
-          description: 'Connect with OpenClaw agents for automated task processing',
-          status: 'planning',
-          progress: 25,
-          tasks: 8,
-          completedTasks: 2
-        }
-      ];
-      
-      setProjects(mockProjects);
+      setProjects([]);
     } catch (error) {
       console.error('Failed to load projects:', error);
     } finally {

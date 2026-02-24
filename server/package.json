@@ -1,6 +1,6 @@
 {
   "name": "mission-control-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Backend API server for Mission Control - AI task management platform with OpenClaw integration",
   "type": "module",
   "author": "Emmanuel Miller",
