@@ -123,7 +123,37 @@ export default function OnboardingFlow({ onAuthSuccess }) {
             </div>
           )}
 
-          {/* Production OAuth only - no demo mode */}
+          {/* Demo Mode for Local Development */}
+          <button
+            onClick={async () => {
+              setIsAuthenticating(true);
+              setError(null);
+              try {
+                const response = await apiClient.loginWithDemo();
+                if (response.success) {
+                  onAuthSuccess(response);
+                } else {
+                  setError('Local login failed');
+                }
+              } catch (error) {
+                console.error('Local auth error:', error);
+                setError(error.message || 'Local login failed - is backend running?');
+              } finally {
+                setIsAuthenticating(false);
+              }
+            }}
+            disabled={isAuthenticating}
+            className="w-full bg-gradient-to-r from-[#06B6D4]/20 to-[#8B5CF6]/20 hover:from-[#06B6D4]/30 hover:to-[#8B5CF6]/30 border border-[#2A2A2A] text-[#9CA3AF] text-sm font-medium rounded-lg p-3 flex items-center justify-center gap-3 cursor-pointer transition-colors disabled:opacity-50"
+          >
+            <Zap size={18} />
+            Continue in Local Mode (No OAuth)
+          </button>
+
+          <div className="flex items-center gap-4 py-2">
+            <div className="flex-1 h-px bg-[#2A2A2A]"></div>
+            <span className="text-[#6B7280] text-xs">or sign in with</span>
+            <div className="flex-1 h-px bg-[#2A2A2A]"></div>
+          </div>
 
           {/* Google OAuth */}
           {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (

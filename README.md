@@ -7,24 +7,34 @@
 
 **🎯 Now Open Source & Ready for Production Deployment**
 
-<img width="1915" height="927" alt="image" src="https://github.com/user-attachments/assets/43f95e77-2245-4b52-8fec-b1146ed4ecd9" />
+## ⚡ Quick Start (2 Minutes)
+
+```bash
+git clone https://github.com/EmanMiller/MissionControl.git
+cd MissionControl
+npm install
+cd server && npm install && cd ..
+npm run dev
+```
+
+**That's it!** Mission Control opens with **local authentication** - no OAuth setup required for development.
 
 ## 🎉 What's New in v1.0 (Production Release)
 
-- ✅ **Demo Mode Removed** - Production-ready OAuth-only authentication
+- ✅ **Zero-Friction Local Development** - `npm run dev` just works, no OAuth needed
 - ✅ **Simplified Kanban Board** - Clean 3-column workflow (New → In Progress → Completed)
 - ✅ **One-Command Mobile Setup** - `npm run dev:mobile` creates public tunnels for iPhone testing  
 - ✅ **Enhanced Task Flow** - Automatic progression with real-time notifications
 - ✅ **Console Error Free** - Zero browser console errors for professional UX
-- ✅ **URL Validation** - OpenClaw endpoint accepts URLs and IP addresses (e.g. `http://127.0.0.1:18789`, `http://192.168.1.5/`)
+- ✅ **URL Validation** - Robust OpenClaw endpoint validation with helpful error messages
 - ✅ **Mobile Optimized** - Perfect responsive design across all device types
 - ✅ **Production Hardened** - Security enhancements, error handling, and performance optimizations
 
 ## ✨ Features
 
-- **🔐 Production OAuth Authentication** - Google, GitHub, and Apple Sign In (no demo mode)
+- **🔐 Dual Authentication** - Local mode for development, OAuth for production
 - **🤖 OpenClaw Integration** - Direct connection to your OpenClaw instance with enhanced validation
-- **📋 Streamlined Task Management** - Clean 4-column Kanban: Backlog → New → In Progress → Completed
+- **📋 Streamlined Task Management** - Clean 3-column Kanban: New → In Progress → Completed
 - **📊 Real-time Dashboard** - Monitor system status and task progress with toast notifications
 - **🎯 Dynamic Team Visualization** - 3D voxel office showing you + your AI agents
 - **📱 Mobile Responsive** - Works perfectly on desktop, tablet, and mobile devices
@@ -72,181 +82,131 @@ npm install
 cd ..
 ```
 
-### 2. Configure Environment
+### 2. Start Development
 
 ```bash
-# Frontend configuration
-cp .env.example .env.local
-# Edit .env.local with your OAuth credentials (see OAuth Setup below)
-
-# Backend configuration
-cd server
-cp .env.example .env
-# Edit .env with your configuration
-cd ..
-```
-
-### 3. Start the Application
-
-```bash
-# Terminal 1: Start backend server
-cd server
-npm run dev
-
-# Terminal 2: Start frontend (in separate terminal)
+# Local development (no OAuth required)
 npm run dev
 ```
 
-### 4. Open Application
+Mission Control will open at `http://localhost:5173` with local authentication enabled.
 
-- **Frontend:** http://localhost:5173
-- **Backend API:** http://localhost:3001
+### 3. Configure OpenClaw
 
-## 📱 PWA: Install on iPhone (Add to Home Screen)
+1. Sign in using "Local Mode" button
+2. Go to Settings (gear icon)
+3. Add your OpenClaw endpoint (e.g., `http://localhost:18789`)
+4. Test the connection
+5. Start creating tasks!
 
-Mission Control is a **Progressive Web App**. You can install it on your iPhone for a native-feeling, fullscreen experience:
+## 🔐 Authentication Modes
 
-1. Open Mission Control in **Safari** (must be Safari on iOS).
-2. Tap the **Share** button, then **Add to Home Screen**.
-3. Name it "Mission Control" and tap **Add**.
+### Local Development (Default)
+- **Zero setup** - works immediately
+- **Local user account** - data persists in SQLite
+- **All features enabled** - full functionality without OAuth
 
-The app will open **fullscreen** (no browser chrome), use the app icon on your home screen, and work offline for the UI shell; if the backend is unreachable, you’ll see a connection message.
+### Production OAuth
+For production deployment, configure OAuth providers:
 
-- **Icons & theme:** The app uses `theme-color` and `apple-mobile-web-app-capable` for a native look.
-- **Offline:** The UI loads from cache when offline; API requests show "Can't reach the server" when the backend isn’t available.
-
-## 🌐 Access from Anywhere with Tailscale
-
-Use **Tailscale** so you can open Mission Control from anywhere (not just local Wi‑Fi). Your Tailscale node must be running on the same machine (or a machine that can reach your dev ports).
-
-### Expose the app with Tailscale Serve
-
-From the machine where the frontend and backend run:
-
-```bash
-# Expose frontend (Vite dev server on 5173)
-tailscale serve --bg https / http://127.0.0.1:5173
-
-# Expose backend API (e.g. on 3001 or 3002)
-tailscale serve --bg https / http://127.0.0.1:3001
-```
-
-Tailscale will give you a URL like `https://your-machine.your-tailnet.ts.net`. By default, both commands use the same path (`/`), so you need to serve **frontend and backend on different ports** and either:
-
-- Use **two Tailscale nodes** (one for frontend, one for backend), or  
-- Use **Tailscale Funnel** / **serve** with path-based routing, or  
-- Run frontend and backend on the same port (e.g. serve the built frontend from the backend).
-
-**Recommended: serve built frontend from the backend**
-
-1. Build the frontend and set the API base URL to your Tailscale backend URL:
-   ```bash
-   VITE_API_URL=https://your-machine.your-tailnet.ts.net/api npm run build
-   ```
-2. Serve the backend (which can also host the built frontend static files) on one port, e.g. 3001.
-3. Expose that port with Tailscale:
-   ```bash
-   tailscale serve --bg https / http://127.0.0.1:3001
-   ```
-4. Add static file serving for the SPA in your backend (e.g. `express.static('dist')` for the built Vite app) so one URL serves both API and app.
-
-**If you keep frontend and backend on separate ports (e.g. 5173 and 3001):**
-
-- Run two serve commands on the same machine with different paths (e.g. `tailscale serve --bg https / http://127.0.0.1:5173` and `tailscale serve --bg https /api http://127.0.0.1:3001` only works if you use path-based routing; Tailscale serve typically maps one path to one target). So the simpler approach is: **one Tailscale URL for the backend**, and either host the built frontend from the backend or use a second machine/node for the frontend.
-
-**CORS and API URL when using Tailscale**
-
-- Set the backend env **`FRONTEND_URL`** to the exact URL users use to open the app (e.g. `https://your-machine.your-tailnet.ts.net` if the frontend is served from the backend, or your frontend Tailscale URL). The server allows `*.ts.net` and `*.tailscale.net` origins in non-production, and uses `FRONTEND_URL` (comma-separated if needed) in production.
-- Set the frontend **`VITE_API_URL`** to your backend URL when building, e.g. `VITE_API_URL=https://your-machine.your-tailnet.ts.net/api npm run build`, so API requests go to the Tailscale backend.
-
-**Check Tailscale**
-
-```bash
-tailscale status
-tailscale serve status
-```
-
-## 🔧 OAuth Setup
-
-### Google OAuth
-
+**Google OAuth:**
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select existing
-3. Enable Google+ API
-4. Create OAuth 2.0 credentials
-5. Add authorized origins: `http://localhost:5173` (and your Tailscale URL if you use it, e.g. `https://your-machine.your-tailnet.ts.net`)
-6. Add authorized redirect URIs: `http://localhost:5173/auth/google/callback` (and the same Tailscale base + `/auth/google/callback` if needed)
-7. Copy Client ID to `.env.local` as `VITE_GOOGLE_CLIENT_ID`
+2. Create OAuth 2.0 Client ID
+3. Add your domain to authorized origins
+4. Set `VITE_AUTH_MODE=oauth` in `.env.local`
 
-### GitHub OAuth
-
-1. Go to [GitHub Settings > Developer settings](https://github.com/settings/developers)
+**GitHub OAuth:**
+1. Go to [GitHub Settings](https://github.com/settings/developers)
 2. Create new OAuth App
-3. Set Homepage URL: `http://localhost:5173`
-4. Set Authorization callback URL: `http://localhost:5173/auth/github/callback`
-5. Copy Client ID to `.env.local` as `VITE_GITHUB_CLIENT_ID`
-6. Copy Client Secret to `server/.env` as `GITHUB_CLIENT_SECRET`
+3. Set callback URL to your domain
+4. Add credentials to `server/.env`
 
-### Apple Sign In
+**Apple Sign In:**
+1. Configure at [Apple Developer Console](https://developer.apple.com)
+2. Add Service ID and credentials
 
-1. Go to [Apple Developer Console](https://developer.apple.com)
-2. Create Service ID for Sign in with Apple
-3. Configure domains and redirect URLs
-4. Copy Service ID to `.env.local` as `VITE_APPLE_CLIENT_ID`
+## 🔧 Environment Configuration
 
-## 🔌 OpenClaw Integration
+### Frontend (.env.local)
+```bash
+# Authentication mode
+VITE_AUTH_MODE=local          # 'local' or 'oauth'
+VITE_API_URL=http://localhost:3001/api
+
+# OAuth credentials (for production)
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+VITE_GITHUB_CLIENT_ID=your_github_client_id  
+VITE_APPLE_CLIENT_ID=your_apple_client_id
+```
+
+### Backend (server/.env)
+```bash
+# Authentication
+AUTH_MODE=local               # 'local' or 'oauth'
+ALLOW_DEMO_AUTH=1            # Enable local development
+
+# JWT Configuration
+JWT_SECRET=your_super_secret_jwt_key
+
+# OAuth secrets (for production)
+GITHUB_CLIENT_SECRET=your_github_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+```
+
+## 🌐 Production Deployment
+
+### Railway + Vercel (Recommended)
+
+**Backend (Railway):**
+1. Connect your GitHub repository
+2. Set environment variables for OAuth
+3. Deploy automatically on push
+
+**Frontend (Vercel):**
+1. Connect your GitHub repository  
+2. Set build command: `npm run build`
+3. Set environment variables
+4. Deploy automatically on push
+
+### Environment Variables (Production)
+```bash
+# Frontend
+VITE_AUTH_MODE=oauth
+VITE_API_URL=https://your-api-domain.com/api
+VITE_GOOGLE_CLIENT_ID=your_production_google_id
+
+# Backend  
+AUTH_MODE=oauth
+NODE_ENV=production
+DATABASE_URL=postgresql://user:pass@host:port/db
+GITHUB_CLIENT_SECRET=your_production_github_secret
+```
+
+## 🤖 OpenClaw Integration
 
 ### Connecting Your OpenClaw Instance
 
-1. **Sign into Mission Control** using Google or GitHub OAuth
-2. **Go to Settings** (sidebar or bottom navigation)
-3. **Configure OpenClaw Integration:**
-   - **Endpoint:** Your OpenClaw base URL (e.g. `http://localhost:18789`, `http://127.0.0.1:18789`, or `http://192.168.1.5/`). IP-based URLs and optional trailing slashes are supported.
-   - **Authentication Token (required):** Must match `hooks.token` in OpenClaw. Add to `~/.openclaw/openclaw.json`:
-   ```json
-   "hooks": {
-     "enabled": true,
-     "token": "your-secret-token"
-   }
-   ```
-   Use the same token in Mission Control Settings. Without it you cannot create or send tasks to OpenClaw.
-4. **Test Connection** – Verify Mission Control can reach OpenClaw
+1. **Sign in** to Mission Control  
+2. **Go to Settings** (gear icon in sidebar)
+3. **Configure OpenClaw:**
+   - **Endpoint:** Your OpenClaw URL (e.g., `http://localhost:18789`)
+   - **Token:** Optional authentication token
+4. **Test Connection** - Verify Mission Control can reach OpenClaw
 5. **Save Configuration**
-
-### OpenClaw: Getting tasks to run
-
-When you **move a task to "In Progress"** (or create a task in **New** with OpenClaw configured), Mission Control tries these in order:
-
-1. **Webhooks (recommended)** — `POST {endpoint}/hooks/agent` ([docs](https://docs.openclaw.ai/automation/webhook)). Enable in OpenClaw with `hooks.enabled` and `hooks.token` in `~/.openclaw/openclaw.json` (see above). Mission Control sends the task with a completion instruction; when OpenClaw finishes, it POSTs to Mission Control’s webhook URL and the task moves to **Completed** automatically.
-
-2. **Tools Invoke** — `POST {endpoint}/tools/invoke` with tool `sessions_spawn`. Requires `gateway.tools.allow: ["sessions_spawn"]` in OpenClaw.
-
-3. **Legacy** — `POST {endpoint}/api/sessions` if your deployment exposes it.
-
-4. **OpenResponses (auto-completion)** — If all of the above fail, Mission Control runs the task in the background via `POST {endpoint}/v1/responses` and updates the task to Completed/Failed when done. Enable with `gateway.http.endpoints.responses.enabled: true` in OpenClaw.
 
 ### How It Works
 
 1. **Create Task** - Add a new task with title and description
-2. **Start Processing** - Click "Start Processing" to send to OpenClaw
-3. **Automatic Execution** - OpenClaw receives and processes the task
+2. **Start Processing** - Task automatically moves to "In Progress"
+3. **OpenClaw Processing** - OpenClaw receives and processes the task
 4. **Status Updates** - Mission Control polls for completion
 5. **View Results** - Completed tasks show results and deliverables
 
-### OpenClaw Webhook (auto-completion)
+### Webhook Support (Optional)
 
-When using webhooks, Mission Control injects an instruction so OpenClaw can report completion. Set `PUBLIC_URL` (or ensure the server is reachable) so the injected URL is correct. OpenClaw should POST to:
+For faster updates, configure OpenClaw to send webhooks to:
 ```
-POST <PUBLIC_URL>/api/openclaw/webhook
-```
-
-Webhook payload:
-```json
-{
-  "session_id": "hook:task-<id> or OpenClaw session id",
-  "status": "completed",
-  "result": "task output or object"
-}
+POST https://your-api-domain.com/api/openclaw/webhook
 ```
 
 ## 🏗️ Architecture
@@ -254,33 +214,32 @@ Webhook payload:
 ### Frontend (React + Vite)
 - **Framework:** React 18 with Vite
 - **Styling:** Tailwind CSS with dark theme
-- **Authentication:** Google OAuth, GitHub OAuth, Apple Sign In
+- **Authentication:** Dual mode (local + OAuth)
 - **Icons:** Lucide React
-- **Notifications:** react-hot-toast for success and error feedback
-- **API Client:** Custom fetch-based client
+- **3D Graphics:** Three.js for team visualization
 
 ### Backend (Node.js + Express)
 - **Framework:** Express.js with ES modules
-- **Database:** SQLite with automatic setup
-- **Authentication:** JWT tokens with OAuth validation
+- **Database:** SQLite (development) / PostgreSQL (production)
+- **Authentication:** JWT tokens with dual auth support
 - **OpenClaw Integration:** HTTP API with polling and webhooks
-- **Security:** Helmet, CORS, input validation
+- **Security:** Helmet, CORS, rate limiting
 
 ### Database Schema
-- **users** - OAuth user profiles and OpenClaw config
+- **users** - User profiles and OpenClaw configuration
 - **tasks** - Task management with OpenClaw session tracking  
 - **sessions** - JWT session management
 - **oauth_states** - OAuth security state validation
 
 ## 📋 API Endpoints
 
-### Authentication (OAuth)
+### Authentication (Production OAuth Only)
 - `POST /api/auth/google` - Google OAuth login
 - `POST /api/auth/github/callback` - GitHub OAuth callback  
 - `POST /api/auth/apple` - Apple Sign In
 - `POST /api/auth/verify` - Verify JWT token
 - `POST /api/auth/logout` - Sign out
-- `POST /api/auth/demo` - Demo login (development only, not in production; no UI, API-only for testing)
+- `POST /api/auth/demo` - Local development login
 
 ### Tasks
 - `GET /api/tasks` - Get user's tasks
@@ -315,71 +274,17 @@ Tests validate:
 - ✅ Frontend accessibility and rendering
 - ✅ Error handling and security
 
-## 🚀 Deployment
-
-### Prerequisites
-- Node.js 18+ 
-- OpenClaw instance (local or remote)
-- OAuth app credentials from providers
-
-### Production Environment Variables
-
-**Frontend (.env.local):**
-```bash
-VITE_API_URL=https://your-api-domain.com/api
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-VITE_GITHUB_CLIENT_ID=your_github_client_id  
-VITE_APPLE_CLIENT_ID=your_apple_client_id
-```
-
-**Backend (.env):**
-```bash
-NODE_ENV=production
-PORT=3001
-JWT_SECRET=your_super_secret_jwt_key_change_this
-FRONTEND_URL=https://your-frontend-domain.com
-PUBLIC_URL=https://your-api-domain.com
-
-# OAuth (backend needs both client ID and secret for GitHub)
-GITHUB_CLIENT_ID=your_github_client_id
-GITHUB_CLIENT_SECRET=your_github_client_secret
-GITHUB_REDIRECT_URI=https://your-frontend-domain.com/auth/github/callback
-GOOGLE_CLIENT_ID=your_google_client_id
-```
-
-### Build and Deploy
-
-```bash
-# Build frontend
-npm run build
-
-# Start production server
-cd server
-npm start
-```
-
 ## 🔍 Troubleshooting
 
 ### Common Issues
 
-**Google: "Access blocked: Authorization Error"**
-- Your Google OAuth app is in **Testing** mode: add your Google account under **Test users** in [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials → your OAuth 2.0 Client ID → Test users.
-- Or publish the app (OAuth consent screen → Publishing status → Production) so any Google user can sign in.
-- Ensure **Authorized redirect URIs** and **Authorized JavaScript origins** include the exact URL you use to open the app (e.g. `http://localhost:5173` or `http://localhost:5176` if Vite uses a different port). Add each origin you use.
-
-**GitHub: "Failed to connect" or "Cannot reach the server"**
-- Start the backend: `cd server && npm run dev` (default port 3001). The frontend calls `http://localhost:3001/api` unless you set `VITE_API_URL`.
-- If the frontend runs on a different port (e.g. 5176), CORS allows it in development. In production set `FRONTEND_URL` in the server `.env` to your frontend URL.
-- Ensure **GitHub OAuth** is configured: `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `server/.env`, and in GitHub OAuth App settings the callback URL is exactly `http://localhost:5173/auth/github/callback` (or your `FRONTEND_URL` + `/auth/github/callback`).
-
-**OAuth "Invalid Client" Error:**
-- Verify OAuth credentials in environment files
-- Check authorized redirect URLs match exactly
-- Ensure OAuth apps are configured for correct domain
+**"Local Mode" button not appearing:**
+- Check that `ALLOW_DEMO_AUTH=1` in `server/.env`
+- Restart the backend server
 
 **OpenClaw Connection Failed:**
 - Verify OpenClaw is running and accessible
-- Use a valid base URL with protocol (e.g. `http://localhost:18789`, `http://127.0.0.1:18789`, or `http://192.168.1.5/`). IP-based URLs are supported; trailing slashes are optional.
+- Check endpoint URL format (include http:// or https://)
 - Test authentication token if using secured OpenClaw
 
 **Database Errors:**
@@ -392,13 +297,21 @@ npm start
 - Verify webhook URL configuration
 - Manual polling occurs every 2 minutes as fallback
 
+**Mobile Testing Issues:**
+- Use `npm run dev:mobile` for tunnel setup
+- Update Google Cloud Console with tunnel URLs
+- Tunnel URLs expire after ~30 minutes
+
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`) 
-5. Open Pull Request
+3. Test with `npm run dev` (local mode)
+4. Commit changes (`git commit -m 'Add amazing feature'`)
+5. Push to branch (`git push origin feature/amazing-feature`) 
+6. Open Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## 📄 License
 
@@ -410,3 +323,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **OpenClaw:** https://openclaw.ai
 - **Issues:** https://github.com/EmanMiller/MissionControl/issues
 - **Discussions:** https://github.com/EmanMiller/MissionControl/discussions
+
+---
+
+**🚀 Ready to automate your workflow with AI agents? Start with `npm run dev` and create your first task!**
