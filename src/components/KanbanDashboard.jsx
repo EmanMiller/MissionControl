@@ -1338,7 +1338,7 @@ function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-64 transition-colors rounded-lg ${
+            className={`min-h-64 max-h-[calc(100vh-280px)] overflow-y-auto transition-colors rounded-lg kanban-column-scroll ${
               snapshot.isDraggingOver ? 'bg-[#0A0A0A] border border-[#06B6D4]' : ''
             }`}
           >
