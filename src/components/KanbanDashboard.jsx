@@ -1318,7 +1318,7 @@ function TaskCard({ task, index, onAssignAgent, onDelete, agents = [] }) {
   );
 }
 
-function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
+function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, onDelete, agents }) {
   const taskCount = tasks.length;
   
   return (
@@ -1367,7 +1367,7 @@ function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
                   task={task} 
                   index={index}
                   onAssignAgent={onAssignAgent}
-                  onDelete={deleteTask}
+                  onDelete={onDelete}
                   agents={agents}
                 />
               ))
@@ -2266,6 +2266,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
                       tasks={filteredTasks.filter(task => task.status === column.id)}
                       onAddTask={handleAddTask}
                       onAssignAgent={setAssignmentTask}
+                      onDelete={deleteTask}
                       agents={agents}
                     />
                   ))}
