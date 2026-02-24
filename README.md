@@ -12,7 +12,8 @@
 ## 🎉 What's New in v1.0 (Production Release)
 
 - ✅ **Demo Mode Removed** - Production-ready OAuth-only authentication
-- ✅ **Simplified Kanban Board** - Clean 4-column workflow (Backlog → New → In Progress → Completed)  
+- ✅ **Simplified Kanban Board** - Clean 3-column workflow (New → In Progress → Completed)
+- ✅ **One-Command Mobile Setup** - `npm run dev:mobile` creates public tunnels for iPhone testing  
 - ✅ **Enhanced Task Flow** - Automatic progression with real-time notifications
 - ✅ **Console Error Free** - Zero browser console errors for professional UX
 - ✅ **URL Validation** - OpenClaw endpoint accepts URLs and IP addresses (e.g. `http://127.0.0.1:18789`, `http://192.168.1.5/`)
@@ -30,6 +31,29 @@
 - **🔄 Automated Task Flow** - Tasks automatically progress through pipeline with AI processing
 - **⚡ Enhanced UX** - Time estimates, visual feedback, and production-ready error handling
 - **🛡️ Security Hardened** - JWT authentication, input validation, and secure OAuth flows
+
+## 📱 Mobile Development Setup
+
+**For testing on your iPhone/mobile device:**
+
+Since Google OAuth requires a public domain (not localhost or IP addresses), we provide automatic tunneling:
+
+```bash
+# One-command mobile setup with automatic localtunnel
+npm run dev:mobile
+```
+
+This will:
+- ✅ Start backend and frontend servers
+- ✅ Create public tunnels for both services
+- ✅ Update environment configuration automatically
+- ✅ Display the mobile-ready URLs
+
+**Then configure Google Cloud Console with the displayed URLs:**
+- Authorized JavaScript origins: `https://xxxx.loca.lt`
+- Authorized redirect URIs: `https://xxxx.loca.lt/auth/google/callback`
+
+Open the mobile URL on your iPhone to test Mission Control on the go!
 
 ## 🚀 Quick Start
 
