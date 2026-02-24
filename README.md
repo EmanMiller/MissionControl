@@ -31,12 +31,16 @@ npm run dev
 - ✅ **Task Assignment System** - Assign specific tasks to specific agents
 - ✅ **Performance Analytics** - Track agent efficiency, completion rates, and metrics
 
+<img width="949" height="344" alt="image" src="https://github.com/user-attachments/assets/376d2de5-7069-47df-965b-4950c4f01e82" />
+
 ### 📊 **Advanced Analytics Dashboard**
 - ✅ **Fleet Performance Metrics** - Overall agent utilization and success rates
 - ✅ **Task Completion Analytics** - Historical trends and completion insights
 - ✅ **Agent Leaderboards** - Top performing agents with detailed stats
 - ✅ **System Information Panel** - Current/default AI model tracking and OpenClaw status
 - ✅ **Real-time Charts** - Visual progress tracking and activity monitoring
+
+<img width="1050" height="691" alt="image" src="https://github.com/user-attachments/assets/71a2dab4-7b0a-4345-8afa-bb1ea0f4cae3" />
 
 ### ⚡ **Real-time Everything**
 - ✅ **WebSocket Updates** - Instant status changes across all users
@@ -57,6 +61,8 @@ npm run dev
 - **Agent Avatars** - Color-coded avatars for each team member and AI agent
 - **Real-time Positioning** - Agents appear/disappear based on status
 - **Interactive Labels** - Click to view agent details and performance
+
+<img width="755" height="579" alt="image" src="https://github.com/user-attachments/assets/d3e85cb1-7da8-4b8e-b386-903ca4c6119d" />
 
 ### 🤖 **Agent Management**
 - **Agent Types** - Coding, Research, Analysis, Creative, System agents
