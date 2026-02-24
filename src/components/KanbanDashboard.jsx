@@ -755,16 +755,41 @@ function TeamOfficeView({ user }) {
 function CalendarView({ user }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     loadCalendarEvents();
-  }, []);
+  }, [currentDate]);
 
   async function loadCalendarEvents() {
     try {
       setLoading(true);
       // TODO: Integrate with OpenClaw agent's schedule
-      setEvents([]);
+      // For now, add some sample events to demonstrate the calendar
+      const sampleEvents = [
+        {
+          id: 1,
+          title: 'Review PR #123',
+          date: new Date(2025, 1, 5), // February 5th, 2025
+          time: '10:00 AM',
+          status: 'upcoming'
+        },
+        {
+          id: 2,
+          title: 'Deploy to staging',
+          date: new Date(2025, 1, 12), // February 12th, 2025
+          time: '2:00 PM',
+          status: 'upcoming'
+        },
+        {
+          id: 3,
+          title: 'Team sync',
+          date: new Date(2025, 1, 18), // February 18th, 2025
+          time: '11:00 AM',
+          status: 'upcoming'
+        }
+      ];
+      setEvents(sampleEvents);
     } catch (error) {
       console.error('Failed to load calendar events:', error);
     } finally {
@@ -772,63 +797,191 @@ function CalendarView({ user }) {
     }
   }
 
+  // Calendar utility functions
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const getMonthName = (date) => {
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  };
+
+  const isSameDay = (date1, date2) => {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+  };
+
+  const isToday = (date) => {
+    return isSameDay(date, new Date());
+  };
+
+  const navigateMonth = (direction) => {
+    setCurrentDate(prevDate => {
+      const newDate = new Date(prevDate);
+      newDate.setMonth(prevDate.getMonth() + direction);
+      return newDate;
+    });
+  };
+
+  // Generate calendar days
+  const generateCalendarDays = () => {
+    const daysInMonth = getDaysInMonth(currentDate);
+    const firstDay = getFirstDayOfMonth(currentDate);
+    const days = [];
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+
+    // Add all days of the current month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      const dayEvents = events.filter(event => isSameDay(event.date, date));
+      
+      days.push({
+        date: day,
+        fullDate: date,
+        events: dayEvents,
+        isToday: isToday(date)
+      });
+    }
+
+    return days;
+  };
+
+  const calendarDays = generateCalendarDays();
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
   return (
     <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
-      <div className="max-w-4xl mx-auto min-w-0">
+      <div className="max-w-6xl mx-auto min-w-0">
         <div className="mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="min-w-0">
               <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Calendar</h2>
               <p className="text-[#9CA3AF] text-xs sm:text-sm">OpenClaw agent schedule and planned tasks</p>
             </div>
-            <button
-              onClick={loadCalendarEvents}
-              className="flex items-center justify-center gap-2 bg-[#374151] hover:bg-[#4B5563] text-white px-3 py-2 rounded-lg text-sm transition-colors flex-shrink-0"
-            >
-              <RefreshCw size={16} />
-              Refresh
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigateMonth(-1)}
+                className="flex items-center justify-center w-8 h-8 bg-[#374151] hover:bg-[#4B5563] text-white rounded-lg text-sm transition-colors"
+                title="Previous month"
+              >
+                ←
+              </button>
+              <button
+                onClick={() => setCurrentDate(new Date())}
+                className="px-3 py-2 bg-[#374151] hover:bg-[#4B5563] text-white rounded-lg text-sm transition-colors"
+              >
+                Today
+              </button>
+              <button
+                onClick={() => navigateMonth(1)}
+                className="flex items-center justify-center w-8 h-8 bg-[#374151] hover:bg-[#4B5563] text-white rounded-lg text-sm transition-colors"
+                title="Next month"
+              >
+                →
+              </button>
+              <button
+                onClick={loadCalendarEvents}
+                className="flex items-center gap-2 bg-[#374151] hover:bg-[#4B5563] text-white px-3 py-2 rounded-lg text-sm transition-colors ml-2"
+              >
+                <RefreshCw size={16} />
+                Refresh
+              </button>
+            </div>
           </div>
         </div>
 
         {loading ? (
           <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-8 text-center">
             <div className="animate-spin w-6 h-6 border-2 border-[#06B6D4] border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-[#9CA3AF]">Loading agent schedule...</p>
+            <p className="text-[#9CA3AF]">Loading calendar...</p>
           </div>
         ) : (
-          <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg">
+          <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg overflow-hidden">
+            {/* Calendar Header */}
             <div className="p-4 border-b border-[#2A2A2A]">
-              <h3 className="text-[#F9FAFB] font-medium">Today's Schedule</h3>
+              <h3 className="text-[#F9FAFB] text-lg font-medium text-center">
+                {getMonthName(currentDate)}
+              </h3>
             </div>
             
+            {/* Calendar Grid */}
             <div className="p-4">
-              {events.length === 0 ? (
-                <div className="text-center py-8">
-                  <Calendar size={48} className="text-[#6B7280] mx-auto mb-4" />
-                  <h4 className="text-[#F9FAFB] font-medium mb-2">No events scheduled</h4>
-                  <p className="text-[#9CA3AF] text-sm">Your OpenClaw agent has no planned activities</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {events.map((event) => (
-                    <div key={event.id} className="flex flex-wrap items-center gap-2 sm:gap-4 p-3 bg-[#1A1A1A] rounded-lg min-w-0">
-                      <div className="text-[#06B6D4] text-sm font-medium flex-shrink-0">
-                        {event.time}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-[#F9FAFB] font-medium text-sm sm:text-base truncate">{event.title}</h4>
-                        <p className="text-[#9CA3AF] text-xs sm:text-sm">{event.duration}</p>
-                      </div>
-                      <div className={`px-2 py-1 text-xs rounded-full flex-shrink-0 ${
-                        event.status === 'in_progress' ? 'bg-[#F59E0B]/20 text-[#F59E0B]' :
-                        event.status === 'upcoming' ? 'bg-[#06B6D4]/20 text-[#06B6D4]' :
-                        'bg-[#6B7280]/20 text-[#6B7280]'
-                      }`}>
-                        {event.status}
-                      </div>
-                    </div>
-                  ))}
+              {/* Week day headers */}
+              <div className="grid grid-cols-7 gap-2 mb-4">
+                {weekDays.map(day => (
+                  <div key={day} className="text-center text-[#9CA3AF] text-xs sm:text-sm font-medium py-2">
+                    {day}
+                  </div>
+                ))}
+              </div>
+              
+              {/* Calendar days grid */}
+              <div className="grid grid-cols-7 gap-2">
+                {calendarDays.map((day, index) => (
+                  <div
+                    key={index}
+                    className={`min-h-[80px] sm:min-h-[100px] p-1 sm:p-2 rounded-lg border transition-colors ${
+                      day === null 
+                        ? 'border-transparent' // Empty cell
+                        : day.isToday
+                          ? 'bg-[#06B6D4]/10 border-[#06B6D4]/30 border-2' // Today
+                          : day.events.length > 0
+                            ? 'bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#3A3A3A] cursor-pointer' // Has events
+                            : 'bg-[#0A0A0A] border-[#2A2A2A] hover:border-[#3A3A3A] cursor-pointer' // Empty day
+                    }`}
+                  >
+                    {day !== null && (
+                      <>
+                        {/* Day number */}
+                        <div className={`text-right text-sm font-medium mb-1 ${
+                          day.isToday ? 'text-[#06B6D4]' : 'text-[#F9FAFB]'
+                        }`}>
+                          {day.date}
+                        </div>
+                        
+                        {/* Events */}
+                        <div className="space-y-1">
+                          {day.events.slice(0, 3).map(event => (
+                            <div
+                              key={event.id}
+                              className="bg-[#06B6D4]/20 text-[#06B6D4] text-xs px-2 py-1 rounded truncate"
+                              title={`${event.time} - ${event.title}`}
+                            >
+                              {event.title}
+                            </div>
+                          ))}
+                          {day.events.length > 3 && (
+                            <div className="text-[#6B7280] text-xs px-2">
+                              +{day.events.length - 3} more
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
+              {/* Legend */}
+              {events.length > 0 && (
+                <div className="mt-6 flex flex-wrap items-center gap-4 text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-[#06B6D4]/20 border border-[#06B6D4]/30 rounded"></div>
+                    <span className="text-[#9CA3AF]">Today</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-[#06B6D4]/20 rounded"></div>
+                    <span className="text-[#9CA3AF]">Scheduled event</span>
+                  </div>
                 </div>
               )}
             </div>
