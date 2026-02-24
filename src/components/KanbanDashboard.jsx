@@ -15,7 +15,7 @@ import VoxelOffice3D from './VoxelOffice3D.jsx';
 
 const NAVIGATION_ITEMS = [
   { id: 'tasks', label: 'Tasks', icon: CheckSquare, active: true },
-  { id: 'team', label: 'Team', icon: Users },
+  { id: 'agents', label: 'Agents', icon: Users },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
   { id: 'projects', label: 'Projects', icon: FolderOpen },
   { id: 'approvals', label: 'Approvals', icon: CheckSquare }
@@ -93,6 +93,367 @@ function ToastContainer({ notifications, onClose }) {
 }
 
 /* ─── Components ─────────────────────────────────────────────────────────── */
+
+function AgentsView({ agents, loadAgents, user }) {
+  const [showAddAgent, setShowAddAgent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function createAgent(agentData) {
+    try {
+      setLoading(true);
+      const response = await apiClient.createAgent(agentData);
+      if (response.agent) {
+        await loadAgents(); // Reload the agent list
+        setShowAddAgent(false);
+        toast.success('Agent created successfully');
+      }
+    } catch (error) {
+      console.error('Failed to create agent:', error);
+      toast.error(error?.message || 'Failed to create agent');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateAgentStatus(agentId, newStatus) {
+    try {
+      await apiClient.updateAgentStatus(agentId, newStatus);
+      await loadAgents(); // Refresh the list
+      toast.success('Agent status updated');
+    } catch (error) {
+      console.error('Failed to update agent status:', error);
+      toast.error(error?.message || 'Failed to update agent status');
+    }
+  }
+
+  async function deleteAgent(agentId) {
+    if (!confirm('Are you sure you want to delete this agent?')) return;
+    
+    try {
+      await apiClient.deleteAgent(agentId);
+      await loadAgents(); // Refresh the list
+      toast.success('Agent deleted');
+    } catch (error) {
+      console.error('Failed to delete agent:', error);
+      toast.error(error?.message || 'Failed to delete agent');
+    }
+  }
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'working': return 'text-[#F59E0B] bg-[#F59E0B]/20';
+      case 'idle': return 'text-[#10B981] bg-[#10B981]/20';
+      case 'error': return 'text-[#EF4444] bg-[#EF4444]/20';
+      case 'offline': return 'text-[#6B7280] bg-[#6B7280]/20';
+      default: return 'text-[#6B7280] bg-[#6B7280]/20';
+    }
+  };
+
+  return (
+    <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
+      <div className="max-w-6xl mx-auto min-w-0">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div className="min-w-0">
+            <h2 className="text-[#F9FAFB] text-xl font-semibold mb-2">Agent Fleet</h2>
+            <p className="text-[#9CA3AF] text-sm">Manage and monitor your AI agents</p>
+          </div>
+          <button
+            onClick={() => setShowAddAgent(true)}
+            className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 flex-shrink-0"
+          >
+            <Plus size={18} />
+            Add Agent
+          </button>
+        </div>
+
+        {/* Agents Grid */}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin inline-block w-8 h-8 border-[3px] border-current border-t-transparent text-[#06B6D4] rounded-full" />
+            <p className="text-[#9CA3AF] mt-2">Loading agents...</p>
+          </div>
+        ) : agents.length === 0 ? (
+          <div className="text-center py-12">
+            <Users size={48} className="text-[#6B7280] mx-auto mb-4" />
+            <h3 className="text-[#F9FAFB] text-lg font-medium mb-2">No agents yet</h3>
+            <p className="text-[#9CA3AF] text-sm mb-6">Create your first AI agent to get started</p>
+            <button
+              onClick={() => setShowAddAgent(true)}
+              className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-6 py-3 rounded-lg font-medium transition-colors"
+            >
+              Create Agent
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {agents.map((agent) => (
+              <div key={agent.id} className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[#F9FAFB] font-semibold text-lg truncate">{agent.name}</h3>
+                    <p className="text-[#9CA3AF] text-sm capitalize mt-1">{agent.type}</p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(agent.status)}`}>
+                      {agent.status}
+                    </span>
+                    <div className="relative">
+                      <button className="text-[#9CA3AF] hover:text-[#F9FAFB] p-1">
+                        <MoreHorizontal size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Current Task */}
+                {agent.current_task_title && (
+                  <div className="mb-4 p-3 bg-[#1A1A1A] rounded-lg">
+                    <p className="text-[#9CA3AF] text-xs mb-1">Current Task</p>
+                    <p className="text-[#F9FAFB] text-sm font-medium truncate">{agent.current_task_title}</p>
+                  </div>
+                )}
+
+                {/* Performance Stats */}
+                {agent.performance_stats && (
+                  <div className="mb-4 space-y-2">
+                    <p className="text-[#9CA3AF] text-xs font-medium">Performance</p>
+                    <div className="grid grid-cols-2 gap-3 text-center">
+                      <div className="bg-[#1A1A1A] rounded p-2">
+                        <p className="text-[#F9FAFB] text-lg font-semibold">{agent.performance_stats.tasksCompleted || 0}</p>
+                        <p className="text-[#9CA3AF] text-xs">Tasks</p>
+                      </div>
+                      <div className="bg-[#1A1A1A] rounded p-2">
+                        <p className="text-[#F9FAFB] text-lg font-semibold">{agent.performance_stats.successRate || 0}%</p>
+                        <p className="text-[#9CA3AF] text-xs">Success</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Capabilities */}
+                {agent.capabilities && agent.capabilities.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-[#9CA3AF] text-xs font-medium mb-2">Capabilities</p>
+                    <div className="flex flex-wrap gap-1">
+                      {agent.capabilities.slice(0, 3).map((capability, idx) => (
+                        <span key={idx} className="bg-[#06B6D4]/20 text-[#06B6D4] text-xs px-2 py-1 rounded">
+                          {capability}
+                        </span>
+                      ))}
+                      {agent.capabilities.length > 3 && (
+                        <span className="text-[#6B7280] text-xs px-2 py-1">
+                          +{agent.capabilities.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex gap-2">
+                  {agent.status === 'idle' ? (
+                    <button
+                      onClick={() => updateAgentStatus(agent.id, 'working')}
+                      className="flex-1 bg-[#10B981]/20 text-[#10B981] px-3 py-2 rounded text-sm font-medium hover:bg-[#10B981]/30 transition-colors"
+                    >
+                      Activate
+                    </button>
+                  ) : agent.status === 'working' ? (
+                    <button
+                      onClick={() => updateAgentStatus(agent.id, 'idle')}
+                      className="flex-1 bg-[#F59E0B]/20 text-[#F59E0B] px-3 py-2 rounded text-sm font-medium hover:bg-[#F59E0B]/30 transition-colors"
+                    >
+                      Pause
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => updateAgentStatus(agent.id, 'idle')}
+                      className="flex-1 bg-[#6B7280]/20 text-[#6B7280] px-3 py-2 rounded text-sm font-medium hover:bg-[#6B7280]/30 transition-colors"
+                    >
+                      Reset
+                    </button>
+                  )}
+                  <button
+                    onClick={() => deleteAgent(agent.id)}
+                    className="px-3 py-2 text-[#EF4444] hover:bg-[#EF4444]/20 rounded text-sm transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Add Agent Modal */}
+        {showAddAgent && (
+          <AgentCreateModal
+            isOpen={showAddAgent}
+            onClose={() => setShowAddAgent(false)}
+            onSubmit={createAgent}
+            loading={loading}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AgentCreateModal({ isOpen, onClose, onSubmit, loading }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    type: 'general',
+    capabilities: []
+  });
+  const [newCapability, setNewCapability] = useState('');
+
+  const agentTypes = [
+    { value: 'general', label: 'General Purpose' },
+    { value: 'coding', label: 'Coding' },
+    { value: 'research', label: 'Research' },
+    { value: 'analysis', label: 'Analysis' },
+    { value: 'creative', label: 'Creative' },
+    { value: 'support', label: 'Support' }
+  ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name.trim()) return;
+    
+    onSubmit({
+      ...formData,
+      name: formData.name.trim()
+    });
+  };
+
+  const addCapability = () => {
+    if (newCapability.trim() && !formData.capabilities.includes(newCapability.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        capabilities: [...prev.capabilities, newCapability.trim()]
+      }));
+      setNewCapability('');
+    }
+  };
+
+  const removeCapability = (capability) => {
+    setFormData(prev => ({
+      ...prev,
+      capabilities: prev.capabilities.filter(c => c !== capability)
+    }));
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 w-full max-w-md">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-[#F9FAFB] text-lg font-semibold">Create New Agent</h3>
+          <button
+            onClick={onClose}
+            className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Agent Name */}
+          <div>
+            <label className="block text-[#9CA3AF] text-sm font-medium mb-2">
+              Agent Name *
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              placeholder="e.g. Research Assistant"
+              className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors placeholder-[#4B5563]"
+              required
+            />
+          </div>
+
+          {/* Agent Type */}
+          <div>
+            <label className="block text-[#9CA3AF] text-sm font-medium mb-2">
+              Agent Type
+            </label>
+            <select
+              value={formData.type}
+              onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
+              className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors"
+            >
+              {agentTypes.map(type => (
+                <option key={type.value} value={type.value}>{type.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Capabilities */}
+          <div>
+            <label className="block text-[#9CA3AF] text-sm font-medium mb-2">
+              Capabilities
+            </label>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={newCapability}
+                onChange={(e) => setNewCapability(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCapability())}
+                placeholder="e.g. Web Scraping"
+                className="flex-1 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-2 text-[#F9FAFB] text-sm outline-none focus:border-[#06B6D4] transition-colors placeholder-[#4B5563]"
+              />
+              <button
+                type="button"
+                onClick={addCapability}
+                className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-3 py-2 rounded-lg text-sm transition-colors"
+              >
+                Add
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {formData.capabilities.map((capability, idx) => (
+                <span
+                  key={idx}
+                  className="bg-[#06B6D4]/20 text-[#06B6D4] text-xs px-2 py-1 rounded flex items-center gap-1"
+                >
+                  {capability}
+                  <button
+                    type="button"
+                    onClick={() => removeCapability(capability)}
+                    className="text-[#06B6D4] hover:text-[#0891B2]"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 border border-[#2A2A2A] text-[#9CA3AF] px-4 py-2 rounded-lg font-medium hover:bg-[#1A1A1A] transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading || !formData.name.trim()}
+              className="flex-1 bg-[#06B6D4] hover:bg-[#0891B2] disabled:bg-[#6B7280] text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
+            >
+              {loading ? 'Creating...' : 'Create Agent'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 function CustomModal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;
@@ -1290,6 +1651,7 @@ function MobileSidebar({ user, activeItem, onItemClick, onSignOut, onClose }) {
 
 export default function KanbanDashboard({ user, onSignOut }) {
   const [tasks, setTasks] = useState([]);
+  const [agents, setAgents] = useState([]);
   const [activeNav, setActiveNav] = useState('tasks');
   const [loading, setLoading] = useState(true);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -1300,6 +1662,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
 
   useEffect(() => {
     loadTasks();
+    loadAgents();
   }, []);
 
   // Poll task list while any task is in progress (so webhook completion updates the board)
@@ -1328,6 +1691,15 @@ export default function KanbanDashboard({ user, onSignOut }) {
       console.error('Failed to load tasks:', error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadAgents() {
+    try {
+      const response = await apiClient.getAgents();
+      setAgents(response.agents || []);
+    } catch (error) {
+      console.error('Failed to load agents:', error);
     }
   }
 
@@ -1529,6 +1901,12 @@ export default function KanbanDashboard({ user, onSignOut }) {
         <ApprovalsView user={user} />
       ) : activeNav === 'settings' ? (
         <SettingsContent user={user} onSignOut={onSignOut} />
+      ) : activeNav === 'agents' ? (
+        <AgentsView 
+          agents={agents}
+          loadAgents={loadAgents}
+          user={user}
+        />
       ) : (
         /* Fallback for any unmapped navigation items */
         <div className="flex-1 flex items-center justify-center">

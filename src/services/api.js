@@ -227,6 +227,38 @@ class ApiClient {
   async getWebhookUrl() {
     return await this.request('/openclaw/webhook-url');
   }
+
+  // Agents
+  async getAgents() {
+    return await this.request('/agents');
+  }
+
+  async createAgent(agentData) {
+    return await this.request('/agents', {
+      method: 'POST',
+      body: agentData
+    });
+  }
+
+  async updateAgentStatus(agentId, status, currentTaskId = null) {
+    return await this.request(`/agents/${agentId}/status`, {
+      method: 'PUT',
+      body: { status, currentTaskId }
+    });
+  }
+
+  async updateAgentStats(agentId, stats) {
+    return await this.request(`/agents/${agentId}/stats`, {
+      method: 'PUT',
+      body: { stats }
+    });
+  }
+
+  async deleteAgent(agentId) {
+    return await this.request(`/agents/${agentId}`, {
+      method: 'DELETE'
+    });
+  }
 }
 
 export default new ApiClient();

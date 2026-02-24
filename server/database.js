@@ -51,6 +51,8 @@ function initializeDatabase() {
         status TEXT DEFAULT 'backlog',
         priority TEXT DEFAULT 'medium',
         tags TEXT,
+        assigned_agent_id TEXT,
+        processing_metrics TEXT,
         openclaw_session_id TEXT,
         result_url TEXT,
         result_data TEXT,
@@ -58,6 +60,23 @@ function initializeDatabase() {
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         completed_at DATETIME,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+      )`,
+
+      // Agents table for dynamic agent tracking
+      `CREATE TABLE IF NOT EXISTS agents (
+        id TEXT PRIMARY KEY,
+        user_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL DEFAULT 'general',
+        status TEXT DEFAULT 'idle',
+        capabilities TEXT,
+        current_task_id INTEGER,
+        performance_stats TEXT DEFAULT '{}',
+        last_heartbeat DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (current_task_id) REFERENCES tasks (id) ON DELETE SET NULL
       )`,
 
       // Sessions table for OAuth state management
