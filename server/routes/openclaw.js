@@ -1,6 +1,6 @@
 import express from 'express';
 import db from '../database.js';
-import { testOpenClawConnection, handleOpenClawWebhook } from '../services/openclaw.js';
+import { testOpenClawConnection, handleOpenClawWebhook, syncOpenClawAgents } from '../services/openclaw.js';
 
 /** Normalize and validate OpenClaw endpoint: accept http(s) with host (domain or IP) and optional port. */
 function normalizeOpenClawEndpoint(input) {
@@ -285,6 +285,25 @@ router.get('/webhook-url', (req, res) => {
       'Supported statuses: completed, finished, failed, error'
     ]
   });
+});
+
+// Sync agents from OpenClaw
+router.post('/sync-agents', async (req, res) => {
+  const userId = req.user.id;
+  
+  try {
+    const result = await syncOpenClawAgents(userId);
+    res.json({
+      success: true,
+      ...result
+    });
+  } catch (error) {
+    console.error('Agent sync failed:', error);
+    res.status(500).json({
+      error: 'Failed to sync agents from OpenClaw',
+      message: error.message
+    });
+  }
 });
 
 export default router;

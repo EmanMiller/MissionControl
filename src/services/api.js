@@ -275,6 +275,13 @@ class ApiClient {
       body: { metrics }
     });
   }
+
+  // OpenClaw Integration
+  async syncOpenClawAgents() {
+    return await this.request('/openclaw/sync-agents', {
+      method: 'POST'
+    });
+  }
 }
 
 export default new ApiClient();

@@ -98,9 +98,10 @@ function ToastContainer({ notifications, onClose }) {
 
 /* ─── Components ─────────────────────────────────────────────────────────── */
 
-function AgentsView({ agents, setAgents, loadAgents, user }) {
+function AgentsView({ agents, setAgents, loadAgents, user, addNotification }) {
   const [showAddAgent, setShowAddAgent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   // Real-time agent updates
   useEffect(() => {
@@ -132,6 +133,31 @@ function AgentsView({ agents, setAgents, loadAgents, user }) {
 
     return cleanup;
   }, [setAgents, loadAgents]);
+
+  async function handleSyncOpenClaw() {
+    try {
+      setSyncing(true);
+      const result = await apiClient.syncOpenClawAgents();
+      
+      // Reload agents to show synced ones
+      await loadAgents();
+      
+      addNotification({
+        type: 'success',
+        title: 'Agents synced successfully',
+        message: result.message || `Synced ${result.synced} agents from OpenClaw`
+      });
+    } catch (error) {
+      console.error('Sync failed:', error);
+      addNotification({
+        type: 'error',
+        title: 'Sync failed',
+        message: error.message || 'Failed to sync agents from OpenClaw'
+      });
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   async function createAgent(agentData) {
     try {
@@ -572,8 +598,22 @@ function TeamOfficeView({ user }) {
     <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
       <div className="max-w-4xl mx-auto min-w-0">
         <div className="mb-4 sm:mb-6">
-          <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Team</h2>
-          <p className="text-[#9CA3AF] text-xs sm:text-sm">Your AI agents and their current status</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Team</h2>
+              <p className="text-[#9CA3AF] text-xs sm:text-sm">Your AI agents and their current status</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSyncOpenClaw}
+                disabled={syncing}
+                className="flex items-center gap-2 bg-[#1A1A1A] hover:bg-[#2A2A2A] disabled:bg-[#0A0A0A] border border-[#2A2A2A] text-[#06B6D4] px-3 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+              >
+                <RefreshCw size={16} className={syncing ? 'animate-spin' : ''} />
+                {syncing ? 'Syncing...' : 'Sync OpenClaw'}
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* 3D Voxel Office Scene */}
@@ -1786,6 +1826,27 @@ export default function KanbanDashboard({ user, onSignOut }) {
     try {
       const response = await apiClient.getAgents();
       setAgents(response.agents || []);
+      
+      // Auto-sync from OpenClaw if no agents exist
+      if ((!response.agents || response.agents.length === 0) && activeNav === 'agents') {
+        try {
+          const syncResult = await apiClient.syncOpenClawAgents();
+          if (syncResult.synced > 0) {
+            // Reload agents after successful sync
+            const refreshedData = await apiClient.getAgents();
+            setAgents(refreshedData.agents || []);
+            
+            addNotification({
+              type: 'info',
+              title: 'Agents synced',
+              message: `Found ${syncResult.synced} agents from your OpenClaw instance`
+            });
+          }
+        } catch (syncError) {
+          // Silent fail for auto-sync - user can manually sync if needed
+          console.log('Auto-sync skipped:', syncError.message);
+        }
+      }
     } catch (error) {
       console.error('Failed to load agents:', error);
     }
@@ -2025,6 +2086,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
           setAgents={setAgents}
           loadAgents={loadAgents}
           user={user}
+          addNotification={addNotification}
         />
       ) : activeNav === 'analytics' ? (
         <AnalyticsDashboard user={user} />
