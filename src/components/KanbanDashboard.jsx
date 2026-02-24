@@ -1144,7 +1144,7 @@ function StatsBar({ tasks }) {
   );
 }
 
-function TaskCard({ task, index, onAssignAgent, agents = [] }) {
+function TaskCard({ task, index, onAssignAgent, onDelete, agents = [] }) {
   const getStatusColor = (status) => {
     const colors = {
       'backlog': '#6B7280',
@@ -1190,10 +1190,24 @@ function TaskCard({ task, index, onAssignAgent, agents = [] }) {
             snapshot.isDragging ? 'rotate-2 shadow-lg' : ''
           }`}
         >
-          {/* Task Title */}
-          <h3 className="text-[#F9FAFB] font-medium text-sm mb-2 leading-tight">
-            {task.title}
-          </h3>
+          {/* Task Header */}
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <h3 className="text-[#F9FAFB] font-medium text-sm leading-tight flex-1">
+              {task.title}
+            </h3>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                if (window.confirm('Delete this task?')) {
+                  onDelete(task.id);
+                }
+              }}
+              className="flex-shrink-0 text-[#6B7280] hover:text-[#EF4444] transition-colors p-1 rounded hover:bg-[#2A2A2A]"
+              title="Delete task"
+            >
+              <X size={14} />
+            </button>
+          </div>
           
           {/* Description */}
           {task.description && (
@@ -1353,6 +1367,7 @@ function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
                   task={task} 
                   index={index}
                   onAssignAgent={onAssignAgent}
+                  onDelete={deleteTask}
                   agents={agents}
                 />
               ))
@@ -1907,6 +1922,17 @@ export default function KanbanDashboard({ user, onSignOut }) {
       console.error('Failed to load tasks:', error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function deleteTask(taskId) {
+    try {
+      await apiClient.deleteTask(taskId);
+      setTasks(prev => prev.filter(task => task.id !== taskId));
+      toast.success('Task deleted');
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+      toast.error('Failed to delete task');
     }
   }
 
