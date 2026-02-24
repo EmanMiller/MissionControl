@@ -18,7 +18,8 @@ import AgentAssignmentModal from './AgentAssignmentModal.jsx';
 
 const NAVIGATION_ITEMS = [
   { id: 'tasks', label: 'Tasks', icon: CheckSquare, active: true },
-  { id: 'agents', label: 'Agents', icon: Users },
+  { id: 'agents', label: 'Team', icon: Users },
+  { id: 'manage-agents', label: 'Manage Agents', icon: Settings },
   { id: 'analytics', label: 'Analytics', icon: Activity },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
   { id: 'projects', label: 'Projects', icon: FolderOpen },
@@ -98,7 +99,7 @@ function ToastContainer({ notifications, onClose }) {
 
 /* ─── Components ─────────────────────────────────────────────────────────── */
 
-function AgentsView({ agents, setAgents, loadAgents, user, addNotification }) {
+function AgentManagementView({ agents, setAgents, loadAgents, user, addNotification }) {
   const [showAddAgent, setShowAddAgent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
@@ -558,6 +559,16 @@ function TeamOfficeView({ user }) {
       // Build dynamic agents array based on system state
       const dynamicAgents = [];
       
+      // Always add user avatar
+      dynamicAgents.push({
+        id: 'user',
+        name: 'Emmanuel Miller',
+        role: 'Human',
+        status: 'active',
+        color: 0xF59E0B, // Orange/Gold for human
+        type: 'human'
+      });
+
       // Main Agent (OpenClaw instance) - shown when connected
       if (isConnected) {
         dynamicAgents.push({
@@ -570,8 +581,52 @@ function TeamOfficeView({ user }) {
         });
       }
 
-      // TODO: Sync with OpenClaw to get additional spawned agents
-      // This would fetch from something like /api/agents/list-sessions
+      // Fetch and add OpenClaw agents
+      try {
+        const syncedAgents = await apiClient.getAgents();
+        if (syncedAgents?.agents?.length > 0) {
+          syncedAgents.agents.forEach(agent => {
+            dynamicAgents.push({
+              id: agent.id,
+              name: agent.name,
+              role: `${agent.type} Agent`,
+              status: agent.status || 'idle',
+              color: getAgentColor(agent.type),
+              type: 'agent'
+            });
+          });
+        } else if (isConnected) {
+          // Auto-sync if no agents but connected
+          const syncResult = await apiClient.syncOpenClawAgents();
+          if (syncResult.synced > 0) {
+            const refreshedAgents = await apiClient.getAgents();
+            refreshedAgents.agents.forEach(agent => {
+              dynamicAgents.push({
+                id: agent.id,
+                name: agent.name,
+                role: `${agent.type} Agent`,
+                status: agent.status || 'idle',
+                color: getAgentColor(agent.type),
+                type: 'agent'
+              });
+            });
+          }
+        }
+      } catch (agentError) {
+        console.log('Agent sync skipped:', agentError.message);
+      }
+
+      // Add some default agents for demo purposes if none exist
+      if (dynamicAgents.length === 1) { // Only user
+        dynamicAgents.push({
+          id: 'codex',
+          name: 'Codex',
+          role: 'Code Agent',
+          status: 'idle',
+          color: 0x8B5CF6, // Purple for coding
+          type: 'agent'
+        });
+      }
 
       setAgents(dynamicAgents);
     } catch (error) {
@@ -581,6 +636,18 @@ function TeamOfficeView({ user }) {
     } finally {
       setLoading(false);
     }
+  }
+
+  function getAgentColor(type) {
+    const colors = {
+      'coding': 0x8B5CF6, // Purple
+      'research': 0x10B981, // Green
+      'general': 0x06B6D4, // Cyan
+      'analysis': 0xF59E0B, // Orange
+      'creative': 0xEC4899, // Pink
+      'system': 0x6B7280, // Gray
+    };
+    return colors[type?.toLowerCase()] || 0x06B6D4;
   }
 
   if (loading) {
@@ -2081,7 +2148,10 @@ export default function KanbanDashboard({ user, onSignOut }) {
       ) : activeNav === 'settings' ? (
         <SettingsContent user={user} onSignOut={onSignOut} />
       ) : activeNav === 'agents' ? (
-        <AgentsView 
+        // Original 3D Team View
+        <TeamOfficeView user={user} />
+      ) : activeNav === 'manage-agents' ? (
+        <AgentManagementView 
           agents={agents}
           setAgents={setAgents}
           loadAgents={loadAgents}
