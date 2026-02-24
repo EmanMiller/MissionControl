@@ -544,6 +544,7 @@ function TeamOfficeView({ user }) {
   const [agents, setAgents] = useState([]);
   const [openclawConnected, setOpenclawConnected] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     loadAgentsAndStatus();
@@ -648,6 +649,22 @@ function TeamOfficeView({ user }) {
       'system': 0x6B7280, // Gray
     };
     return colors[type?.toLowerCase()] || 0x06B6D4;
+  }
+
+  async function handleSyncOpenClaw() {
+    try {
+      setSyncing(true);
+      const result = await apiClient.syncOpenClawAgents();
+      
+      // Reload agents for the 3D view
+      await loadAgentsAndStatus();
+      
+      console.log('Agents synced:', result.message || `Synced ${result.synced} agents from OpenClaw`);
+    } catch (error) {
+      console.error('Sync failed:', error);
+    } finally {
+      setSyncing(false);
+    }
   }
 
   if (loading) {
