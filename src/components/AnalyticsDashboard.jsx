@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, Activity, Clock, CheckCircle, AlertCircle, Users, Target } from 'lucide-react';
+import { BarChart3, TrendingUp, Activity, Clock, CheckCircle, AlertCircle, Users, Target, Settings, Cpu } from 'lucide-react';
 import apiClient from '../services/api.js';
 
 function AnalyticsDashboard({ user }) {
@@ -62,7 +62,7 @@ function AnalyticsDashboard({ user }) {
     );
   }
 
-  const { summary, recentActivity, agentPerformance } = analytics;
+  const { summary, recentActivity, agentPerformance, systemInfo } = analytics;
 
   return (
     <div className="flex-1 p-6 bg-[#0A0A0A] overflow-y-auto">
@@ -116,6 +116,73 @@ function AnalyticsDashboard({ user }) {
             icon={Target}
             color="purple"
           />
+        </div>
+
+        {/* System Information */}
+        <div className="bg-[#111111] border border-[#2A2A2A] rounded-lg p-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-[#06B6D4] to-[#8B5CF6] rounded-lg flex items-center justify-center">
+                <Cpu size={20} className="text-white" />
+              </div>
+              <div>
+                <h3 className="text-[#F9FAFB] text-lg font-semibold">System Information</h3>
+                <p className="text-[#9CA3AF] text-sm">Current OpenClaw configuration and model details</p>
+              </div>
+            </div>
+            <Settings size={20} className="text-[#9CA3AF]" />
+          </div>
+          
+          {systemInfo ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-[#0A0A0A] rounded-lg p-4 border border-[#1A1A1A]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-[#06B6D4]/20 rounded-lg flex items-center justify-center">
+                    <Activity size={16} className="text-[#06B6D4]" />
+                  </div>
+                  <h4 className="text-[#F9FAFB] text-sm font-medium">Current Model</h4>
+                </div>
+                <p className="text-[#F9FAFB] text-lg font-semibold mb-1">
+                  {systemInfo.currentModel || 'Unknown'}
+                </p>
+                <p className="text-[#9CA3AF] text-xs">Active reasoning model</p>
+              </div>
+              
+              <div className="bg-[#0A0A0A] rounded-lg p-4 border border-[#1A1A1A]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-[#10B981]/20 rounded-lg flex items-center justify-center">
+                    <Target size={16} className="text-[#10B981]" />
+                  </div>
+                  <h4 className="text-[#F9FAFB] text-sm font-medium">Default Model</h4>
+                </div>
+                <p className="text-[#F9FAFB] text-lg font-semibold mb-1">
+                  {systemInfo.defaultModel || 'Unknown'}
+                </p>
+                <p className="text-[#9CA3AF] text-xs">Configured default</p>
+              </div>
+              
+              <div className="bg-[#0A0A0A] rounded-lg p-4 border border-[#1A1A1A]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-[#8B5CF6]/20 rounded-lg flex items-center justify-center">
+                    <Clock size={16} className="text-[#8B5CF6]" />
+                  </div>
+                  <h4 className="text-[#F9FAFB] text-sm font-medium">Agent Status</h4>
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className={`w-2 h-2 rounded-full ${systemInfo.agentStatus === 'online' ? 'bg-[#10B981]' : 'bg-[#EF4444]'}`}></div>
+                  <p className="text-[#F9FAFB] text-lg font-semibold capitalize">
+                    {systemInfo.agentStatus || 'Unknown'}
+                  </p>
+                </div>
+                <p className="text-[#9CA3AF] text-xs">OpenClaw connection</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Settings size={48} className="text-[#6B7280] mx-auto mb-4" />
+              <p className="text-[#9CA3AF] text-sm">System information unavailable</p>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -84,6 +84,14 @@ router.get('/dashboard', (req, res) => {
 
   Promise.all(Object.values(queries))
     .then(([totalAgents, activeAgents, totalTasks, completedTasks, recentActivity, agentPerformance]) => {
+      // System information - this would normally come from OpenClaw API or config
+      const systemInfo = {
+        currentModel: "anthropic/claude-sonnet-4-20250514",
+        defaultModel: "anthropic/claude-sonnet-4-20250514", 
+        agentStatus: "online",
+        lastUpdate: new Date().toISOString()
+      };
+
       res.json({
         summary: {
           totalAgents,
@@ -95,7 +103,8 @@ router.get('/dashboard', (req, res) => {
           completionRate: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
         },
         recentActivity,
-        agentPerformance
+        agentPerformance,
+        systemInfo
       });
     })
     .catch(error => {
