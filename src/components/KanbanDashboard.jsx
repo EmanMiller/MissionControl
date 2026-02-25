@@ -838,10 +838,123 @@ function CalendarView({ user }) {
   );
 }
 
-function ProjectsView({ user }) {
+function ProjectCreateForm({ onSubmit, onCancel }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    github_url: '',
+    status: 'active',
+    tags: ''
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!formData.name.trim()) return;
+    
+    // Parse tags from text input
+    const tags = formData.tags
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
+
+    onSubmit({
+      ...formData,
+      name: formData.name.trim(),
+      description: formData.description.trim() || null,
+      github_url: formData.github_url.trim() || null,
+      tags: tags.length > 0 ? tags : null
+    });
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="text-[#9CA3AF] text-sm block mb-2">Project Name *</label>
+        <input
+          type="text"
+          value={formData.name}
+          onChange={e => setFormData({...formData, name: e.target.value})}
+          className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm focus:border-[#06B6D4] focus:outline-none"
+          placeholder="Enter project name..."
+          required
+        />
+      </div>
+
+      <div>
+        <label className="text-[#9CA3AF] text-sm block mb-2">Description</label>
+        <textarea
+          value={formData.description}
+          onChange={e => setFormData({...formData, description: e.target.value})}
+          className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm focus:border-[#06B6D4] focus:outline-none resize-none"
+          rows="3"
+          placeholder="Describe the project..."
+        />
+      </div>
+
+      <div>
+        <label className="text-[#9CA3AF] text-sm block mb-2">GitHub Repository</label>
+        <input
+          type="url"
+          value={formData.github_url}
+          onChange={e => setFormData({...formData, github_url: e.target.value})}
+          className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm focus:border-[#06B6D4] focus:outline-none"
+          placeholder="https://github.com/user/repo"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="text-[#9CA3AF] text-sm block mb-2">Status</label>
+          <select
+            value={formData.status}
+            onChange={e => setFormData({...formData, status: e.target.value})}
+            className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm focus:border-[#06B6D4] focus:outline-none"
+          >
+            <option value="active">Active</option>
+            <option value="planning">Planning</option>
+            <option value="paused">Paused</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-[#9CA3AF] text-sm block mb-2">
+            Tags <span className="text-[#6B7280]">(comma-separated)</span>
+          </label>
+          <input
+            type="text"
+            value={formData.tags}
+            onChange={e => setFormData({...formData, tags: e.target.value})}
+            className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-3 text-[#F9FAFB] text-sm focus:border-[#06B6D4] focus:outline-none"
+            placeholder="e.g. web, mobile, AI"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap justify-end gap-2 pt-2">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-3 sm:px-4 py-2 text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors text-sm"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        >
+          Create Project
+        </button>
+      </div>
+    </form>
+  );
+}
+
+function ProjectsView({ user, addNotification }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     loadProjects();
@@ -850,12 +963,60 @@ function ProjectsView({ user }) {
   async function loadProjects() {
     try {
       setLoading(true);
-      // TODO: Add projects API endpoint
-      setProjects([]);
+      const response = await apiClient.getProjects();
+      setProjects(response.projects || []);
     } catch (error) {
       console.error('Failed to load projects:', error);
+      addNotification && addNotification({
+        type: 'error',
+        title: 'Failed to load projects',
+        message: error.message || 'Could not load projects'
+      });
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function createProject(projectData) {
+    try {
+      const response = await apiClient.createProject(projectData);
+      if (response.project) {
+        setProjects(prev => [response.project, ...prev]);
+        setShowCreateModal(false);
+        addNotification && addNotification({
+          type: 'success',
+          title: 'Project created',
+          message: `${response.project.name} was created successfully`
+        });
+      }
+    } catch (error) {
+      console.error('Failed to create project:', error);
+      addNotification && addNotification({
+        type: 'error',
+        title: 'Failed to create project',
+        message: error.message || 'Could not create project'
+      });
+    }
+  }
+
+  async function deleteProject(projectId) {
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) return;
+    
+    try {
+      await apiClient.deleteProject(projectId);
+      setProjects(prev => prev.filter(p => p.id !== projectId));
+      addNotification && addNotification({
+        type: 'success',
+        title: 'Project deleted',
+        message: 'Project was deleted successfully'
+      });
+    } catch (error) {
+      console.error('Failed to delete project:', error);
+      addNotification && addNotification({
+        type: 'error',
+        title: 'Failed to delete project',
+        message: error.message || 'Could not delete project'
+      });
     }
   }
 
@@ -863,8 +1024,19 @@ function ProjectsView({ user }) {
     <div className="flex-1 p-3 sm:p-6 bg-[#0A0A0A] overflow-x-hidden min-w-0">
       <div className="max-w-4xl mx-auto min-w-0">
         <div className="mb-4 sm:mb-6">
-          <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Projects</h2>
-          <p className="text-[#9CA3AF] text-xs sm:text-sm">Manage your active projects and initiatives</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="text-[#F9FAFB] text-lg sm:text-xl font-semibold mb-2">Projects</h2>
+              <p className="text-[#9CA3AF] text-xs sm:text-sm">Manage your active projects and initiatives</p>
+            </div>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 flex-shrink-0"
+            >
+              <Plus size={16} />
+              New Project
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -877,7 +1049,9 @@ function ProjectsView({ user }) {
             <FolderOpen size={48} className="text-[#6B7280] mx-auto mb-4" />
             <h3 className="text-[#F9FAFB] font-medium mb-2">No projects</h3>
             <p className="text-[#9CA3AF] text-sm mb-4">You haven't created any projects yet</p>
-            <button className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            <button 
+              onClick={() => setShowCreateModal(true)}
+              className="bg-[#06B6D4] hover:bg-[#0891B2] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
               Create Project
             </button>
           </div>
@@ -893,27 +1067,58 @@ function ProjectsView({ user }) {
                   <div className="min-w-0 flex-1">
                     <h3 className="text-[#F9FAFB] font-semibold text-base sm:text-lg truncate">{project.name}</h3>
                     <p className="text-[#9CA3AF] text-xs sm:text-sm mt-1 line-clamp-2">{project.description}</p>
+                    {project.github_url && (
+                      <a href={project.github_url} target="_blank" rel="noopener noreferrer" 
+                         className="text-[#06B6D4] text-xs hover:underline mt-1 inline-block"
+                         onClick={(e) => e.stopPropagation()}>
+                        GitHub Repository
+                      </a>
+                    )}
                   </div>
-                  <span className={`px-3 py-1 text-xs rounded-full flex-shrink-0 w-fit ${
-                    project.status === 'active' ? 'bg-[#10B981]/20 text-[#10B981]' :
-                    project.status === 'planning' ? 'bg-[#F59E0B]/20 text-[#F59E0B]' :
-                    'bg-[#6B7280]/20 text-[#6B7280]'
-                  }`}>
-                    {project.status}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-3 py-1 text-xs rounded-full flex-shrink-0 w-fit ${
+                      project.status === 'active' ? 'bg-[#10B981]/20 text-[#10B981]' :
+                      project.status === 'planning' ? 'bg-[#F59E0B]/20 text-[#F59E0B]' :
+                      project.status === 'completed' ? 'bg-[#8B5CF6]/20 text-[#8B5CF6]' :
+                      'bg-[#6B7280]/20 text-[#6B7280]'
+                    }`}>
+                      {project.status}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteProject(project.id);
+                      }}
+                      className="text-[#EF4444] hover:text-[#DC2626] p-1 transition-colors"
+                      title="Delete project"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
                 </div>
+                
+                {/* Tags */}
+                {project.tags && project.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {project.tags.slice(0, 3).map((tag, index) => (
+                      <span 
+                        key={index}
+                        className="px-2 py-1 bg-[#06B6D4]/20 text-[#06B6D4] text-xs rounded-full"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                    {project.tags.length > 3 && (
+                      <span className="px-2 py-1 bg-[#6B7280]/20 text-[#6B7280] text-xs rounded-full">
+                        +{project.tags.length - 3}
+                      </span>
+                    )}
+                  </div>
+                )}
                 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-[#9CA3AF]">
-                    <span>{project.completedTasks}/{project.tasks} tasks</span>
-                    <span className="hidden sm:inline">•</span>
-                    <span>{project.progress}% complete</span>
-                  </div>
-                  <div className="w-full sm:w-32 h-2 bg-[#1A1A1A] rounded-full overflow-hidden flex-shrink-0">
-                    <div 
-                      className="h-full bg-[#06B6D4] transition-all duration-300"
-                      style={{ width: `${project.progress}%` }}
-                    ></div>
+                    <span>Created {new Date(project.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
               </div>
@@ -957,6 +1162,15 @@ function ProjectsView({ user }) {
             </div>
           </div>
         )}
+      </CustomModal>
+
+      {/* Project Creation Modal */}
+      <CustomModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title="Create New Project"
+      >
+        <ProjectCreateForm onSubmit={createProject} onCancel={() => setShowCreateModal(false)} />
       </CustomModal>
     </div>
   );
@@ -2159,7 +2373,7 @@ export default function KanbanDashboard({ user, onSignOut }) {
       ) : activeNav === 'calendar' ? (
         <CalendarView user={user} />
       ) : activeNav === 'projects' ? (
-        <ProjectsView user={user} />
+        <ProjectsView user={user} addNotification={addNotification} />
       ) : activeNav === 'approvals' ? (
         <ApprovalsView user={user} />
       ) : activeNav === 'settings' ? (

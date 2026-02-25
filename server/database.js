@@ -163,12 +163,65 @@ function runMigrations() {
       {
         name: 'add_openclaw_id_to_agents',
         sql: 'ALTER TABLE agents ADD COLUMN openclaw_id TEXT'
+      },
+      // Migration: Create projects table
+      {
+        name: 'create_projects_table',
+        sql: `CREATE TABLE IF NOT EXISTS projects (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          description TEXT,
+          github_url TEXT,
+          status TEXT DEFAULT 'active',
+          tags TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        )`
+      },
+      // Migration: Add project_id to tasks table  
+      {
+        name: 'add_project_id_to_tasks',
+        sql: 'ALTER TABLE tasks ADD COLUMN project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL'
       }
     ];
 
     let completed = 0;
     
     migrations.forEach((migration) => {
+      // Handle different types of migrations
+      if (migration.name === 'create_projects_table') {
+        // For table creation, check if table exists
+        db.all(`SELECT name FROM sqlite_master WHERE type='table' AND name='projects'`, (err, rows) => {
+          if (err) {
+            console.error(`Migration ${migration.name} failed:`, err);
+            completed++;
+            if (completed === migrations.length) resolve();
+            return;
+          }
+
+          if (rows.length === 0) {
+            // Table doesn't exist, create it
+            db.run(migration.sql, (err) => {
+              if (err) {
+                console.error(`Migration ${migration.name} failed:`, err);
+              } else {
+                console.log(`Migration ${migration.name} completed successfully`);
+              }
+              completed++;
+              if (completed === migrations.length) resolve();
+            });
+          } else {
+            console.log(`Migration ${migration.name} already applied`);
+            completed++;
+            if (completed === migrations.length) resolve();
+          }
+        });
+        return;
+      }
+
+      // Handle ADD COLUMN migrations
       // Determine table name from migration SQL
       let tableName = 'tasks'; // default
       if (migration.sql.includes('agents')) {

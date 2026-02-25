@@ -21,6 +21,7 @@ import userRoutes from './routes/users.js';
 import openclawRoutes from './routes/openclaw.js';
 import agentRoutes from './routes/agents.js';
 import analyticsRoutes from './routes/analytics.js';
+import projectRoutes from './routes/projects.js';
 
 // Import middleware
 import { authenticateToken } from './middleware/auth.js';
@@ -99,6 +100,7 @@ app.use('/api/tasks', authenticateToken, taskRoutes);
 app.use('/api/users', authenticateToken, userRoutes);
 app.use('/api/agents', authenticateToken, agentRoutes);
 app.use('/api/analytics', authenticateToken, analyticsRoutes);
+app.use('/api/projects', authenticateToken, projectRoutes);
 // OpenClaw: webhook must be public (OpenClaw agent POSTs without JWT); other routes require auth
 app.use('/api/openclaw', (req, res, next) => {
   if (req.path === '/webhook' && req.method === 'POST') return next();

@@ -282,6 +282,39 @@ class ApiClient {
       method: 'POST'
     });
   }
+
+  // Projects
+  async getProjects() {
+    return await this.request('/projects');
+  }
+
+  async getProject(projectId) {
+    return await this.request(`/projects/${projectId}`);
+  }
+
+  async createProject(projectData) {
+    return await this.request('/projects', {
+      method: 'POST',
+      body: projectData
+    });
+  }
+
+  async updateProject(projectId, projectData) {
+    return await this.request(`/projects/${projectId}`, {
+      method: 'PUT',
+      body: projectData
+    });
+  }
+
+  async deleteProject(projectId) {
+    return await this.request(`/projects/${projectId}`, {
+      method: 'DELETE'
+    });
+  }
+
+  async getProjectTasks(projectId) {
+    return await this.request(`/projects/${projectId}/tasks`);
+  }
 }
 
 export default new ApiClient();
