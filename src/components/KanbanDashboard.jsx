@@ -27,6 +27,7 @@ const NAVIGATION_ITEMS = [
 ];
 
 const KANBAN_COLUMNS = [
+  { id: 'backlog', title: 'Backlog', color: '#6B7280' },
   { id: 'new', title: 'New', color: '#06B6D4' },
   { id: 'in_progress', title: 'In Progress', color: '#F59E0B' },
   { id: 'built', title: 'Completed', color: '#10B981' }
@@ -1357,7 +1358,7 @@ function StatsBar({ tasks }) {
   );
 }
 
-function TaskCard({ task, index, onAssignAgent, agents = [] }) {
+function TaskCard({ task, index, onAssignAgent, onDelete, onTaskClick, agents = [] }) {
   const getStatusColor = (status) => {
     const colors = {
       'backlog': '#6B7280',
@@ -1399,14 +1400,34 @@ function TaskCard({ task, index, onAssignAgent, agents = [] }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          onClick={(e) => {
+            // Only handle click if it's not on the delete button
+            if (!e.target.closest('button') && onTaskClick) {
+              onTaskClick(task);
+            }
+          }}
           className={`bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-4 mb-3 cursor-pointer transition-all duration-200 hover:border-[#3A3A3A] ${
             snapshot.isDragging ? 'rotate-2 shadow-lg' : ''
           }`}
         >
-          {/* Task Title */}
-          <h3 className="text-[#F9FAFB] font-medium text-sm mb-2 leading-tight">
-            {task.title}
-          </h3>
+          {/* Task Header */}
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <h3 className="text-[#F9FAFB] font-medium text-sm leading-tight flex-1">
+              {task.title}
+            </h3>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                if (window.confirm('Delete this task?')) {
+                  onDelete(task.id);
+                }
+              }}
+              className="flex-shrink-0 text-[#6B7280] hover:text-[#EF4444] transition-colors p-1 rounded hover:bg-[#2A2A2A]"
+              title="Delete task"
+            >
+              <X size={14} />
+            </button>
+          </div>
           
           {/* Description */}
           {task.description && (
@@ -1517,7 +1538,7 @@ function TaskCard({ task, index, onAssignAgent, agents = [] }) {
   );
 }
 
-function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
+function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, onDelete, onTaskClick, agents }) {
   const taskCount = tasks.length;
   
   return (
@@ -1551,7 +1572,7 @@ function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-64 transition-colors rounded-lg ${
+            className={`min-h-64 max-h-[calc(100vh-280px)] overflow-y-auto transition-colors rounded-lg kanban-column-scroll ${
               snapshot.isDraggingOver ? 'bg-[#0A0A0A] border border-[#06B6D4]' : ''
             }`}
           >
@@ -1566,6 +1587,8 @@ function KanbanColumn({ column, tasks, onAddTask, onAssignAgent, agents }) {
                   task={task} 
                   index={index}
                   onAssignAgent={onAssignAgent}
+                  onDelete={onDelete}
+                  onTaskClick={onTaskClick}
                   agents={agents}
                 />
               ))
@@ -2066,6 +2089,213 @@ function MobileSidebar({ user, activeItem, onItemClick, onSignOut, onClose }) {
   );
 }
 
+/* ─── Task Detail Modal ─────────────────────────────────────────────────── */
+
+function TaskDetailModal({ isOpen, onClose, task, onSave, onDelete }) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState('medium');
+  const [estimatedHours, setEstimatedHours] = useState('');
+
+  useEffect(() => {
+    if (task) {
+      setTitle(task.title || '');
+      setDescription(task.description || '');
+      setPriority(task.priority || 'medium');
+      setEstimatedHours(task.estimated_hours || '');
+    }
+  }, [task]);
+
+  const handleSave = () => {
+    if (!title.trim()) {
+      toast.error('Title is required');
+      return;
+    }
+
+    onSave(task.id, {
+      title: title.trim(),
+      description: description.trim(),
+      priority,
+      estimated_hours: estimatedHours ? parseFloat(estimatedHours) : null
+    });
+  };
+
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      onDelete(task.id);
+      onClose();
+    }
+  };
+
+  if (!isOpen || !task) return null;
+
+  const getStatusColor = (status) => {
+    const colors = {
+      'backlog': '#6B7280',
+      'new': '#06B6D4', 
+      'in_progress': '#F59E0B',
+      'built': '#10B981',
+      'failed': '#EF4444'
+    };
+    return colors[status] || '#6B7280';
+  };
+
+  const getPriorityColor = (priority) => {
+    const colors = {
+      'low': '#10B981',
+      'medium': '#F59E0B', 
+      'high': '#EF4444'
+    };
+    return colors[priority] || '#F59E0B';
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-[#2A2A2A]">
+          <div className="flex items-center gap-3">
+            <div 
+              className="w-4 h-4 rounded-full flex-shrink-0"
+              style={{ backgroundColor: getStatusColor(task.status) }}
+            />
+            <h2 className="text-[#F9FAFB] text-xl font-semibold">Task Details</h2>
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors p-2 rounded-lg hover:bg-[#2A2A2A]"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+          {/* Title */}
+          <div className="mb-6">
+            <label className="block text-[#F9FAFB] text-sm font-medium mb-2">
+              Title *
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-[#F9FAFB] placeholder-[#6B7280] focus:border-[#06B6D4] focus:outline-none transition-colors"
+              placeholder="Task title..."
+            />
+          </div>
+
+          {/* Description */}
+          <div className="mb-6">
+            <label className="block text-[#F9FAFB] text-sm font-medium mb-2">
+              Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={6}
+              className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-[#F9FAFB] placeholder-[#6B7280] focus:border-[#06B6D4] focus:outline-none transition-colors resize-none"
+              placeholder="Describe your task..."
+            />
+          </div>
+
+          {/* Priority and Estimated Hours */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block text-[#F9FAFB] text-sm font-medium mb-2">
+                Priority
+              </label>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-[#F9FAFB] focus:border-[#06B6D4] focus:outline-none transition-colors"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[#F9FAFB] text-sm font-medium mb-2">
+                Estimated Hours
+              </label>
+              <input
+                type="number"
+                value={estimatedHours}
+                onChange={(e) => setEstimatedHours(e.target.value)}
+                step="0.5"
+                min="0"
+                className="w-full bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg px-4 py-3 text-[#F9FAFB] placeholder-[#6B7280] focus:border-[#06B6D4] focus:outline-none transition-colors"
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          {/* Metadata */}
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-[#9CA3AF]">Status:</span>
+                <span className="text-[#F9FAFB] ml-2 capitalize">{task.status.replace('_', ' ')}</span>
+              </div>
+              <div>
+                <span className="text-[#9CA3AF]">Priority:</span>
+                <div className="inline-flex items-center gap-2 ml-2">
+                  <div 
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: getPriorityColor(task.priority) }}
+                  />
+                  <span className="text-[#F9FAFB] capitalize">{task.priority}</span>
+                </div>
+              </div>
+              <div>
+                <span className="text-[#9CA3AF]">Created:</span>
+                <span className="text-[#F9FAFB] ml-2">
+                  {new Date(task.created_at).toLocaleDateString()}
+                </span>
+              </div>
+              {task.completed_at && (
+                <div>
+                  <span className="text-[#9CA3AF]">Completed:</span>
+                  <span className="text-[#F9FAFB] ml-2">
+                    {new Date(task.completed_at).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between p-6 border-t border-[#2A2A2A] bg-[#0A0A0A]/50">
+          <button
+            onClick={handleDelete}
+            className="px-4 py-2 bg-[#EF4444] text-white rounded-lg hover:bg-[#DC2626] transition-colors flex items-center gap-2"
+          >
+            <X size={16} />
+            Delete
+          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="px-6 py-2 text-[#9CA3AF] hover:text-[#F9FAFB] transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-6 py-2 bg-[#06B6D4] text-white rounded-lg hover:bg-[#0891B2] transition-colors"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function KanbanDashboard({ user, onSignOut }) {
   const [tasks, setTasks] = useState([]);
   const [agents, setAgents] = useState([]);
@@ -2077,10 +2307,14 @@ export default function KanbanDashboard({ user, onSignOut }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [assignmentTask, setAssignmentTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
     loadTasks();
     loadAgents();
+    
+    // Seed backlog if empty
+    seedBacklogIfNeeded();
     
     // Connect to WebSocket for real-time updates
     socketService.connect(user.id);
@@ -2120,6 +2354,35 @@ export default function KanbanDashboard({ user, onSignOut }) {
     }
   }
 
+  async function deleteTask(taskId) {
+    try {
+      await apiClient.deleteTask(taskId);
+      setTasks(prev => prev.filter(task => task.id !== taskId));
+      toast.success('Task deleted');
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+      toast.error('Failed to delete task');
+    }
+  }
+
+  function handleTaskClick(task) {
+    setSelectedTask(task);
+  }
+
+  async function handleTaskUpdate(taskId, updates) {
+    try {
+      await apiClient.updateTask(taskId, updates);
+      setTasks(prev => prev.map(task => 
+        task.id === taskId ? { ...task, ...updates } : task
+      ));
+      setSelectedTask(null);
+      toast.success('Task updated');
+    } catch (error) {
+      console.error('Failed to update task:', error);
+      toast.error('Failed to update task');
+    }
+  }
+
   async function loadAgents() {
     try {
       const response = await apiClient.getAgents();
@@ -2147,6 +2410,101 @@ export default function KanbanDashboard({ user, onSignOut }) {
       }
     } catch (error) {
       console.error('Failed to load agents:', error);
+    }
+  }
+
+  async function seedBacklogIfNeeded() {
+    try {
+      const response = await apiClient.getTasks();
+      const backlogTasks = response.tasks?.filter(task => task.status === 'backlog') || [];
+      
+      // Only seed if no backlog tasks exist
+      if (backlogTasks.length === 0) {
+        const backlogItems = [
+          {
+            title: 'Agent Marketplace Integration',
+            description: 'Build a marketplace where users can discover, install, and share custom AI agents. Includes agent template system, community sharing, ratings, and one-click installation.',
+            status: 'backlog',
+            priority: 'high',
+            tags: ['marketplace', 'agents', 'community']
+          },
+          {
+            title: 'Advanced Workflow Automation',
+            description: 'Multi-agent task pipelines with conditional logic, visual workflow builder, agent handoff system, and parallel task execution.',
+            status: 'backlog',
+            priority: 'high', 
+            tags: ['workflows', 'automation', 'pipelines']
+          },
+          {
+            title: 'Team Collaboration Features',
+            description: 'Multi-user workspace with shared agent pools, real-time collaborative task editing, team activity feeds, and role-based access control.',
+            status: 'backlog',
+            priority: 'high',
+            tags: ['collaboration', 'teams', 'sharing']
+          },
+          {
+            title: 'Enhanced Analytics Dashboard',
+            description: 'Advanced metrics with predictive task completion, agent optimization suggestions, cost analysis, custom widgets, and export capabilities.',
+            status: 'backlog',
+            priority: 'high',
+            tags: ['analytics', 'insights', 'reporting']
+          },
+          {
+            title: 'Mobile App Companion',
+            description: 'React Native app for iOS/Android with push notifications, voice task creation, mobile-optimized 3D visualization, and offline queuing.',
+            status: 'backlog',
+            priority: 'medium',
+            tags: ['mobile', 'ios', 'android']
+          },
+          {
+            title: 'Enterprise Security & SSO',
+            description: 'SAML/LDAP/Active Directory integration, role-based permissions, audit logs, API key management, and compliance reporting.',
+            status: 'backlog',
+            priority: 'medium',
+            tags: ['security', 'enterprise', 'sso']
+          },
+          {
+            title: 'AI Agent Training Integration',
+            description: 'Fine-tune agents based on performance feedback, custom model training pipeline, A/B testing, and learning curve visualization.',
+            status: 'backlog',
+            priority: 'medium',
+            tags: ['ai', 'training', 'optimization']
+          },
+          {
+            title: 'Voice Interface',
+            description: 'Speech-to-text task creation, voice status updates, hands-free agent interaction, multi-language support, and custom wake words.',
+            status: 'backlog',
+            priority: 'low',
+            tags: ['voice', 'speech', 'accessibility']
+          },
+          {
+            title: 'Integration Ecosystem',
+            description: 'Slack/Discord bots, GitHub Actions triggers, Zapier connector, calendar integration, and email task creation.',
+            status: 'backlog',
+            priority: 'low',
+            tags: ['integrations', 'slack', 'github']
+          },
+          {
+            title: '3D Office Customization',
+            description: 'Custom office layouts, avatar customization, environmental animations, seasonal themes, and user-generated 3D assets.',
+            status: 'backlog',
+            priority: 'low',
+            tags: ['3d', 'customization', 'themes']
+          }
+        ];
+
+        // Create backlog tasks
+        for (const item of backlogItems) {
+          await apiClient.createTask(item);
+        }
+
+        // Reload tasks to show the new backlog
+        await loadTasks();
+        
+        console.log('✅ Backlog seeded with development tasks');
+      }
+    } catch (error) {
+      console.error('Failed to seed backlog:', error);
     }
   }
 
@@ -2355,6 +2713,8 @@ export default function KanbanDashboard({ user, onSignOut }) {
                       tasks={filteredTasks.filter(task => task.status === column.id)}
                       onAddTask={handleAddTask}
                       onAssignAgent={setAssignmentTask}
+                      onDelete={deleteTask}
+                      onTaskClick={handleTaskClick}
                       agents={agents}
                     />
                   ))}
@@ -2434,6 +2794,15 @@ export default function KanbanDashboard({ user, onSignOut }) {
         task={assignmentTask}
         agents={agents}
         onAssign={assignTaskToAgent}
+      />
+
+      {/* Task Detail Modal */}
+      <TaskDetailModal
+        isOpen={!!selectedTask}
+        onClose={() => setSelectedTask(null)}
+        task={selectedTask}
+        onSave={handleTaskUpdate}
+        onDelete={deleteTask}
       />
 
       {/* Toast Notifications */}

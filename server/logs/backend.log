@@ -1,0 +1,1037 @@
+2026-02-23 22:17:16 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:17:16 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:17:16 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:17:16 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:17:16 -06:00: Connected to SQLite database
+2026-02-23 22:17:16 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:17:16 -06:00: Migration add_estimated_hours_to_tasks completed successfully
+2026-02-23 22:17:16 -06:00: Migration add_openclaw_id_to_agents completed successfully
+2026-02-23 22:17:16 -06:00: Database initialized successfully
+2026-02-23 22:17:20 -06:00: Client connected: 4vypDWhJElrRz1KMAAAB
+2026-02-23 22:17:20 -06:00: Socket 4vypDWhJElrRz1KMAAAB joined user room: user-1
+2026-02-23 22:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:20:36 -06:00: Client disconnected: 4vypDWhJElrRz1KMAAAB
+2026-02-23 22:20:48 -06:00: Client connected: AQk0H8m0uim7JSGaAAAD
+2026-02-23 22:20:48 -06:00: Socket AQk0H8m0uim7JSGaAAAD joined user room: user-1
+2026-02-23 22:21:00 -06:00: Client disconnected: AQk0H8m0uim7JSGaAAAD
+2026-02-23 22:21:00 -06:00: Client connected: sE19w9n6y5CPoJ6BAAAF
+2026-02-23 22:21:00 -06:00: Socket sE19w9n6y5CPoJ6BAAAF joined user room: user-1
+2026-02-23 22:21:01 -06:00: Client disconnected: sE19w9n6y5CPoJ6BAAAF
+2026-02-23 22:21:01 -06:00: Client connected: 6Yk14isin4Jmpk_wAAAH
+2026-02-23 22:21:01 -06:00: Socket 6Yk14isin4Jmpk_wAAAH joined user room: user-1
+2026-02-23 22:21:06 -06:00: Client disconnected: 6Yk14isin4Jmpk_wAAAH
+2026-02-23 22:21:06 -06:00: Client connected: YlIPuMK8lsabO2mOAAAJ
+2026-02-23 22:21:06 -06:00: Socket YlIPuMK8lsabO2mOAAAJ joined user room: user-1
+2026-02-23 22:21:11 -06:00: Client disconnected: YlIPuMK8lsabO2mOAAAJ
+2026-02-23 22:21:12 -06:00: Client connected: kSSYSrY1gQ3PszHfAAAL
+2026-02-23 22:21:12 -06:00: Socket kSSYSrY1gQ3PszHfAAAL joined user room: user-1
+2026-02-23 22:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:22:34 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:22:34 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:22:34 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:22:34 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:22:34 -06:00: Connected to SQLite database
+2026-02-23 22:22:34 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:22:34 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-23 22:22:34 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-23 22:22:34 -06:00: Database initialized successfully
+2026-02-23 22:22:35 -06:00: Client connected: CW0iyUf4K12EHmOuAAAB
+2026-02-23 22:22:35 -06:00: Socket CW0iyUf4K12EHmOuAAAB joined user room: user-1
+2026-02-23 22:23:52 -06:00: Client disconnected: CW0iyUf4K12EHmOuAAAB
+2026-02-23 22:23:52 -06:00: Client connected: Sy_Rw3g2fgA8uh6lAAAD
+2026-02-23 22:23:52 -06:00: Socket Sy_Rw3g2fgA8uh6lAAAD joined user room: user-1
+2026-02-23 22:23:53 -06:00: Client disconnected: Sy_Rw3g2fgA8uh6lAAAD
+2026-02-23 22:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:24:09 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:24:09 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:24:09 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:24:09 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:24:09 -06:00: Connected to SQLite database
+2026-02-23 22:24:09 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:24:09 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-23 22:24:09 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-23 22:24:09 -06:00: Database initialized successfully
+2026-02-23 22:24:30 -06:00: Client connected: JIoadAPVwMeDPOHTAAAB
+2026-02-23 22:24:30 -06:00: Socket JIoadAPVwMeDPOHTAAAB joined user room: user-1
+2026-02-23 22:25:30 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:25:30 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:25:30 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:25:30 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:25:30 -06:00: Connected to SQLite database
+2026-02-23 22:25:30 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:25:30 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-23 22:25:30 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-23 22:25:30 -06:00: Database initialized successfully
+2026-02-23 22:25:30 -06:00: Client connected: ANC_4C5Yv-PYJns_AAAB
+2026-02-23 22:25:30 -06:00: Socket ANC_4C5Yv-PYJns_AAAB joined user room: user-1
+2026-02-23 22:25:33 -06:00: Client disconnected: ANC_4C5Yv-PYJns_AAAB
+2026-02-23 22:25:33 -06:00: Client connected: G1T3cDbJ_Y153gKTAAAD
+2026-02-23 22:25:33 -06:00: Socket G1T3cDbJ_Y153gKTAAAD joined user room: user-1
+2026-02-23 22:25:36 -06:00: Client disconnected: G1T3cDbJ_Y153gKTAAAD
+2026-02-23 22:25:36 -06:00: Client connected: Gowi3OGV23Cw9KaNAAAF
+2026-02-23 22:25:36 -06:00: Socket Gowi3OGV23Cw9KaNAAAF joined user room: user-1
+2026-02-23 22:25:40 -06:00: Client disconnected: Gowi3OGV23Cw9KaNAAAF
+2026-02-23 22:25:40 -06:00: Client connected: EyfVCnK5-AeouWlRAAAH
+2026-02-23 22:25:40 -06:00: Socket EyfVCnK5-AeouWlRAAAH joined user room: user-1
+2026-02-23 22:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:26:00 -06:00: Client disconnected: EyfVCnK5-AeouWlRAAAH
+2026-02-23 22:26:00 -06:00: Client connected: fZ7U_ehNj4_4USnzAAAJ
+2026-02-23 22:26:00 -06:00: Socket fZ7U_ehNj4_4USnzAAAJ joined user room: user-1
+2026-02-23 22:26:04 -06:00: Client disconnected: fZ7U_ehNj4_4USnzAAAJ
+2026-02-23 22:26:04 -06:00: Client connected: asIiX4TuTzyugj-LAAAL
+2026-02-23 22:26:04 -06:00: Socket asIiX4TuTzyugj-LAAAL joined user room: user-1
+2026-02-23 22:26:06 -06:00: Client disconnected: asIiX4TuTzyugj-LAAAL
+2026-02-23 22:26:06 -06:00: Client connected: LgbKDBsKjcNRGRMiAAAN
+2026-02-23 22:26:06 -06:00: Socket LgbKDBsKjcNRGRMiAAAN joined user room: user-1
+2026-02-23 22:26:10 -06:00: Client disconnected: LgbKDBsKjcNRGRMiAAAN
+2026-02-23 22:26:22 -06:00: Client connected: X0567OXUvu0iTiemAAAP
+2026-02-23 22:26:22 -06:00: Socket X0567OXUvu0iTiemAAAP joined user room: user-1
+2026-02-23 22:26:25 -06:00: Client disconnected: X0567OXUvu0iTiemAAAP
+2026-02-23 22:26:25 -06:00: Client connected: anwPuqxgvH8JV7xGAAAR
+2026-02-23 22:26:25 -06:00: Socket anwPuqxgvH8JV7xGAAAR joined user room: user-1
+2026-02-23 22:26:30 -06:00: Client disconnected: anwPuqxgvH8JV7xGAAAR
+2026-02-23 22:26:30 -06:00: Client connected: __ONgIVY7Ce0RDo3AAAT
+2026-02-23 22:26:30 -06:00: Socket __ONgIVY7Ce0RDo3AAAT joined user room: user-1
+2026-02-23 22:27:03 -06:00: Client disconnected: __ONgIVY7Ce0RDo3AAAT
+2026-02-23 22:27:04 -06:00: Client connected: -gUnuXcZN7nwG75CAAAV
+2026-02-23 22:27:04 -06:00: Socket -gUnuXcZN7nwG75CAAAV joined user room: user-1
+2026-02-23 22:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:28:07 -06:00: Client disconnected: -gUnuXcZN7nwG75CAAAV
+2026-02-23 22:28:07 -06:00: Client connected: 2TG6Pu6kCnJf0Rf1AAAX
+2026-02-23 22:28:07 -06:00: Socket 2TG6Pu6kCnJf0Rf1AAAX joined user room: user-1
+2026-02-23 22:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:30:50 -06:00: Client disconnected: 2TG6Pu6kCnJf0Rf1AAAX
+2026-02-23 22:30:50 -06:00: Client connected: tloywgyi-kvH98D4AAAZ
+2026-02-23 22:30:50 -06:00: Socket tloywgyi-kvH98D4AAAZ joined user room: user-1
+2026-02-23 22:31:10 -06:00: Client disconnected: tloywgyi-kvH98D4AAAZ
+2026-02-23 22:31:10 -06:00: Client connected: ikzBjMm5INfiGDZYAAAb
+2026-02-23 22:31:10 -06:00: Socket ikzBjMm5INfiGDZYAAAb joined user room: user-1
+2026-02-23 22:31:18 -06:00: Client disconnected: ikzBjMm5INfiGDZYAAAb
+2026-02-23 22:31:18 -06:00: Client connected: vqntbEptpGdZoa2DAAAd
+2026-02-23 22:31:18 -06:00: Socket vqntbEptpGdZoa2DAAAd joined user room: user-1
+2026-02-23 22:31:27 -06:00: Client disconnected: vqntbEptpGdZoa2DAAAd
+2026-02-23 22:31:28 -06:00: Client connected: 1Duq5aOmwEygL0reAAAf
+2026-02-23 22:31:28 -06:00: Socket 1Duq5aOmwEygL0reAAAf joined user room: user-1
+2026-02-23 22:31:41 -06:00: Client connected: qEAS-nsDt9lI-uIiAAAh
+2026-02-23 22:31:41 -06:00: Socket qEAS-nsDt9lI-uIiAAAh joined user room: user-1
+2026-02-23 22:31:43 -06:00: Client disconnected: qEAS-nsDt9lI-uIiAAAh
+2026-02-23 22:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:32:01 -06:00: Client connected: GNVu4lH6AOa8UE85AAAj
+2026-02-23 22:32:01 -06:00: Socket GNVu4lH6AOa8UE85AAAj joined user room: user-1
+2026-02-23 22:32:15 -06:00: Client disconnected: GNVu4lH6AOa8UE85AAAj
+2026-02-23 22:32:29 -06:00: Client disconnected: 1Duq5aOmwEygL0reAAAf
+2026-02-23 22:32:42 -06:00: Client connected: K4LzNBqjetLy5D7IAAAl
+2026-02-23 22:32:42 -06:00: Socket K4LzNBqjetLy5D7IAAAl joined user room: user-1
+2026-02-23 22:33:28 -06:00: Client disconnected: K4LzNBqjetLy5D7IAAAl
+2026-02-23 22:33:28 -06:00: Client connected: sUKUjf4t0xfkfnePAAAn
+2026-02-23 22:33:28 -06:00: Socket sUKUjf4t0xfkfnePAAAn joined user room: user-1
+2026-02-23 22:33:42 -06:00: Client disconnected: sUKUjf4t0xfkfnePAAAn
+2026-02-23 22:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:40:40 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-23 22:40:40 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-23 22:40:40 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-23 22:40:40 -06:00: 🔌 WebSocket server enabled
+2026-02-23 22:40:40 -06:00: Connected to SQLite database
+2026-02-23 22:40:40 -06:00: Migration add_tags_to_tasks already applied
+2026-02-23 22:40:40 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-23 22:40:40 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-23 22:40:40 -06:00: Database initialized successfully
+2026-02-23 22:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 22:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 22:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 22:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:29:39 -06:00: Client connected: Ekeu9veka0kJCi38AAAB
+2026-02-23 23:29:39 -06:00: Socket Ekeu9veka0kJCi38AAAB joined user room: user-1
+2026-02-23 23:29:46 -06:00: Client disconnected: Ekeu9veka0kJCi38AAAB
+2026-02-23 23:29:46 -06:00: Client connected: ocUF783V1OrODLpSAAAD
+2026-02-23 23:29:46 -06:00: Socket ocUF783V1OrODLpSAAAD joined user room: user-1
+2026-02-23 23:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-23 23:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-23 23:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-23 23:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 00:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 00:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 00:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 01:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 01:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 01:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 02:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 02:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 02:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 03:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 03:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 03:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 04:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 04:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 04:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 05:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 05:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 05:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:56:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:56:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:56:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 06:58:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 06:58:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 06:58:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:00:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:00:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:02:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:02:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:02:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:04:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:04:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:04:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:06:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:06:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:06:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:10:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:10:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:10:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:16:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:16:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:16:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:18:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:18:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:18:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:20:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:20:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:20:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:22:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:22:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:22:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:24:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:24:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:24:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:26:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:26:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:26:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:28:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:28:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:28:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:30:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:30:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:30:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:32:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:32:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:32:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:40:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:40:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:40:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:42:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:42:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:42:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:44:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:44:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:44:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:51:44 -06:00: Client disconnected: ocUF783V1OrODLpSAAAD
+2026-02-24 07:51:44 -06:00: Client connected: OVBel4ckR5-BfvEVAAAF
+2026-02-24 07:51:44 -06:00: Socket OVBel4ckR5-BfvEVAAAF joined user room: user-1
+2026-02-24 07:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:54:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 07:54:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 07:54:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 07:54:19 -06:00: Client disconnected: OVBel4ckR5-BfvEVAAAF
+2026-02-24 07:54:21 -06:00: Client connected: _XrmKKfIN7GqrMiCAAAH
+2026-02-24 07:54:21 -06:00: Socket _XrmKKfIN7GqrMiCAAAH joined user room: user-1
+2026-02-24 08:00:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 08:00:01 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 08:00:01 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 08:08:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 08:08:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 08:08:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 08:12:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 08:12:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 08:12:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-24 08:12:20 -06:00: Client disconnected: _XrmKKfIN7GqrMiCAAAH
+2026-02-24 08:12:20 -06:00: Client connected: 2ZlNuM7_FSySFvJfAAAJ
+2026-02-24 08:12:20 -06:00: Socket 2ZlNuM7_FSySFvJfAAAJ joined user room: user-1
+2026-02-24 08:12:29 -06:00: Client disconnected: 2ZlNuM7_FSySFvJfAAAJ
+2026-02-24 08:12:31 -06:00: Client connected: HccRbBKiy9m6MNXMAAAL
+2026-02-24 08:12:31 -06:00: Socket HccRbBKiy9m6MNXMAAAL joined user room: user-1
+2026-02-24 08:12:50 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-24 08:12:50 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-24 08:12:50 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-24 08:12:50 -06:00: 🔌 WebSocket server enabled
+2026-02-24 08:12:50 -06:00: Connected to SQLite database
+2026-02-24 08:12:50 -06:00: Migration add_tags_to_tasks already applied
+2026-02-24 08:12:50 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-24 08:12:50 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-24 08:12:50 -06:00: Database initialized successfully
+2026-02-24 08:12:50 -06:00: Client connected: DUMEsN0M3nNfZhL4AAAB
+2026-02-24 08:12:50 -06:00: Socket DUMEsN0M3nNfZhL4AAAB joined user room: user-1
+2026-02-24 08:14:00 -06:00: Starting OpenClaw session polling...
+2026-02-24 08:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-24 08:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
