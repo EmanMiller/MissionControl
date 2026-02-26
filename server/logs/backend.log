@@ -1035,3 +1035,31 @@
 2026-02-24 08:14:00 -06:00: Starting OpenClaw session polling...
 2026-02-24 08:14:00 -06:00: Polling 0 in-progress OpenClaw sessions
 2026-02-24 08:14:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-26 10:32:03 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-26 10:32:03 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-26 10:32:03 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-26 10:32:03 -06:00: 🔌 WebSocket server enabled
+2026-02-26 10:32:03 -06:00: Connected to SQLite database
+2026-02-26 10:32:03 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-26 10:32:03 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-26 10:32:03 -06:00: Migration add_tags_to_tasks already applied
+2026-02-26 10:32:03 -06:00: Migration create_projects_table completed successfully
+2026-02-26 10:32:03 -06:00: Migration add_project_id_to_tasks completed successfully
+2026-02-26 10:32:03 -06:00: Database initialized successfully
+2026-02-26 10:32:03 -06:00: Client connected: FwF2ynxxpuSoPcd9AAAB
+2026-02-26 10:32:03 -06:00: Socket FwF2ynxxpuSoPcd9AAAB joined user room: user-1
+2026-02-26 10:32:21 -06:00: 🔄 OpenClaw session polling scheduled (every 2 minutes)
+2026-02-26 10:32:21 -06:00: 🚀 Mission Control Server running on port 3001
+2026-02-26 10:32:21 -06:00: 🔗 Frontend URL: http://localhost:5173
+2026-02-26 10:32:21 -06:00: 🔌 WebSocket server enabled
+2026-02-26 10:32:21 -06:00: Connected to SQLite database
+2026-02-26 10:32:21 -06:00: Migration add_tags_to_tasks already applied
+2026-02-26 10:32:21 -06:00: Migration create_projects_table already applied
+2026-02-26 10:32:21 -06:00: Migration add_project_id_to_tasks already applied
+2026-02-26 10:32:21 -06:00: Migration add_openclaw_id_to_agents already applied
+2026-02-26 10:32:21 -06:00: Migration add_estimated_hours_to_tasks already applied
+2026-02-26 10:32:21 -06:00: Database initialized successfully
+2026-02-26 10:32:22 -06:00: Client connected: 2uQgTq3YRtLRc_f2AAAB
+2026-02-26 10:32:22 -06:00: Socket 2uQgTq3YRtLRc_f2AAAB joined user room: user-1
+2026-02-26 10:33:14 -06:00: [OpenClaw] Fetching agents via CLI...
+2026-02-26 10:33:16 -06:00: [OpenClaw] Found 5 agents

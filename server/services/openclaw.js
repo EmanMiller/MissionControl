@@ -33,74 +33,82 @@ function sanitizeForPrompt(str) {
 }
 
 export async function fetchOpenClawAgents(endpoint, token) {
-  const base = baseUrl(endpoint);
   try {
-    const headers = {};
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+    // Use OpenClaw CLI to get agents - this is the correct approach
+    const { exec } = await import('child_process');
+    const { promisify } = await import('util');
+    const execAsync = promisify(exec);
     
-    // Try multiple endpoints to find agents
-    const agentEndpoints = [
-      `${base}/api/agents_list`,
-      `${base}/api/sessions_list`,
-      `${base}/api/subagents`,
-      `${base}/api/agents`
-    ];
-
-    for (const agentEndpoint of agentEndpoints) {
+    console.log('[OpenClaw] Fetching agents via CLI...');
+    
+    try {
+      // Get agents list via CLI
+      const { stdout } = await execAsync('openclaw agents list --json', {
+        timeout: 10000,
+        maxBuffer: 1024 * 1024 // 1MB buffer
+      });
+      
+      const agentsData = JSON.parse(stdout.trim());
+      console.log(`[OpenClaw] Found ${agentsData.length || 0} agents`);
+      
+      if (!Array.isArray(agentsData)) {
+        return [];
+      }
+      
+      // Map OpenClaw agents to Mission Control format
+      return agentsData.map(agent => ({
+        id: agent.id,
+        name: agent.name || agent.id,
+        type: agent.model ? agent.model.split('/').pop() : 'general',
+        status: agent.isDefault ? 'active' : 'idle',
+        capabilities: [],
+        performance_stats: {},
+        model: agent.model,
+        workspace: agent.workspace
+      }));
+      
+    } catch (cliError) {
+      console.error('[OpenClaw] CLI command failed:', cliError.message);
+      
+      // Fallback: try to get sessions instead
       try {
-        const response = await axios.get(agentEndpoint, {
-          headers,
-          timeout: 10000
+        const { stdout } = await execAsync('openclaw sessions --json', {
+          timeout: 10000,
+          maxBuffer: 1024 * 1024
         });
-
-        let agentsList = [];
         
-        // Handle different response formats
-        if (response.data) {
-          if (response.data.agents) {
-            agentsList = response.data.agents;
-          } else if (response.data.sessions) {
-            // Convert sessions to agents
-            agentsList = response.data.sessions.map(session => ({
-              id: session.sessionKey || session.id,
-              name: session.label || `Session ${session.sessionKey}`,
-              type: session.agentId || 'general',
-              status: session.active ? 'idle' : 'offline'
-            }));
-          } else if (Array.isArray(response.data)) {
-            agentsList = response.data;
-          }
+        const sessionsData = JSON.parse(stdout.trim());
+        console.log(`[OpenClaw] Found ${sessionsData.sessions?.length || 0} sessions as fallback`);
+        
+        if (!sessionsData.sessions || !Array.isArray(sessionsData.sessions)) {
+          return [];
         }
-
-        if (agentsList.length > 0) {
-          return agentsList.map(agent => ({
-            id: agent.id || agent.sessionKey || agent.agentId || Math.random().toString(36),
-            name: agent.name || agent.label || `Agent ${agent.id}`,
-            type: agent.type || agent.agentId || 'general',
-            status: agent.status || (agent.active ? 'idle' : 'offline'),
-            capabilities: agent.capabilities || [],
-            performance_stats: agent.performance || {}
+        
+        // Convert sessions to agents format
+        return sessionsData.sessions
+          .filter(session => session.kind === 'agent' || session.agentId)
+          .map(session => ({
+            id: session.agentId || session.sessionKey,
+            name: session.displayName || session.label || session.agentId,
+            type: session.model ? session.model.split('/').pop() : 'general',
+            status: session.active ? 'active' : 'idle',
+            capabilities: [],
+            performance_stats: {},
+            model: session.model
           }));
-        }
-      } catch (endpointError) {
-        // Continue to next endpoint
-        continue;
+          
+      } catch (fallbackError) {
+        console.error('[OpenClaw] Sessions fallback failed:', fallbackError.message);
+        return [];
       }
     }
     
-    // If no endpoints worked, return empty array
-    return [];
-    
   } catch (error) {
     console.error('Failed to fetch OpenClaw agents:', error.message);
-    if (error.response?.status === 401) {
-      throw new Error('Authentication failed - check your OpenClaw token');
-    } else if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to OpenClaw - check endpoint URL');
+    if (error.code === 'ENOENT') {
+      throw new Error('OpenClaw CLI not found - ensure OpenClaw is installed and in PATH');
     }
-    throw new Error(`OpenClaw connection failed: ${error.message}`);
+    throw new Error(`OpenClaw CLI error: ${error.message}`);
   }
 }
 
