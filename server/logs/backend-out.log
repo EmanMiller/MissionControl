@@ -1063,3 +1063,66 @@
 2026-02-26 10:32:22 -06:00: Socket 2uQgTq3YRtLRc_f2AAAB joined user room: user-1
 2026-02-26 10:33:14 -06:00: [OpenClaw] Fetching agents via CLI...
 2026-02-26 10:33:16 -06:00: [OpenClaw] Found 5 agents
+2026-02-26 10:34:00 -06:00: Starting OpenClaw session polling...
+2026-02-26 10:34:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-26 10:34:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-26 10:34:29 -06:00: Client disconnected: 2uQgTq3YRtLRc_f2AAAB
+2026-02-26 10:34:29 -06:00: Client connected: 9cqNZcuYb3o77q3tAAAD
+2026-02-26 10:34:29 -06:00: Socket 9cqNZcuYb3o77q3tAAAD joined user room: user-1
+2026-02-26 10:34:30 -06:00: Client disconnected: 9cqNZcuYb3o77q3tAAAD
+2026-02-26 10:34:30 -06:00: Client connected: FilJC4N6b8c02cQ5AAAF
+2026-02-26 10:34:30 -06:00: Socket FilJC4N6b8c02cQ5AAAF joined user room: user-1
+2026-02-26 10:34:31 -06:00: Client disconnected: FilJC4N6b8c02cQ5AAAF
+2026-02-26 10:34:31 -06:00: Client connected: 2B0YtZFIHxgJD13_AAAH
+2026-02-26 10:34:31 -06:00: Socket 2B0YtZFIHxgJD13_AAAH joined user room: user-1
+2026-02-26 10:34:41 -06:00: Client disconnected: 2B0YtZFIHxgJD13_AAAH
+2026-02-26 10:34:41 -06:00: Client connected: BP7NfZXbqFvz7Y4iAAAJ
+2026-02-26 10:34:41 -06:00: Socket BP7NfZXbqFvz7Y4iAAAJ joined user room: user-1
+2026-02-26 10:34:42 -06:00: Client disconnected: BP7NfZXbqFvz7Y4iAAAJ
+2026-02-26 10:34:42 -06:00: Client connected: iR7N48H878hZBeCRAAAL
+2026-02-26 10:34:42 -06:00: Socket iR7N48H878hZBeCRAAAL joined user room: user-1
+2026-02-26 10:36:00 -06:00: Starting OpenClaw session polling...
+2026-02-26 10:36:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-26 10:36:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-26 10:38:00 -06:00: Starting OpenClaw session polling...
+2026-02-26 10:38:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-26 10:38:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-26 10:39:53 -06:00: Client disconnected: iR7N48H878hZBeCRAAAL
+2026-02-26 10:39:54 -06:00: Client connected: tL7rWBgNGfAgD1aQAAAN
+2026-02-26 10:39:54 -06:00: Socket tL7rWBgNGfAgD1aQAAAN joined user room: user-1
+2026-02-26 10:46:00 -06:00: Starting OpenClaw session polling...
+2026-02-26 10:46:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-26 10:46:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-26 10:46:15 -06:00: Client disconnected: tL7rWBgNGfAgD1aQAAAN
+2026-02-26 10:46:16 -06:00: Client connected: 52LKnjTsdPEY4KgFAAAP
+2026-02-26 10:46:16 -06:00: Socket 52LKnjTsdPEY4KgFAAAP joined user room: user-1
+2026-02-26 10:48:00 -06:00: Starting OpenClaw session polling...
+2026-02-26 10:48:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-26 10:48:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-26 10:50:00 -06:00: Starting OpenClaw session polling...
+2026-02-26 10:50:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-26 10:50:00 -06:00: OpenClaw polling complete: 0 sessions checked
+2026-02-26 10:50:16 -06:00: Client disconnected: 52LKnjTsdPEY4KgFAAAP
+2026-02-26 10:50:16 -06:00: Client connected: j47pTvnkH5myvXpUAAAR
+2026-02-26 10:50:16 -06:00: Socket j47pTvnkH5myvXpUAAAR joined user room: user-1
+2026-02-26 10:50:17 -06:00: Client disconnected: j47pTvnkH5myvXpUAAAR
+2026-02-26 10:50:17 -06:00: Client connected: _HNTky5mxawcZfYDAAAT
+2026-02-26 10:50:17 -06:00: Socket _HNTky5mxawcZfYDAAAT joined user room: user-1
+2026-02-26 10:50:19 -06:00: Client disconnected: _HNTky5mxawcZfYDAAAT
+2026-02-26 10:50:19 -06:00: Client connected: O5AoW_2W9g9mui4WAAAV
+2026-02-26 10:50:19 -06:00: Socket O5AoW_2W9g9mui4WAAAV joined user room: user-1
+2026-02-26 10:50:32 -06:00: Client disconnected: O5AoW_2W9g9mui4WAAAV
+2026-02-26 10:50:32 -06:00: Client connected: ysVIWlOP6w0udXtFAAAX
+2026-02-26 10:50:32 -06:00: Socket ysVIWlOP6w0udXtFAAAX joined user room: user-1
+2026-02-26 10:50:49 -06:00: Client disconnected: ysVIWlOP6w0udXtFAAAX
+2026-02-26 10:50:49 -06:00: Client connected: er_A8CD00WzL6zEQAAAZ
+2026-02-26 10:50:49 -06:00: Socket er_A8CD00WzL6zEQAAAZ joined user room: user-1
+2026-02-26 10:51:12 -06:00: Client disconnected: er_A8CD00WzL6zEQAAAZ
+2026-02-26 10:51:12 -06:00: Client connected: PxVDJmfkKh3F5TBJAAAb
+2026-02-26 10:51:12 -06:00: Socket PxVDJmfkKh3F5TBJAAAb joined user room: user-1
+2026-02-26 10:51:15 -06:00: Client disconnected: PxVDJmfkKh3F5TBJAAAb
+2026-02-26 10:51:15 -06:00: Client connected: d5PE761hfFzoVSw7AAAd
+2026-02-26 10:51:15 -06:00: Socket d5PE761hfFzoVSw7AAAd joined user room: user-1
+2026-02-26 10:52:00 -06:00: Starting OpenClaw session polling...
+2026-02-26 10:52:00 -06:00: Polling 0 in-progress OpenClaw sessions
+2026-02-26 10:52:00 -06:00: OpenClaw polling complete: 0 sessions checked
